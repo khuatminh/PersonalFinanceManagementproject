@@ -1,0 +1,88 @@
+### IntelliJ IDEA ###
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+### Mac OS ###
+.DS_Store
+
+### Maven ###
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+### Java ###
+*.class
+*.log
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
+replay_pid*
+
+### Database ###
+*.db
+*.sqlite
+*.sqlite3
+
+### Temporary files ###
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+### Windows ###
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+### IntelliJ IDEA specific ###
+.idea/
+*.iws
+*.iml
+*.ipr
+
+AGENTS.md
+BUILD_SUMMARY.md
+CLAUDE.md
+fix-database-schema.sql
+FIX_PROGRESS.md
+init.bat
+MySQL-Setup-Guide.md
+Personal-Finance-Manager-Brief.md
+PersonalFinanceManager.iml
+query
