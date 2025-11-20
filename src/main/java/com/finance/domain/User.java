@@ -1,56 +1,50 @@
 package com.finance.domain;
 
 import lombok.*;
-import javax.management.relation.Role;
 import javax.persistence.*;
-import javax.transaction.Transaction;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "user", indexes = {
         @Index(name = "idx_user_name", columnList = "username"),
-        @Index(name = "idx_user_email",columnList = "email"),
-        @Index(name = "idx_user_created_at",columnList = "created_at")
+        @Index(name = "idx_user_email", columnList = "email"),
+        @Index(name = "idx_user_created_at", columnList = "created_at")
 })
-@Data
-@Getter @Setter
+@Getter
+@Setter
 @ToString(exclude = {"transactions", "budgets", "goals", "userRole"})
-
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    @EqualsAndHashCode.Include
     private int id;
 
     @NotBlank(message = "Username is required")
-    @Size(min = 3,message = "Username must be at least 3 characters")
-    @Column(name = "username", unique = true, nullable = false, length = 50)
+    @Size(min = 3, message = "Username must be at least 3 characters")
+    @Column(unique = true, nullable = false, length = 50)
     private String username;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Please provide a valid email")
-    @Column(name = "email", unique = true, nullable = false, length = 50)
+    @Column(unique = true, nullable = false, length = 50)
     private String email;
 
-
     @NotBlank(message = "Password is required")
-    @Size(min = 6, message = "Password must be at least")
-    @Column(name = "password",nullable = false)
+    @Size(min = 6, message = "Password must be at least 6 characters")
+    @Column(nullable = false)
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", nullable = false)
-    private Role userrole;
+    private Role userRole;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Transaction> transactions = new ArrayList<>();
@@ -58,24 +52,24 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Budget> budgets = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private  List<Goal> goals = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Goal> goals = new ArrayList<>();
 
     @PrePersist
     public void prePersist() {
-        this.created_at = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
     }
 
-    public void addTransaction(Transaction transaction) throws IllegalAccessException {
-        if(transaction != null) {
-            throw new IllegalAccessException(("Transaction cannot be null"));
+    public void addTransaction(Transaction transaction) {
+        if (transaction == null) {
+            throw new IllegalArgumentException("Transaction cannot be null");
         }
         transactions.add(transaction);
-        transactions.setUser(this);
+        transaction.setUser(this);
     }
 
     public void removeTransaction(Transaction transaction) {
-        if(transaction != null) {
+        if (transaction != null) {
             transactions.remove(transaction);
             transaction.setUser(null);
         }
@@ -89,9 +83,10 @@ public class User {
         budget.setUser(this);
     }
 
-    public void removeBudget(Budget budget){
-        if(budget != null) {
+    public void removeBudget(Budget budget) {
+        if (budget != null) {
             budgets.remove(budget);
+            budget.setUser(null);
         }
     }
 
@@ -117,5 +112,4 @@ public class User {
     public boolean isRegularUser() {
         return this.userRole != null && "USER".equals(this.userRole.getName());
     }
-
 }
