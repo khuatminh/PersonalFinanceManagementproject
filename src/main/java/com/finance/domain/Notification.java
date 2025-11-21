@@ -11,7 +11,7 @@ import lombok.experimental.FieldDefaults;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
+@Entity 
 @Table(name = "notifications")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter @Setter
