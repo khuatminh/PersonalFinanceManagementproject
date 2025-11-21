@@ -1,56 +1,59 @@
 package com.finance.domain;
 
-import lombok.*;
-import javax.management.relation.Role;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 import javax.persistence.*;
-import javax.transaction.Transaction;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.Set;
 
 @Entity
-@Table(name = "user", indexes = {
-        @Index(name = "idx_user_name", columnList = "username"),
-        @Index(name = "idx_user_email",columnList = "email"),
-        @Index(name = "idx_user_created_at",columnList = "created_at")
+@Table(name = "users", indexes = {
+        @Index(name = "idx_user_username", columnList = "username"),
+        @Index(name = "idx_user_email", columnList = "email")
 })
 @Data
-@Getter @Setter
-@ToString(exclude = {"transactions", "budgets", "goals", "userRole"})
-
+@ToString(exclude = {"transactions", "budgets", "goals", "roles"})
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     @EqualsAndHashCode.Include
-    private int id;
+    private Long id;
 
     @NotBlank(message = "Username is required")
-    @Size(min = 3,message = "Username must be at least 3 characters")
+    @Size(min = 3, message = "Username must be at least 3 characters")
     @Column(name = "username", unique = true, nullable = false, length = 50)
     private String username;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Please provide a valid email")
-    @Column(name = "email", unique = true, nullable = false, length = 50)
+    @Column(name = "email", unique = true, nullable = false, length = 100)
     private String email;
 
-
     @NotBlank(message = "Password is required")
-    @Size(min = 6, message = "Password must be at least")
-    @Column(name = "password",nullable = false)
+    @Size(min = 6, message = "Password must be at least 6 characters")
+    @Column(name = "password", nullable = false)
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role userrole;
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Transaction> transactions = new ArrayList<>();
@@ -58,64 +61,73 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Budget> budgets = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private  List<Goal> goals = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Goal> goals = new ArrayList<>();
 
     @PrePersist
     public void prePersist() {
-        this.created_at = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
     }
 
-    public void addTransaction(Transaction transaction) throws IllegalAccessException {
-        if(transaction != null) {
-            throw new IllegalAccessException(("Transaction cannot be null"));
+    // Helper methods for Transaction
+    public void addTransaction(Transaction transaction) {
+        if (transaction == null) {
+            throw new IllegalArgumentException("Transaction cannot be null");
         }
-        transactions.add(transaction);
-        transactions.setUser(this);
+        this.transactions.add(transaction);
+        transaction.setUser(this);
     }
 
     public void removeTransaction(Transaction transaction) {
-        if(transaction != null) {
-            transactions.remove(transaction);
+        if (transaction != null) {
+            this.transactions.remove(transaction);
             transaction.setUser(null);
         }
     }
 
+    // Helper methods for Budget
     public void addBudget(Budget budget) {
         if (budget == null) {
             throw new IllegalArgumentException("Budget cannot be null");
         }
-        budgets.add(budget);
+        this.budgets.add(budget);
         budget.setUser(this);
     }
 
-    public void removeBudget(Budget budget){
-        if(budget != null) {
-            budgets.remove(budget);
+    public void removeBudget(Budget budget) {
+        if (budget != null) {
+            this.budgets.remove(budget);
+            budget.setUser(null);
         }
     }
 
+    // Helper methods for Goal
     public void addGoal(Goal goal) {
         if (goal == null) {
             throw new IllegalArgumentException("Goal cannot be null");
         }
-        goals.add(goal);
+        this.goals.add(goal);
         goal.setUser(this);
     }
 
     public void removeGoal(Goal goal) {
         if (goal != null) {
-            goals.remove(goal);
+            this.goals.remove(goal);
             goal.setUser(null);
         }
     }
+    
+    // Helper methods for Role
+    public boolean hasRole(String roleName) {
+        if (roleName == null) return false;
+        return this.roles.stream().anyMatch(role -> roleName.equals(role.getName()));
+    }
 
     public boolean isAdmin() {
-        return this.userRole != null && "ADMIN".equals(this.userRole.getName());
+        return hasRole("ADMIN");
     }
 
     public boolean isRegularUser() {
-        return this.userRole != null && "USER".equals(this.userRole.getName());
+        return hasRole("USER");
     }
-
 }

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>View Goal</title>
+</head>
+<body>
+    <h1>Goal Details</h1>
+    <div>
+        <strong>Name:</strong> <span th:text="${goal.name}"></span>
+    </div>
+    <div>
+        <strong>Target Amount:</strong> <span th:text="${goal.targetAmount}"></span>
+    </div>
+    <div>
+        <strong>Current Amount:</strong> <span th:text="${goal.currentAmount}"></span>
+    </div>
+    <div>
+        <strong>Target Date:</strong> <span th:text="${goal.targetDate}"></span>
+    </div>
+    <div>
+        <strong>Description:</strong> <span th:text="${goal.description}"></span>
+    </div>
+    <div>
+        <strong>Status:</strong> <span th:text="${goal.status}"></span>
+    </div>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Contribute to Goal</title>
+</head>
+<body>
+    <h1>Contribute to Goal: <span th:text="${goal.name}"></span></h1>
+    <p>Target Amount: <span th:text="${goal.targetAmount}"></span></p>
+    <p>Current Amount: <span th:text="${goal.currentAmount}"></span></p>
+    <p>Remaining Amount: <span th:text="${goal.targetAmount - goal.currentAmount}"></span></p>
+    
+    <form th:action="@{/goals/contribute/{id}(id=${goal.id})}" method="post">
+        <div>
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" name="amount" />
+        </div>
+        <div>
+            <button type="submit">Contribute</button>
+        </div>
+    </form>
+</body>
+</html>
