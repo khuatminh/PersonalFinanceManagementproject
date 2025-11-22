@@ -9,14 +9,13 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 @Repository
-
 public interface UserRepository extends JpaRepository<User,Long> {
     Optional<User> findByUsername(String username);
     Optional<User> findByEmail(String email);
     boolean existByUserName(String username);
     boolean existByEmail(String email);
 
-    @Query("Select u from User u Where u.username Like %:keyword% OR  u.email Like %keyword%")
+    @Query("SELECT u FROM User u WHERE u.username LIKE CONCAT('%', :keyword, '%') OR u.email LIKE CONCAT('%', :keyword, '%')")
     List<User> findByUsernameOrEmailContain(@Param("keyword") String keyword);
 
     @Query("Select COUNT(u) From User u Where u.userRole.name = 'USER'")

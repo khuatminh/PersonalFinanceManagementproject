@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/main}">
+<head>
+    <title>View Goal</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1 th:text="${goal.name}">Goal Name</h1>
+
+    <div class="card">
+        <div class="card-body">
+            <p th:text="${goal.description}">Goal Description</p>
+            <p><strong>Target Amount:</strong> <span th:text="${#numbers.formatCurrency(goal.targetAmount)}"></span></p>
+            <p><strong>Current Amount:</strong> <span th:text="${#numbers.formatCurrency(goal.currentAmount)}"></span></p>
+            <p><strong>Remaining:</strong> <span th:text="${#numbers.formatCurrency(goal.getRemainingAmount())}"></span></p>
+            <p><strong>Progress:</strong> <span th:text="${#numbers.formatDecimal(goal.progressPercentage, 1, 1)}"></span>%</p>
+            <div class="progress mb-3">
+                <div class="progress-bar" role="progressbar" th:style="'width: ' + ${goal.progressPercentage} + '%;'" th:aria-valuenow="${goal.progressPercentage}" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <p><strong>Target Date:</strong> <span th:text="${#temporals.format(goal.targetDate, 'dd-MM-yyyy')}"></span></p>
+            <p><strong>Days Remaining:</strong> <span th:text="${goal.getDaysRemaining()}"></span></p>
+            <p><strong>Status:</strong> <span th:text="${goal.status.displayName}"></span></p>
+            
+            <a href="/goals" class="btn btn-primary">Back to List</a>
+            <a th:href="@{/goals/edit/{id}(id=${goal.id})}" class="btn btn-info">Edit</a>
+            <a th:href="@{/goals/contribute/{id}(id=${goal.id})}" class="btn btn-success">Contribute</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
