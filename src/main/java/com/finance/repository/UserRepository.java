@@ -13,16 +13,16 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User,Long> {
     Optional<User> findByUsername(String username);
     Optional<User> findByEmail(String email);
-    boolean existByUserName(String username);
-    boolean existByEmail(String email);
+    boolean existsByUsername(String username);
+    boolean existsByEmail(String email);
 
-    @Query("Select u from User u Where u.username Like %:keyword% OR  u.email Like %keyword%")
+    @Query("SELECT u FROM User u WHERE LOWER(u.username) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<User> findByUsernameOrEmailContain(@Param("keyword") String keyword);
 
     @Query("Select COUNT(u) From User u Where u.userRole.name = 'USER'")
     long countUserRole();
 
-    @Query("Select COUNT(u) From User u Where u.userRole.name = 'Admin'")
+    @Query("Select COUNT(u) From User u Where u.userRole.name = 'ADMIN'")
     long countByAdminRole();
 
 

@@ -3,6 +3,7 @@ package com.finance.form;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 @Data
@@ -16,7 +17,7 @@ public class UserRegistrationForm {
     String username;
 
     @NotBlank(message = "Email is required")
-    @Size(message = "Please provided a valid email")
+    @Email(message = "Please provided a valid email")
     String email;
 
     @NotBlank(message = "Password is required")

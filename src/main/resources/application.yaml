@@ -1,7 +1,3 @@
-# ========================================
-# = Spring Boot Configuration
-# ========================================
-
 spring:
   application:
     name: personal-finance-manager
@@ -14,10 +10,9 @@ spring:
       enabled: true
 
   datasource:
-    # MySQL Database (for production)
-    url: jdbc:mysql://103.228.36.73:3306/personal_finance_db?useSSL=false&serverTimezone=Asia/Ho_Chi_Minh
-    username: quanly
-    password: ProjectOop123@
+    url: jdbc:mysql://localhost:3306/demo?useSSL=false&serverTimezone=UTC
+    username: root
+    password: 2906!TienDung
     driver-class-name: com.mysql.cj.jdbc.Driver
 
     hikari:
@@ -34,17 +29,3 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.MySQL8Dialect
-
-  thymeleaf:
-    cache: false
-    encoding: UTF-8
-    mode: HTML
-    prefix: classpath:/templates/
-    suffix: .html
-
-
-server:
-  port: 8083
-  servlet:
-    session:
-      timeout: 30m

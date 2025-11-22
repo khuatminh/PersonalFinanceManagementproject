@@ -81,11 +81,11 @@ public class UserService {
         }
 
 
-        if (userRepository.existByUserName(username)) {
+        if (userRepository.existsByUsername(username)) {
             throw DuplicateUserException.forUserName(username);
         }
 
-        if (userRepository.existByEmail(email)) {
+        if (userRepository.existsByEmail(email)) {
             throw DuplicateUserException.forEmail(email);
         }
 
@@ -152,14 +152,14 @@ public class UserService {
         if (!StringUtils.hasText(username)) {
             throw new IllegalArgumentException("Username cannot be null or empty");
         }
-        return userRepository.existByUserName(username);
+        return userRepository.existsByUsername(username);
     }
 
     public boolean existsByEmail(String email) {
         if (!StringUtils.hasText(email)) {
             throw new IllegalArgumentException("Email cannot be null or empty");
         }
-        return userRepository.existByEmail(email);
+        return userRepository.existsByEmail(email);
     }
     //Tìm kiêm tên đăng nhập, email có chứa từ khóa
 
