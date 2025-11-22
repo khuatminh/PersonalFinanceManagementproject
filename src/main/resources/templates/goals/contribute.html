@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/main}">
+<head>
+    <title>Contribute to Goal</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1 th:text="'Contribute to ' + ${goal.name}">Contribute to Goal</h1>
+
+    <div class="card mb-3">
+        <div class="card-body">
+             <p><strong>Current Progress:</strong> 
+                <span th:text="${#numbers.formatCurrency(goal.currentAmount)}"></span> / 
+                <span th:text="${#numbers.formatCurrency(goal.targetAmount)}"></span>
+             </p>
+             <div class="progress">
+                <div class="progress-bar" role="progressbar" th:style="'width: ' + ${goal.progressPercentage} + '%;'" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+        </div>
+    </div>
+
+    <form th:action="@{/goals/contribute/{id}(id=${goal.id})}" method="post">
+        <div class="form-group">
+            <label for="amount">Contribution Amount</label>
+            <input type="number" id="amount" name="amount" class="form-control" required step="0.01" min="0.01">
+        </div>
+        <button type="submit" class="btn btn-primary">Contribute</button>
+        <a href="/goals" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+</body>
+</html>

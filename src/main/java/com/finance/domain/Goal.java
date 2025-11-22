@@ -99,6 +99,9 @@ public class Goal {
     }
 
     public long getDaysRemaining() {
+        if (targetDate == null) {
+            return 0;
+        }
         LocalDate today = LocalDate.now();
         if (today.isAfter(targetDate)) {
             return 0;

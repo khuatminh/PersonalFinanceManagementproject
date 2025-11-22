@@ -18,7 +18,6 @@ import java.util.Optional;
 
 @Service
 @Transactional
-@Getter
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TransactionService {

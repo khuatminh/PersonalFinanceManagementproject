@@ -7,10 +7,6 @@ import com.finance.domain.Transaction;
 import com.finance.repository.BudgetRepository;
 import com.finance.service.TransactionService;
 import com.finance.service.NotificationService;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,14 +19,16 @@ import java.util.Optional;
 
 @Service
 @Transactional
-@Data
-@AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BudgetService {
 
-    BudgetRepository budgetRepository;
-    TransactionService transactionService;
-    NotificationService notificationService;
+    @Autowired
+    private BudgetRepository budgetRepository;
+
+    @Autowired
+    private TransactionService transactionService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     public List<Budget> findAll() {
         return budgetRepository.findAll();
@@ -73,7 +71,7 @@ public class BudgetService {
     }
 
     public Budget createBudget(String name, BigDecimal amount, LocalDate startDate, LocalDate endDate,
-                               User user, Category category, String description) {
+                              User user, Category category, String description) {
         if (startDate.isAfter(endDate)) {
             throw new IllegalArgumentException("Start date cannot be after end date.");
         }
@@ -93,7 +91,7 @@ public class BudgetService {
 
 
     public Budget updateBudget(Long id, String name, BigDecimal amount, LocalDate startDate,
-                               LocalDate endDate, Category category, String description) {
+                              LocalDate endDate, Category category, String description) {
         return budgetRepository.findById(id)
                 .map(budget -> {
                     if (startDate.isAfter(endDate)) {
@@ -149,23 +147,23 @@ public class BudgetService {
         // If budget has a specific category, filter by that category
         if (budget.getCategory() != null) {
             spent = transactionService.getTotalExpensesByUserAndCategoryAndDateRange(
-                    budget.getUser(),
-                    budget.getCategory(),
-                    budget.getStartDate().atStartOfDay(),
-                    budget.getEndDate().atTime(23, 59, 59)
+                budget.getUser(),
+                budget.getCategory(),
+                budget.getStartDate().atStartOfDay(),
+                budget.getEndDate().atTime(23, 59, 59)
             );
         } else {
             // Calculate spent amount based on all transactions within budget period
             spent = transactionService.getTotalExpensesByUserAndDateRange(
-                    budget.getUser(),
-                    budget.getStartDate().atStartOfDay(),
-                    budget.getEndDate().atTime(23, 59, 59)
+                budget.getUser(),
+                budget.getStartDate().atStartOfDay(),
+                budget.getEndDate().atTime(23, 59, 59)
             );
         }
 
         BigDecimal remaining = budget.getAmount().subtract(spent);
         double percentageSpent = budget.getAmount().compareTo(BigDecimal.ZERO) > 0 ?
-                spent.doubleValue() / budget.getAmount().doubleValue() * 100 : 0.0;
+            spent.doubleValue() / budget.getAmount().doubleValue() * 100 : 0.0;
 
         boolean overBudget = spent.compareTo(budget.getAmount()) > 0;
         long daysRemaining = budget.getDaysRemaining();
@@ -234,7 +232,7 @@ public class BudgetService {
         private final long daysRemaining;
 
         public BudgetProgress(Budget budget, BigDecimal spent, BigDecimal remaining,
-                              double percentageSpent, boolean overBudget, long daysRemaining) {
+                            double percentageSpent, boolean overBudget, long daysRemaining) {
             this.budget = budget;
             this.spent = spent;
             this.remaining = remaining;
@@ -242,6 +240,15 @@ public class BudgetService {
             this.overBudget = overBudget;
             this.daysRemaining = daysRemaining;
         }
+
+        // Getters
+        public Budget getBudget() { return budget; }
+        public BigDecimal getSpent() { return spent; }
+        public BigDecimal getRemaining() { return remaining; }
+        public double getPercentageSpent() { return percentageSpent; }
+        public boolean isOverBudget() { return overBudget; }
+        public long getDaysRemaining() { return daysRemaining; }
+        public boolean isActive() { return budget.isActive(); }
         public String getStatus() {
             if (!budget.isActive()) return "Expired";
             if (overBudget) return "Over Budget";
