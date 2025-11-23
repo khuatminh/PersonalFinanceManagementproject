@@ -1,32 +1,258 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/main}">
-<head>
-    <title>Contribute to Goal</title>
-</head>
-<body>
-<div layout:fragment="content">
-    <h1 th:text="'Contribute to ' + ${goal.name}">Contribute to Goal</h1>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-    <div class="card mb-3">
-        <div class="card-body">
-             <p><strong>Current Progress:</strong> 
-                <span th:text="${#numbers.formatCurrency(goal.currentAmount)}"></span> / 
-                <span th:text="${#numbers.formatCurrency(goal.targetAmount)}"></span>
-             </p>
-             <div class="progress">
-                <div class="progress-bar" role="progressbar" th:style="'width: ' + ${goal.progressPercentage} + '%;'" aria-valuemin="0" aria-valuemax="100"></div>
+<head th:replace="~{fragments/layout :: head}">
+    <title>Đóng góp cho mục tiêu - Quản lý tài chính cá nhân</title>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navigation -->
+    <div th:replace="~{fragments/layout :: navbar}"></div>
+
+    <!-- Flash Messages -->
+    <div th:replace="~{fragments/layout :: flash-messages}"></div>
+
+    <!-- Main Content -->
+    <main class="container mb-4 flex-grow-1">
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">
+                <i class="bi bi-plus-circle"></i> Đóng góp cho mục tiêu
+                <small class="text-muted" th:text="${goal.name}">Tên mục tiêu</small>
+            </h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <a th:href="@{/goals}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Quay lại danh sách mục tiêu
+                </a>
             </div>
         </div>
-    </div>
 
-    <form th:action="@{/goals/contribute/{id}(id=${goal.id})}" method="post">
-        <div class="form-group">
-            <label for="amount">Contribution Amount</label>
-            <input type="number" id="amount" name="amount" class="form-control" required step="0.01" min="0.01">
+        <!-- Goal Progress Overview -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Mục tiêu</h5>
+                        <h3 th:text="${#numbers.formatInteger(goal.targetAmount, 3, 'COMMA')} + ' VND'">1,000,000 VND</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Tiến độ hiện tại</h5>
+                        <h3 th:text="${#numbers.formatInteger(goal.currentAmount, 3, 'COMMA')} + ' VND'">300,000 VND</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Tiến độ</h5>
+                        <h3 th:text="${goal.progressPercentage} + '%'">30%</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-white">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Còn lại</h5>
+                        <h3 th:text="${#numbers.formatInteger(goal.getRemainingAmount(), 3, 'COMMA')} + ' VND'">700,000 VND</h3>
+                    </div>
+                </div>
+            </div>
         </div>
-        <button type="submit" class="btn btn-primary">Contribute</button>
-        <a href="/goals" class="btn btn-secondary">Cancel</a>
-    </form>
-</div>
+
+        <!-- Contribute Form -->
+        <div class="row">
+            <div class="col-lg-6 mx-auto">
+                <div class="card shadow">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-plus-circle"></i> Thêm đóng góp
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/goals/contribute/{id}(id=${goal.id})}" method="post">
+                            <div class="mb-4">
+                                <label for="amount" class="form-label">Số tiền đóng góp (VND) *</label>
+                                <div class="input-group input-group-lg">
+                                    <input type="number" class="form-control" id="amount" name="amount"
+                                           step="1000" min="1000" th:max="${goal.getRemainingAmount()}"
+                                           placeholder="50000" required>
+                                    <span class="input-group-text">VND</span>
+                                </div>
+                                <small class="form-text text-muted">
+                                    Đóng góp tối đa: <span th:text="${#numbers.formatInteger(goal.getRemainingAmount(), 3, 'COMMA')} + ' VND'">700,000 VND</span>
+                                </small>
+                            </div>
+
+                            <!-- Quick Amount Buttons -->
+                            <div class="mb-4">
+                                <label class="form-label">Số tiền nhanh:</label>
+                                <div class="btn-group w-100" role="group">
+                                    <button type="button" class="btn btn-outline-secondary quick-amount" data-amount="10000">10,000 VND</button>
+                                    <button type="button" class="btn btn-outline-secondary quick-amount" data-amount="25000">25,000 VND</button>
+                                    <button type="button" class="btn btn-outline-secondary quick-amount" data-amount="50000">50,000 VND</button>
+                                    <button type="button" class="btn btn-outline-secondary quick-amount" data-amount="100000">100,000 VND</button>
+                                    <button type="button" class="btn btn-outline-success quick-amount" data-amount-goal="remaining">
+                                        Hoàn thành mục tiêu
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Progress Preview -->
+                            <div class="alert alert-info" role="alert" id="progressPreview" style="display: none;">
+                                <h6 class="alert-heading">
+                                    <i class="bi bi-graph-up"></i> Xem trước tiến độ mới
+                                </h6>
+                                <div class="progress mb-2" style="height: 25px;">
+                                    <div class="progress-bar bg-success" role="progressbar" id="previewProgress" style="width: 30%">
+                                        30%
+                                    </div>
+                                </div>
+                                <div class="row text-center">
+                                    <div class="col-4">
+                                        <strong>Tổng mới:</strong><br>
+                                        <span id="newTotal">300,000</span> VND
+                                    </div>
+                                    <div class="col-4">
+                                        <strong>Sẽ còn lại:</strong><br>
+                                        <span id="willRemain">700,000</span> VND
+                                    </div>
+                                    <div class="col-4">
+                                        <strong>Tiến độ mới:</strong><br>
+                                        <span id="newProgress">30%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Goal Complete Alert -->
+                            <div class="alert alert-success" role="alert" id="goalCompleteAlert" style="display: none;">
+                                <h6 class="alert-heading">
+                                    <i class="bi bi-trophy"></i> Chúc mừng! Mục tiêu sẽ được hoàn thành!
+                                </h6>
+                                <p class="mb-0">Đóng góp này sẽ hoàn thành mục tiêu của bạn. Hãy tiếp tục phát huy!</p>
+                            </div>
+
+                            <!-- Form Actions -->
+                            <div class="d-flex justify-content-between">
+                                <a th:href="@{/goals/view/{id}(id=${goal.id})}" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> Hủy
+                                </a>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="bi bi-check-circle"></i> Thêm đóng góp
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Goal Details -->
+                <div class="card mt-4">
+                    <div class="card-header bg-info text-white">
+                        <h6 class="mb-0">
+                            <i class="bi bi-info-circle"></i> Chi tiết mục tiêu
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-borderless mb-0">
+                            <tr>
+                                <td><strong>Tên mục tiêu:</strong></td>
+                                <td th:text="${goal.name}">Tên mục tiêu</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ngày mục tiêu:</strong></td>
+                                <td th:text="${#temporals.format(goal.targetDate, 'dd/MM/yyyy')}">31/12/2024</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Số ngày còn lại:</strong></td>
+                                <td th:text="${goal.getDaysRemaining()} + ' ngày'">30 ngày</td>
+                            </tr>
+                            <tr th:if="${goal.description}">
+                                <td><strong>Mô tả:</strong></td>
+                                <td th:text="${goal.description}">Mô tả mục tiêu</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <!-- Scripts -->
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+
+    <script>
+        const goalTarget = [[${goal.targetAmount}]];
+        const goalCurrent = [[${goal.currentAmount}]];
+        const goalRemaining = [[${goal.getRemainingAmount()}]];
+
+        function updateProgressPreview(amount) {
+            const newTotal = goalCurrent + amount;
+            const newProgress = (newTotal / goalTarget) * 100;
+            const willRemain = Math.max(0, goalTarget - newTotal);
+
+            document.getElementById('newTotal').textContent = new Intl.NumberFormat('vi-VN').format(newTotal);
+            document.getElementById('willRemain').textContent = new Intl.NumberFormat('vi-VN').format(willRemain);
+            document.getElementById('newProgress').textContent = newProgress.toFixed(1) + '%';
+            document.getElementById('previewProgress').style.width = newProgress + '%';
+            document.getElementById('previewProgress').textContent = newProgress.toFixed(1) + '%';
+
+            if (willRemain === 0) {
+                document.getElementById('goalCompleteAlert').style.display = 'block';
+                document.getElementById('previewProgress').className = 'progress-bar bg-warning';
+            } else {
+                document.getElementById('goalCompleteAlert').style.display = 'none';
+                document.getElementById('previewProgress').className = 'progress-bar bg-success';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const amountInput = document.getElementById('amount');
+            const quickAmountButtons = document.querySelectorAll('.quick-amount');
+
+            // Quick amount buttons
+            quickAmountButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const amountType = this.dataset.amount;
+                    if (this.dataset.amountGoal === 'remaining') {
+                        amountInput.value = goalRemaining;
+                    } else {
+                        amountInput.value = amountType;
+                    }
+                    updateProgressPreview(parseFloat(amountInput.value) || 0);
+                });
+            });
+
+            // Amount input change
+            amountInput.addEventListener('input', function() {
+                const amount = parseFloat(this.value) || 0;
+                if (amount > 0 && amount <= goalRemaining) {
+                    updateProgressPreview(amount);
+                    document.getElementById('progressPreview').style.display = 'block';
+                } else {
+                    document.getElementById('progressPreview').style.display = 'none';
+                }
+            });
+
+            // Form validation
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(e) {
+                const amount = parseFloat(amountInput.value) || 0;
+                if (amount <= 0) {
+                    e.preventDefault();
+                    alert('Vui lòng nhập số tiền đóng góp hợp lệ.');
+                } else if (amount > goalRemaining) {
+                    e.preventDefault();
+                    alert('Số tiền đóng góp không thể vượt quá số tiền còn lại cần thiết để hoàn thành mục tiêu.');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head}">
+    <title>Quản lý Tài chính Cá nhân</title>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navigation -->
+    <div th:replace="~{fragments/layout :: navbar}"></div>
+
+    <!-- Flash Messages -->
+    <div th:replace="~{fragments/layout :: flash-messages}"></div>
+
+    <!-- Main Content -->
+    <main th:fragment="content" class="container mb-4 flex-grow-1">
+        <!-- Content will be inserted here by specific templates -->
+    </main>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <!-- Scripts -->
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

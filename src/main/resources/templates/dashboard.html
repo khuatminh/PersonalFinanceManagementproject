@@ -1,12 +1,287 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/main}">
-<head>
-    <title>Dashboard</title>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head}">
+    <title>Bảng điều khiển - Quản lý Tài chính Cá nhân</title>
 </head>
-<body>
-<div layout:fragment="content">
-    <h1>Dashboard</h1>
-    <p>Welcome to your Personal Finance Manager dashboard. This page is under construction.</p>
-</div>
+
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navigation -->
+    <div th:replace="~{fragments/layout :: navbar}"></div>
+
+    <!-- Flash Messages -->
+    <div th:replace="~{fragments/layout :: flash-messages}"></div>
+
+    <!-- Main Content -->
+    <main class="container mb-4 flex-grow-1">
+    <!-- Page Header -->
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">
+                <i class="bi bi-speedometer2"></i> Bảng điều khiển
+                <small class="text-muted">Chào mừng trở lại, <span th:text="${user.username}">User</span>!</small>
+            </h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <div class="btn-group me-2">
+                    <a th:href="@{/transactions/add}" class="btn btn-success">
+                        <i class="bi bi-plus-circle"></i> Thêm giao dịch
+                    </a>
+                    <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="bi bi-calendar3"></i> Tháng này
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Tuần này</a></li>
+                        <li><a class="dropdown-item" href="#">Tháng này</a></li>
+                        <li><a class="dropdown-item" href="#">Năm này</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Tùy chọn thời gian</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Financial Overview Cards -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Số dư
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"
+                                     th:text="${#numbers.formatDecimal(stats.balance, 0, 'COMMA', 0, 'POINT')} + ' VND'">
+                                    0 VND
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-cash-stack text-primary" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    Tổng thu nhập
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"
+                                     th:text="${#numbers.formatDecimal(stats.totalIncome, 0, 'COMMA', 0, 'POINT')} + ' VND'">
+                                    0 VND
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-graph-up-arrow text-success" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-danger shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                    Tổng chi tiêu
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"
+                                     th:text="${#numbers.formatDecimal(stats.totalExpenses, 0, 'COMMA', 0, 'POINT')} + ' VND'">
+                                    0 VND
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-graph-down-arrow text-danger" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-info shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                    Giao dịch
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"
+                                     th:text="${stats.totalCount}">
+                                    0
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-arrow-left-right text-info" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts and Recent Activity -->
+        <div class="row">
+            <!-- Recent Transactions -->
+            <div class="col-lg-8 mb-4">
+                <div class="card shadow">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="bi bi-clock-history"></i> Giao dịch gần đây
+                        </h6>
+                        <a th:href="@{/transactions}" class="btn btn-sm btn-outline-primary">Xem tất cả</a>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${recentTransactions.empty}" class="text-center py-4">
+                            <i class="bi bi-inbox text-muted" style="font-size: 3rem;"></i>
+                            <p class="text-muted mt-2">Chưa có giao dịch nào. Bắt đầu bằng cách thêm giao dịch đầu tiên của bạn!</p>
+                            <a th:href="@{/transactions/add}" class="btn btn-primary">
+                                <i class="bi bi-plus-circle"></i> Thêm giao dịch
+                            </a>
+                        </div>
+                        <div th:if="${!recentTransactions.empty}" class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Mô tả</th>
+                                        <th>Danh mục</th>
+                                        <th>Số tiền</th>
+                                        <th>Ngày</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="transaction : ${recentTransactions}">
+                                        <td th:text="${transaction.description}">Groceries</td>
+                                        <td>
+                                            <span class="badge"
+                                                  th:style="'background-color: ' + ${transaction.category.color}"
+                                                  th:text="${transaction.category.name}">
+                                                Food
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span th:class="${transaction.type.name() == 'INCOME' ? 'text-success' : 'text-danger'}"
+                                                  th:text="${#numbers.formatDecimal(transaction.amount, 0, 'COMMA', 0, 'POINT')} + ' VND'">
+                                                50.000 VND
+                                            </span>
+                                        </td>
+                                        <td th:text="${#temporals.format(transaction.transactionDate, 'MMM dd, yyyy')}">
+                                            Jan 15, 2024
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="col-lg-4 mb-4">
+                <!-- Active Goals -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-warning">
+                            <i class="bi bi-trophy"></i> Mục tiêu đang hoạt động
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${activeGoals.empty}" class="text-center py-3">
+                            <i class="bi bi-flag text-muted" style="font-size: 2rem;"></i>
+                            <p class="text-muted small mb-0">Không có mục tiêu nào đang hoạt động</p>
+                        </div>
+                        <div th:if="${!activeGoals.empty}">
+                            <div th:each="goal : ${activeGoals}" class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <small class="fw-bold" th:text="${goal.name}">Vacation Fund</small>
+                                    <small th:text="${#numbers.formatPercent(goal.progressPercentage / 100, 1, 1)}">25%</small>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar" role="progressbar"
+                                         th:style="'width: ' + ${goal.progressPercentage} + '%'"
+                                         th:classappend="${goal.progressPercentage >= 80 ? 'bg-warning' : 'bg-success'}">
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between mt-1">
+                                    <small class="text-muted">
+                                        <span th:text="${#numbers.formatDecimal(goal.currentAmount, 0, 'COMMA', 0, 'POINT')}">500</span> VND
+                                    </small>
+                                    <small class="text-muted">
+                                        <span th:text="${#numbers.formatDecimal(goal.targetAmount, 0, 'COMMA', 0, 'POINT')}">2000</span> VND
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt-3">
+                            <a th:href="@{/goals}" class="btn btn-sm btn-outline-warning">Quản lý mục tiêu</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Budget Status -->
+                <div class="card shadow">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-info">
+                            <i class="bi bi-piggy-bank"></i> Tình trạng ngân sách
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${activeBudgets.empty}" class="text-center py-3">
+                            <i class="bi bi-piggy-bank text-muted" style="font-size: 2rem;"></i>
+                            <p class="text-muted small mb-0">Không có ngân sách nào đang hoạt động</p>
+                        </div>
+                        <div th:if="${!activeBudgets.empty}">
+                            <div th:each="budget : ${activeBudgets}" class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <small class="fw-bold" th:text="${budget.budget.name}">Food Budget</small>
+                                    <small th:class="${budget.overBudget ? 'text-danger' : 'text-success'}"
+                                          th:text="${#numbers.formatPercent(budget.percentageSpent / 100, 1, 1)}">
+                                        75%
+                                    </small>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar" role="progressbar"
+                                         th:style="'width: ' + ${#numbers.formatDecimal(budget.percentageSpent, 1, 1)} + '%'"
+                                         th:classappend="${budget.overBudget ? 'bg-danger' : (budget.percentageSpent >= 80 ? 'bg-warning' : 'bg-info')}">
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between mt-1">
+                                    <small class="text-muted">
+                                        <span th:text="${#numbers.formatDecimal(budget.spent, 0, 'COMMA', 0, 'POINT')}">300</span> VND đã chi
+                                    </small>
+                                    <small class="text-muted">
+                                        <span th:text="${#numbers.formatDecimal(budget.budget.amount, 0, 'COMMA', 0, 'POINT')}">500</span> VND tổng
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt-3">
+                            <a th:href="@{/budgets}" class="btn btn-sm btn-outline-info">Quản lý ngân sách</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <!-- AI Chat Button -->
+    <div th:replace="~{fragments/layout :: chat-button}"></div>
+
+    <!-- AI Chat Modal -->
+    <div th:replace="~{fragments/layout :: chat-modal}"></div>
+
+    <!-- Scripts -->
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+
 </body>
 </html>

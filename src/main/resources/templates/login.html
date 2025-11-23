@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{fragments/layout :: head}">
+    <title>Đăng nhập - Quản lý Tài chính Cá nhân</title>
+</head>
+
+<body class="bg-light">
+    <div class="container min-vh-100 d-flex align-items-center justify-content-center">
+        <div class="row w-100">
+            <div class="col-md-6 col-lg-4 mx-auto">
+                <div class="card shadow-lg">
+                    <div class="card-body p-4">
+                        <!-- Logo and Title -->
+                        <div class="text-center mb-4">
+                            <i class="bi bi-wallet2 text-primary" style="font-size: 3rem;"></i>
+                            <h3 class="mt-2">Quản lý Tài chính Cá nhân</h3>
+                            <p class="text-muted">Đăng nhập để quản lý tài chính của bạn</p>
+                        </div>
+
+                        <!-- Flash Messages -->
+                        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            <span th:text="${error}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+
+                        <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="bi bi-check-circle"></i>
+                            <span th:text="${message}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+
+                        <!-- Login Form -->
+                        <form th:action="@{/perform_login}" method="post" novalidate>
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Tên đăng nhập</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-person"></i>
+                                    </span>
+                                    <input type="text" class="form-control" id="username" name="username"
+                                           placeholder="Nhập tên đăng nhập của bạn" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Mật khẩu</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-lock"></i>
+                                    </span>
+                                    <input type="password" class="form-control" id="password" name="password"
+                                           placeholder="Nhập mật khẩu của bạn" required>
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="rememberMe" name="remember-me">
+                                <label class="form-check-label" for="rememberMe">
+                                    Ghi nhớ tôi
+                                </label>
+                            </div>
+
+                            <div class="d-grid mb-3">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-box-arrow-in-right"></i> Đăng nhập
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Additional Links -->
+                        <div class="text-center">
+                            <p class="mb-2">
+                                <a href="#" class="text-decoration-none">Quên mật khẩu?</a>
+                            </p>
+                            <p class="mb-0">
+                                Chưa có tài khoản?
+                                <a th:href="@{/user/register}" class="text-decoration-none">
+                                    Đăng ký tại đây
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Demo Account Info -->
+                <div class="card mt-3 border-info">
+                    <div class="card-body text-center">
+                        <h6 class="card-title text-info">
+                            <i class="bi bi-info-circle"></i> Tài khoản Demo
+                        </h6>
+                        <p class="card-text small mb-0">
+                            Tên đăng nhập: <strong>admin</strong> | Mật khẩu: <strong>admin123</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle password visibility
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const icon = this.querySelector('i');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+        });
+
+        // Auto-focus on username field
+        document.getElementById('username').focus();
+    </script>
+</body>
+</html>

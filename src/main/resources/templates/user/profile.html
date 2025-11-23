@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head}">
+    <title>User Profile - Personal Finance Manager</title>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navigation -->
+    <div th:replace="~{fragments/layout :: navbar}"></div>
+
+    <!-- Flash Messages -->
+    <div th:replace="~{fragments/layout :: flash-messages}"></div>
+
+    <!-- Main Content -->
+    <main class="container mb-4 flex-grow-1">
+        <!-- Page Header -->
+        <div
+            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">
+                <i class="bi bi-person-circle"></i> User Profile
+            </h1>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title mb-0">
+                            <i class="bi bi-person-badge"></i> Profile Information
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-sm-3"><strong>Username:</strong></div>
+                            <div class="col-sm-9">
+                                <span class="badge bg-primary" th:text="${user.username}"></span>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-3"><strong>Email:</strong></div>
+                            <div class="col-sm-9" th:text="${user.email}"></div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-3"><strong>Role:</strong></div>
+                            <div class="col-sm-9">
+                                <span th:if="${user.userRole.name == 'ADMIN'}" class="badge bg-danger">
+                                    <i class="bi bi-shield-check"></i> Administrator
+                                </span>
+                                <span th:if="${user.userRole.name == 'USER'}" class="badge bg-info">
+                                    <i class="bi bi-person"></i> User
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-3"><strong>Member Since:</strong></div>
+                            <div class="col-sm-9"
+                                th:text="${user.createdAt != null ? #temporals.format(user.createdAt, 'MMMM dd, yyyy') : 'N/A'}">
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a th:href="@{/user/edit}" class="btn btn-primary me-md-2">
+                                <i class="bi bi-pencil"></i> Edit Profile
+                            </a>
+                            <a th:href="@{/user/change-password}" class="btn btn-outline-secondary">
+                                <i class="bi bi-key"></i> Change Password
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <div th:replace="~{fragments/layout :: footer}"></div>
+
+    <!-- Scripts -->
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+
+</html>

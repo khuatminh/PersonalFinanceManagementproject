@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head}">
+    <title>Xóa Người Dùng - Quản Lý Tài Chính Cá Nhân</title>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navigation -->
+    <div th:replace="~{fragments/layout :: navbar}"></div>
+
+    <!-- Flash Messages -->
+    <div th:replace="~{fragments/layout :: flash-messages}"></div>
+
+    <!-- Main Content -->
+    <main class="container mb-4 flex-grow-1">
+        <!-- Page Header -->
+        <div
+            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">
+                <i class="bi bi-trash text-danger"></i> Xóa Người Dùng
+            </h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <a th:href="@{/admin/users}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Quay lại Danh sách
+                </a>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="alert alert-warning" role="alert">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <strong>Cảnh báo!</strong> Hành động này không thể hoàn tác. Tất cả dữ liệu người dùng sẽ bị xóa
+                    vĩnh viễn.
+                </div>
+
+                <div class="card border-danger">
+                    <div class="card-header bg-danger text-white">
+                        <h3 class="card-title mb-0">
+                            <i class="bi bi-person-x"></i> Xác Nhận Xóa Người Dùng
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-3">Bạn có chắc chắn muốn xóa người dùng sau đây không?</p>
+
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-3"><strong>ID:</strong></div>
+                                    <div class="col-sm-9" th:text="${user.id}"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3"><strong>Tên đăng nhập:</strong></div>
+                                    <div class="col-sm-9" th:text="${user.username}"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3"><strong>Email:</strong></div>
+                                    <div class="col-sm-9" th:text="${user.email}"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3"><strong>Vai trò:</strong></div>
+                                    <div class="col-sm-9">
+                                        <span th:if="${user.userRole.name == 'ADMIN'}" class="badge bg-danger">
+                                            <i class="bi bi-shield-check"></i> Quản trị viên
+                                        </span>
+                                        <span th:if="${user.userRole.name == 'USER'}" class="badge bg-primary">
+                                            <i class="bi bi-person"></i> Người dùng
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3"><strong>Ngày tạo:</strong></div>
+                                    <div class="col-sm-9"
+                                        th:text="${#temporals.format(user.createdAt, 'yyyy-MM-dd HH:mm')}"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form th:action="@{/admin/users/delete/{id}(id=${user.id})}" method="post" class="mt-4">
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a th:href="@{/admin/users}" class="btn btn-outline-secondary me-md-2">
+                                    <i class="bi bi-x-circle"></i> Hủy bỏ
+                                </a>
+                                <button type="submit" class="btn btn-danger"
+                                    onclick="return confirm('Bạn có hoàn toàn chắc chắn không? Hành động này không thể hoàn tác!')">
+                                    <i class="bi bi-trash"></i> Xóa Người Dùng Vĩnh Viễn
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <div th:replace="~{fragments/layout :: footer}"></div>
+
+    <!-- Scripts -->
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+
+</html>

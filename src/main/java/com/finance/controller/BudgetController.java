@@ -7,12 +7,15 @@ import com.finance.form.BudgetForm;
 import com.finance.service.BudgetService;
 import com.finance.service.UserService;
 import com.finance.service.CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import lombok.RequiredArgsConstructor;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 
 import jakarta.validation.Valid;
 import java.security.Principal;
@@ -21,16 +24,15 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/budgets")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BudgetController {
 
-    @Autowired
-    private BudgetService budgetService;
+    BudgetService budgetService;
 
-    @Autowired
-    private UserService userService;
+    UserService userService;
 
-    @Autowired
-    private CategoryService categoryService;
+    CategoryService categoryService;
 
     @GetMapping
     public String listBudgets(Principal principal, Model model) {
@@ -66,7 +68,7 @@ public class BudgetController {
 
     @PostMapping("/add")
     public String addBudget(@Valid BudgetForm budgetForm, BindingResult result,
-                            Principal principal, Model model, RedirectAttributes redirectAttributes) {
+            Principal principal, Model model, RedirectAttributes redirectAttributes) {
         User user = userService.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -96,8 +98,7 @@ public class BudgetController {
                     budgetForm.getEndDate(),
                     user,
                     category,
-                    budgetForm.getDescription()
-            );
+                    budgetForm.getDescription());
 
             redirectAttributes.addFlashAttribute("success", "Budget created successfully!");
             return "redirect:/budgets";
@@ -152,7 +153,7 @@ public class BudgetController {
 
     @PostMapping("/edit/{id}")
     public String updateBudget(@PathVariable Long id, @Valid BudgetForm budgetForm, BindingResult result,
-                               Principal principal, Model model, RedirectAttributes redirectAttributes) {
+            Principal principal, Model model, RedirectAttributes redirectAttributes) {
         User user = userService.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 

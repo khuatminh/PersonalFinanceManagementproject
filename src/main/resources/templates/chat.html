@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head}">
+    <title>Trợ lý AI - Quản lý Tài chính Cá nhân</title>
+    <style>
+        .chat-container {
+            height: 70vh;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+
+        .chat-input-container {
+            padding: 20px;
+            background-color: white;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message.bot {
+            justify-content: flex-start;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            word-wrap: break-word;
+        }
+
+        .message.user .message-content {
+            background-color: #007bff;
+            color: white;
+            margin-left: auto;
+        }
+
+        .message.bot .message-content {
+            background-color: #e9ecef;
+            color: #333;
+            margin-right: auto;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 0 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .message.user .message-avatar {
+            background-color: #007bff;
+            color: white;
+            order: 1;
+        }
+
+        .message.bot .message-avatar {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .typing-indicator .message-content {
+            background-color: #e9ecef;
+            padding: 10px 15px;
+            border-radius: 18px;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #6c757d;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .transaction-extracted {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        .chat-welcome {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .chat-welcome i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navigation -->
+    <div th:replace="~{fragments/layout :: navbar}"></div>
+
+    <!-- Flash Messages -->
+    <div th:replace="~{fragments/layout :: flash-messages}"></div>
+
+    <!-- Main Content -->
+    <main class="container mb-4 flex-grow-1">
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">
+                <i class="bi bi-chat-dots"></i> Trợ lý AI
+                <small class="text-muted">Hỗ trợ ghi chép giao dịch thông minh</small>
+            </h1>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <!-- Chat Container -->
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h6 class="mb-0">
+                            <i class="bi bi-robot"></i> Trợ lý tài chính AI
+                        </h6>
+                    </div>
+                    <div class="chat-container">
+                        <!-- Chat Messages Area -->
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="chat-welcome">
+                                <i class="bi bi-chat-dots"></i>
+                                <h5>Xin chào! Tôi là trợ lý tài chính AI</h5>
+                                <p class="mb-3">Tôi có thể giúp bạn ghi chép giao dịch một cách nhanh chóng.</p>
+                                <div class="text-start">
+                                    <p><strong>Ví dụ:</strong></p>
+                                    <ul class="list-unstyled">
+                                        <li>• "Hôm nay tôi mua cà phê 25.000 đồng"</li>
+                                        <li>• "Nhận lương tháng này 15.000.000 VNĐ"</li>
+                                        <li>• "Tiền điện 250.000, tiền nước 120.000"</li>
+                                        <li>• "Ăn trưa với bạn bè 150.000"</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Typing Indicator -->
+                        <div class="typing-indicator" id="typingIndicator">
+                            <div class="message-avatar">
+                                <i class="bi bi-robot"></i>
+                            </div>
+                            <div class="message-content">
+                                <div class="typing-dots">
+                                    <div class="typing-dot"></div>
+                                    <div class="typing-dot"></div>
+                                    <div class="typing-dot"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chat Input -->
+                        <div class="chat-input-container">
+                            <form id="chatForm">
+                                <div class="input-group">
+                                    <input type="text"
+                                           class="form-control"
+                                           id="messageInput"
+                                           placeholder="Nhập mô tả giao dịch..."
+                                           autocomplete="off"
+                                           required>
+                                    <button class="btn btn-primary" type="submit" id="sendButton">
+                                        <i class="bi bi-send"></i> Gửi
+                                    </button>
+                                </div>
+                            </form>
+                            <small class="text-muted mt-2 d-block">
+                                <i class="bi bi-info-circle"></i>
+                                Mô tả chi tiết giao dịch sẽ giúp AI nhận dạng chính xác hơn
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="card shadow mt-3">
+                    <div class="card-body">
+                        <h6 class="card-title mb-3">
+                            <i class="bi bi-lightning"></i> Giao dịch nhanh
+                        </h6>
+                        <div class="row">
+                            <div class="col-md-3 col-6 mb-2">
+                                <button class="btn btn-outline-danger btn-sm w-100 quick-transaction"
+                                        data-message="Ăn sáng 35.000">
+                                    <i class="bi bi-cup-hot"></i> Ăn sáng
+                                </button>
+                            </div>
+                            <div class="col-md-3 col-6 mb-2">
+                                <button class="btn btn-outline-danger btn-sm w-100 quick-transaction"
+                                        data-message="Ăn trưa 60.000">
+                                    <i class="bi bi-cup-straw"></i> Ăn trưa
+                                </button>
+                            </div>
+                            <div class="col-md-3 col-6 mb-2">
+                                <button class="btn btn-outline-danger btn-sm w-100 quick-transaction"
+                                        data-message="Đi xe bus 7.000">
+                                    <i class="bi bi-bus-front"></i> Xe bus
+                                </button>
+                            </div>
+                            <div class="col-md-3 col-6 mb-2">
+                                <button class="btn btn-outline-danger btn-sm w-100 quick-transaction"
+                                        data-message="Cà phê 25.000">
+                                    <i class="bi bi-cup"></i> Cà phê
+                                </button>
+                            </div>
+                            <div class="col-md-3 col-6 mb-2">
+                                <button class="btn btn-outline-success btn-sm w-100 quick-transaction"
+                                        data-message="Nhận lương 15.000.000">
+                                    <i class="bi bi-cash"></i> Lương
+                                </button>
+                            </div>
+                            <div class="col-md-3 col-6 mb-2">
+                                <button class="btn btn-outline-success btn-sm w-100 quick-transaction"
+                                        data-message="Thưởng 2.000.000">
+                                    <i class="bi bi-gift"></i> Thưởng
+                                </button>
+                            </div>
+                            <div class="col-md-3 col-6 mb-2">
+                                <button class="btn btn-outline-danger btn-sm w-100 quick-transaction"
+                                        data-message="Tiền điện 350.000">
+                                    <i class="bi bi-lightbulb"></i> Tiền điện
+                                </button>
+                            </div>
+                            <div class="col-md-3 col-6 mb-2">
+                                <button class="btn btn-outline-danger btn-sm w-100 quick-transaction"
+                                        data-message="Mua sắm 500.000">
+                                    <i class="bi bi-bag"></i> Mua sắm
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <!-- Scripts -->
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+
+    <script>
+        let conversationHistory = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatForm = document.getElementById('chatForm');
+            const messageInput = document.getElementById('messageInput');
+            const sendButton = document.getElementById('sendButton');
+            const chatMessages = document.getElementById('chatMessages');
+            const typingIndicator = document.getElementById('typingIndicator');
+
+            // Hide welcome message when first message is sent
+            function hideWelcomeMessage() {
+                const welcomeMessage = chatMessages.querySelector('.chat-welcome');
+                if (welcomeMessage) {
+                    welcomeMessage.style.display = 'none';
+                }
+            }
+
+            // Add message to chat
+            function addMessage(content, isUser = false, transactionInfo = null) {
+                hideWelcomeMessage();
+
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+
+                const avatarDiv = document.createElement('div');
+                avatarDiv.className = 'message-avatar';
+                avatarDiv.innerHTML = isUser ? '<i class="bi bi-person"></i>' : '<i class="bi bi-robot"></i>';
+
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'message-content';
+                contentDiv.innerHTML = content.replace(/\n/g, '<br>');
+
+                messageDiv.appendChild(avatarDiv);
+                messageDiv.appendChild(contentDiv);
+
+                // Add transaction info if available
+                if (transactionInfo) {
+                    const transactionDiv = document.createElement('div');
+                    transactionDiv.className = 'transaction-extracted';
+                    transactionDiv.innerHTML = `
+                        <strong><i class="bi bi-check-circle"></i> Đã ghi nhận giao dịch:</strong><br>
+                        ${transactionInfo.type === 'INCOME' ? 'Thu nhập' : 'Chi tiêu'}:
+                        ${transactionInfo.amount} VNĐ - ${transactionInfo.category}
+                        ${transactionInfo.description ? '<br>Mô tả: ' + transactionInfo.description : ''}
+                    `;
+                    contentDiv.appendChild(transactionDiv);
+                }
+
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                // Add to conversation history
+                conversationHistory.push({
+                    role: isUser ? 'user' : 'assistant',
+                    content: content
+                });
+            }
+
+            // Show/hide typing indicator
+            function showTypingIndicator() {
+                typingIndicator.style.display = 'flex';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function hideTypingIndicator() {
+                typingIndicator.style.display = 'none';
+            }
+
+            // Send message to API
+            async function sendMessage(message) {
+                try {
+                    const response = await fetch('/api/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            message: message
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+
+                    // Prepare transaction info if available
+                    let transactionInfo = null;
+                    if (data.transactionId) {
+                        transactionInfo = {
+                            type: data.type,
+                            amount: data.amount,
+                            category: data.category,
+                            description: message
+                        };
+                    }
+
+                    addMessage(data.message, false, transactionInfo);
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    addMessage('❌ Xin lỗi, đã xảy ra lỗi khi xử lý tin nhắn. Vui lòng thử lại sau.', false);
+                }
+            }
+
+            // Handle form submission
+            chatForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const message = messageInput.value.trim();
+                if (!message) return;
+
+                // Add user message
+                addMessage(message, true);
+
+                // Clear input and disable send button
+                messageInput.value = '';
+                sendButton.disabled = true;
+                sendButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Đang gửi...';
+
+                // Show typing indicator
+                showTypingIndicator();
+
+                // Send message to API
+                await sendMessage(message);
+
+                // Hide typing indicator and re-enable send button
+                hideTypingIndicator();
+                sendButton.disabled = false;
+                sendButton.innerHTML = '<i class="bi bi-send"></i> Gửi';
+
+                // Focus back to input
+                messageInput.focus();
+            });
+
+            // Quick transaction buttons
+            document.querySelectorAll('.quick-transaction').forEach(button => {
+                button.addEventListener('click', function() {
+                    const message = this.getAttribute('data-message');
+                    messageInput.value = message;
+                    messageInput.focus();
+                    chatForm.dispatchEvent(new Event('submit'));
+                });
+            });
+
+            // Focus on input field
+            messageInput.focus();
+        });
+    </script>
+</body>
+</html>

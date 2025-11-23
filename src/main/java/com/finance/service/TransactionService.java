@@ -22,7 +22,6 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TransactionService {
 
-
     TransactionRepository transactionRepository;
 
     public List<Transaction> findAll() {
@@ -60,12 +59,12 @@ public class TransactionService {
     }
 
     public List<Transaction> findByUserAndTypeAndDateRange(User user, Transaction.TransactionType type,
-                                                           LocalDateTime startDate, LocalDateTime endDate) {
+            LocalDateTime startDate, LocalDateTime endDate) {
         return transactionRepository.findByUserAndTypeAndTransactionDateBetween(user, type, startDate, endDate);
     }
 
     public List<Transaction> findByUserAndCategoryAndDateRange(User user, Category category,
-                                                               LocalDateTime startDate, LocalDateTime endDate) {
+            LocalDateTime startDate, LocalDateTime endDate) {
         return transactionRepository.findByUserAndCategoryAndTransactionDateBetween(user, category, startDate, endDate);
     }
 
@@ -78,7 +77,7 @@ public class TransactionService {
     }
 
     public Transaction createTransaction(String description, BigDecimal amount, Transaction.TransactionType type,
-                                         User user, Category category, LocalDateTime transactionDate, String notes) {
+            User user, Category category, LocalDateTime transactionDate, String notes) {
         Transaction transaction = new Transaction();
         transaction.setDescription(description);
         transaction.setAmount(amount);
@@ -139,7 +138,8 @@ public class TransactionService {
         return total != null ? total : BigDecimal.ZERO;
     }
 
-    public BigDecimal getTotalExpensesByUserAndCategoryAndDateRange(User user, Category category, LocalDateTime startDate, LocalDateTime endDate) {
+    public BigDecimal getTotalExpensesByUserAndCategoryAndDateRange(User user, Category category,
+            LocalDateTime startDate, LocalDateTime endDate) {
         BigDecimal total = transactionRepository.sumAmountByUserAndCategoryAndTypeAndDateRange(
                 user, category, Transaction.TransactionType.EXPENSE, startDate, endDate);
         return total != null ? total : BigDecimal.ZERO;
@@ -149,15 +149,18 @@ public class TransactionService {
         return transactionRepository.countTransactionsByUserAndType(user, type);
     }
 
-    public List<Object[]> getCategoryTransactionSummaryForDateRange(User user, LocalDateTime startDate, LocalDateTime endDate) {
+    public List<Object[]> getCategoryTransactionSummaryForDateRange(User user, LocalDateTime startDate,
+            LocalDateTime endDate) {
         return transactionRepository.getCategoryTransactionSummaryForDateRange(user, startDate, endDate);
     }
 
-    public List<Object[]> getExpenseCategorySummaryForDateRange(User user, LocalDateTime startDate, LocalDateTime endDate) {
+    public List<Object[]> getExpenseCategorySummaryForDateRange(User user, LocalDateTime startDate,
+            LocalDateTime endDate) {
         return transactionRepository.getExpenseCategorySummaryForDateRange(user, startDate, endDate);
     }
 
-    public List<Object[]> getIncomeCategorySummaryForDateRange(User user, LocalDateTime startDate, LocalDateTime endDate) {
+    public List<Object[]> getIncomeCategorySummaryForDateRange(User user, LocalDateTime startDate,
+            LocalDateTime endDate) {
         return transactionRepository.getIncomeCategorySummaryForDateRange(user, startDate, endDate);
     }
 
@@ -181,11 +184,11 @@ public class TransactionService {
                 getTotalExpensesByUser(user),
                 getBalanceByUser(user),
                 getTransactionCountByUserAndType(user, Transaction.TransactionType.INCOME),
-                getTransactionCountByUserAndType(user, Transaction.TransactionType.EXPENSE)
-        );
+                getTransactionCountByUserAndType(user, Transaction.TransactionType.EXPENSE));
     }
 
-    public TransactionStatistics getTransactionStatisticsForDateRange(User user, LocalDateTime startDate, LocalDateTime endDate) {
+    public TransactionStatistics getTransactionStatisticsForDateRange(User user, LocalDateTime startDate,
+            LocalDateTime endDate) {
         BigDecimal income = getTotalIncomeByUserAndDateRange(user, startDate, endDate);
         BigDecimal expenses = getTotalExpensesByUserAndDateRange(user, startDate, endDate);
         long incomeCount = transactionRepository.countTransactionsByUserAndTypeAndDateRange(
@@ -198,8 +201,7 @@ public class TransactionService {
                 expenses,
                 income.subtract(expenses),
                 incomeCount,
-                expenseCount
-        );
+                expenseCount);
     }
 
     @Getter
@@ -209,14 +211,16 @@ public class TransactionService {
         final BigDecimal balance;
         final long incomeCount;
         final long expenseCount;
+        final long totalCount;
 
         public TransactionStatistics(BigDecimal totalIncome, BigDecimal totalExpenses, BigDecimal balance,
-                                     long incomeCount, long expenseCount) {
+                long incomeCount, long expenseCount) {
             this.totalIncome = totalIncome;
             this.totalExpenses = totalExpenses;
             this.balance = balance;
             this.incomeCount = incomeCount;
             this.expenseCount = expenseCount;
+            this.totalCount = incomeCount + expenseCount;
         }
 
     }

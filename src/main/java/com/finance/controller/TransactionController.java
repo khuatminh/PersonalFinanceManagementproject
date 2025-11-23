@@ -7,13 +7,16 @@ import com.finance.form.TransactionForm;
 import com.finance.service.TransactionService;
 import com.finance.service.CategoryService;
 import com.finance.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import lombok.RequiredArgsConstructor;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 
 import jakarta.validation.Valid;
 import java.security.Principal;
@@ -22,16 +25,15 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/transactions")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TransactionController {
 
-    @Autowired
-    private TransactionService transactionService;
+    TransactionService transactionService;
 
-    @Autowired
-    private CategoryService categoryService;
+    CategoryService categoryService;
 
-    @Autowired
-    private UserService userService;
+    UserService userService;
 
     @GetMapping
     public String listTransactions(Principal principal, Model model) {
@@ -66,11 +68,12 @@ public class TransactionController {
 
     @PostMapping("/add")
     public String addTransaction(@Valid @ModelAttribute("transactionForm") TransactionForm form,
-                                 BindingResult bindingResult, Principal principal,
-                                 RedirectAttributes redirectAttributes, Model model) {
+            BindingResult bindingResult, Principal principal,
+            RedirectAttributes redirectAttributes, Model model) {
 
         System.out.println("=== Transaction Form Submission ===");
-        System.out.println("Form data: " + form.getDescription() + ", " + form.getAmount() + ", " + form.getType() + ", " + form.getCategoryId());
+        System.out.println("Form data: " + form.getDescription() + ", " + form.getAmount() + ", " + form.getType()
+                + ", " + form.getCategoryId());
         System.out.println("Has errors: " + bindingResult.hasErrors());
         if (bindingResult.hasErrors()) {
             System.out.println("Validation errors: " + bindingResult.getAllErrors());
@@ -105,8 +108,7 @@ public class TransactionController {
                     user,
                     category,
                     form.getTransactionDate() != null ? form.getTransactionDate() : LocalDateTime.now(),
-                    form.getNotes()
-            );
+                    form.getNotes());
 
             redirectAttributes.addFlashAttribute("successMessage",
                     "Transaction added successfully: " + transaction.getDescription());
@@ -156,9 +158,9 @@ public class TransactionController {
 
     @PostMapping("/edit/{id}")
     public String updateTransaction(@PathVariable Long id,
-                                    @Valid @ModelAttribute("transactionForm") TransactionForm form,
-                                    BindingResult bindingResult, Principal principal,
-                                    RedirectAttributes redirectAttributes) {
+            @Valid @ModelAttribute("transactionForm") TransactionForm form,
+            BindingResult bindingResult, Principal principal,
+            RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
             return "transaction/edit";
@@ -183,8 +185,8 @@ public class TransactionController {
             existingTransaction.setAmount(form.getAmount());
             existingTransaction.setType(form.getType());
             existingTransaction.setCategory(category);
-            existingTransaction.setTransactionDate(form.getTransactionDate() != null ?
-                    form.getTransactionDate() : existingTransaction.getTransactionDate());
+            existingTransaction.setTransactionDate(form.getTransactionDate() != null ? form.getTransactionDate()
+                    : existingTransaction.getTransactionDate());
             existingTransaction.setNotes(form.getNotes());
 
             transactionService.save(existingTransaction);
@@ -201,7 +203,7 @@ public class TransactionController {
 
     @GetMapping("/delete/{id}")
     public String deleteTransaction(@PathVariable Long id, Principal principal,
-                                    RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes) {
         try {
             User user = userService.findByUsername(principal.getName())
                     .orElseThrow(() -> new RuntimeException("User not found"));

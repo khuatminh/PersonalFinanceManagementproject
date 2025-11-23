@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head}">
+    <title>Thêm Ngân sách - Quản lý Tài chính Cá nhân</title>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+<!-- Navigation -->
+<div th:replace="~{fragments/layout :: navbar}"></div>
+
+<!-- Flash Messages -->
+<div th:replace="~{fragments/layout :: flash-messages}"></div>
+
+<!-- Main Content -->
+<main class="container mb-4 flex-grow-1">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">
+            <i class="bi bi-plus-circle"></i> Thêm Ngân sách Mới
+            <small class="text-muted">Đặt giới hạn chi tiêu cho các danh mục</small>
+        </h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <a th:href="@{/budgets}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Quay lại Ngân sách
+            </a>
+        </div>
+    </div>
+
+    <!-- Add Budget Form -->
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-piggy-bank"></i> Tạo Ngân sách Mới
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/budgets/add}" th:object="${budgetForm}" method="post" novalidate>
+
+                        <!-- Budget Name -->
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Tên ngân sách *</label>
+                            <input type="text" class="form-control" id="name" th:field="*{name}"
+                                   placeholder="ví dụ: Ngân sách hàng tháng cho hàng tạp hóa" required>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+                                Tên ngân sách là bắt buộc
+                            </div>
+                            <small class="form-text text-muted">Đặt cho ngân sách của bạn một cái tên mô tả</small>
+                        </div>
+
+                        <!-- Budget Amount -->
+                        <div class="mb-3">
+                            <label for="amount" class="form-label">Số tiền ngân sách (VND) *</label>
+                            <div class="input-group">
+                                <span class="input-group-text">VND</span>
+                                <input type="number" class="form-control" id="amount" th:field="*{amount}"
+                                       step="1" min="1" placeholder="500000" required>
+                            </div>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}">
+                                Vui lòng nhập số tiền ngân sách hợp lệ
+                            </div>
+                            <small class="form-text text-muted">Đặt giới hạn chi tiêu của bạn cho ngân sách này</small>
+                        </div>
+
+                        <!-- Category Selection -->
+                        <div class="mb-3">
+                            <label for="categoryId" class="form-label">Danh mục</label>
+                            <select class="form-select" id="categoryId" th:field="*{categoryId}">
+                                <option value="">Tất cả danh mục (Theo dõi tất cả chi tiêu)</option>
+                                <option th:each="category : ${categories}"
+                                        th:value="${category.id}"
+                                        th:text="${category.name}">
+                                    Danh mục
+                                </option>
+                            </select>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}">
+                                Vui lòng chọn một danh mục
+                            </div>
+                            <small class="form-text text-muted">Chọn một danh mục cụ thể hoặc để là "Tất cả danh mục" để theo dõi tất cả chi tiêu</small>
+                        </div>
+
+                        <!-- Date Range -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="startDate" class="form-label">Ngày bắt đầu *</label>
+                                <input type="date" class="form-control" id="startDate" th:field="*{startDate}" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}">
+                                    Ngày bắt đầu là bắt buộc
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="endDate" class="form-label">Ngày kết thúc *</label>
+                                <input type="date" class="form-control" id="endDate" th:field="*{endDate}" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}">
+                                    Ngày kết thúc là bắt buộc
+                                </div>
+                            </div>
+                        </div>
+                        <small class="form-text text-muted">Xác định khoảng thời gian cho ngân sách này</small>
+
+                        <!-- Description -->
+                        <div class="mb-4">
+                            <label for="description" class="form-label">Mô tả</label>
+                            <textarea class="form-control" id="description" th:field="*{description}" rows="3"
+                                      placeholder="Mô tả tùy chọn cho ngân sách này..."></textarea>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">
+                                Mô tả quá dài
+                            </div>
+                            <small class="form-text text-muted">Thêm bất kỳ ghi chú bổ sung nào về ngân sách này (tùy chọn)</small>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="d-flex justify-content-between">
+                            <a th:href="@{/budgets}" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> Hủy
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Tạo Ngân sách
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Help Information -->
+            <div class="card mt-4">
+                <div class="card-header bg-info text-white">
+                    <h6 class="mb-0">
+                        <i class="bi bi-info-circle"></i> Mẹo về Ngân sách
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        <li>Đặt số tiền ngân sách thực tế dựa trên các kiểu chi tiêu trong quá khứ của bạn</li>
+                        <li>Xem xét các chu kỳ hàng tháng cho các chi phí thông thường như hàng tạp hóa và tiện ích</li>
+                        <li>Chọn các danh mục cụ thể để theo dõi hiệu quả hơn</li>
+                        <li>Đặt ngày phù hợp với lịch trình trả lương hoặc chu kỳ thanh toán của bạn</li>
+                        <li>Xem xét và điều chỉnh ngân sách thường xuyên khi nhu cầu của bạn thay đổi</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+
+<!-- Scripts -->
+<div th:replace="~{fragments/layout :: scripts}"></div>
+
+<script>
+    // Form validation
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+
+    // Set date validation
+    document.addEventListener('DOMContentLoaded', function() {
+        // Ensure end date is after start date
+        document.getElementById('startDate').addEventListener('change', function() {
+            var startDate = this.value;
+            var endDateField = document.getElementById('endDate');
+            if (startDate) {
+                endDateField.min = startDate;
+                // If end date is before start date, clear it
+                if (endDateField.value && endDateField.value < startDate) {
+                    endDateField.value = '';
+                }
+            }
+        });
+
+        // Validate dates on form submission
+        document.querySelector('form').addEventListener('submit', function(e) {
+            var startDate = document.getElementById('startDate').value;
+            var endDate = document.getElementById('endDate').value;
+
+            if (startDate && endDate && startDate > endDate) {
+                e.preventDefault();
+                alert('Ngày kết thúc phải sau ngày bắt đầu');
+                return false;
+            }
+        });
+    });
+</script>
+</body>
+</html>

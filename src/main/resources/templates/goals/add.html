@@ -1,37 +1,223 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/main}">
-<head>
-    <title>Add Goal</title>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head}">
+    <title>Add Goal - Personal Finance Manager</title>
 </head>
-<body>
-<div layout:fragment="content">
-    <h1>Add New Goal</h1>
 
-    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navigation -->
+    <div th:replace="~{fragments/layout :: navbar}"></div>
 
-    <form th:action="@{/goals/add}" th:object="${goalForm}" method="post">
-        <div class="form-group">
-            <label for="name">Goal Name</label>
-            <input type="text" id="name" th:field="*{name}" class="form-control" required>
-            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></div>
+    <!-- Flash Messages -->
+    <div th:replace="~{fragments/layout :: flash-messages}"></div>
+
+    <!-- Main Content -->
+    <main class="container mb-4 flex-grow-1">
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">
+                <i class="bi bi-plus-circle"></i> Add New Goal
+                <small class="text-muted">Set your savings objectives</small>
+            </h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <a th:href="@{/goals}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Goals
+                </a>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="targetAmount">Target Amount</label>
-            <input type="number" id="targetAmount" th:field="*{targetAmount}" class="form-control" required step="0.01">
-            <div th:if="${#fields.hasErrors('targetAmount')}" th:errors="*{targetAmount}" class="text-danger"></div>
+
+        <!-- Add Goal Form -->
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card shadow">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-trophy"></i> Create New Savings Goal
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/goals/add}" th:object="${goalForm}" method="post" novalidate>
+
+                            <!-- Goal Name -->
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Goal Name *</label>
+                                <input type="text" class="form-control" id="name" th:field="*{name}"
+                                       placeholder="e.g., Emergency Fund, Vacation, New Car" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+                                    Goal name is required
+                                </div>
+                                <small class="form-text text-muted">Give your goal a clear, motivating name</small>
+                            </div>
+
+                            <!-- Target Amount -->
+                            <div class="mb-3">
+                                <label for="targetAmount" class="form-label">Target Amount ($) *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="targetAmount" th:field="*{targetAmount}"
+                                           step="0.01" min="0.01" placeholder="1000.00" required>
+                                </div>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('targetAmount')}" th:errors="*{targetAmount}">
+                                    Please enter a valid target amount
+                                </div>
+                                <small class="form-text text-muted">Set your savings target for this goal</small>
+                            </div>
+
+                            <!-- Target Date -->
+                            <div class="mb-3">
+                                <label for="targetDate" class="form-label">Target Date *</label>
+                                <input type="date" class="form-control" id="targetDate" th:field="*{targetDate}" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('targetDate')}" th:errors="*{targetDate}">
+                                    Target date is required
+                                </div>
+                                <small class="form-text text-muted">When do you want to achieve this goal?</small>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="mb-4">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control" id="description" th:field="*{description}" rows="3"
+                                          placeholder="What are you saving for? Add any details or motivation..."></textarea>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">
+                                    Description is too long
+                                </div>
+                                <small class="form-text text-muted">Describe your goal and why it matters to you (optional)</small>
+                            </div>
+
+                            <!-- Goal Summary -->
+                            <div class="alert alert-info" role="alert" id="goalSummary" style="display: none;">
+                                <h6 class="alert-heading">
+                                    <i class="bi bi-calculator"></i> Savings Calculation
+                                </h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>Time to Goal:</strong> <span id="timeToGoal">0 months</span><br>
+                                        <strong>Weekly Savings:</strong> $<span id="weeklySavings">0.00</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Monthly Savings:</strong> $<span id="monthlySavings">0.00</span><br>
+                                        <strong>Daily Savings:</strong> $<span id="dailySavings">0.00</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Form Actions -->
+                            <div class="d-flex justify-content-between">
+                                <a th:href="@{/goals}" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> Cancel
+                                </a>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="bi bi-check-circle"></i> Create Goal
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Goal Ideas -->
+                <div class="card mt-4">
+                    <div class="card-header bg-primary text-white">
+                        <h6 class="mb-0">
+                            <i class="bi bi-lightbulb"></i> Popular Goal Ideas
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="border rounded p-3 mb-2">
+                                    <h6><i class="bi bi-shield-check text-primary"></i> Emergency Fund</h6>
+                                    <p class="small text-muted mb-1">3-6 months of expenses</p>
+                                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="fillGoal('Emergency Fund', 5000, 6)">
+                                        Use Template
+                                    </button>
+                                </div>
+                                <div class="border rounded p-3 mb-2">
+                                    <h6><i class="bi bi-airplane text-info"></i> Vacation Fund</h6>
+                                    <p class="small text-muted mb-1">Dream vacation</p>
+                                    <button type="button" class="btn btn-sm btn-outline-info" onclick="fillGoal('Vacation Fund', 3000, 12)">
+                                        Use Template
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="border rounded p-3 mb-2">
+                                    <h6><i class="bi bi-car-front text-success"></i> New Car</h6>
+                                    <p class="small text-muted mb-1">Down payment or full purchase</p>
+                                    <button type="button" class="btn btn-sm btn-outline-success" onclick="fillGoal('New Car', 10000, 24)">
+                                        Use Template
+                                    </button>
+                                </div>
+                                <div class="border rounded p-3 mb-2">
+                                    <h6><i class="bi bi-house text-warning"></i> House Down Payment</h6>
+                                    <p class="small text-muted mb-1">First home purchase</p>
+                                    <button type="button" class="btn btn-sm btn-outline-warning" onclick="fillGoal('House Down Payment', 20000, 36)">
+                                        Use Template
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="targetDate">Target Date</label>
-            <input type="date" id="targetDate" th:field="*{targetDate}" class="form-control" required>
-            <div th:if="${#fields.hasErrors('targetDate')}" th:errors="*{targetDate}" class="text-danger"></div>
-        </div>
-        <div class="form-group">
-            <label for="description">Description</label>
-            <textarea id="description" th:field="*{description}" class="form-control" rows="3"></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Create Goal</button>
-        <a href="/goals" class="btn btn-secondary">Cancel</a>
-    </form>
-</div>
+    </main>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <!-- Scripts -->
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+
+    <script>
+        function fillGoal(name, amount, months) {
+            document.getElementById('name').value = name;
+            document.getElementById('targetAmount').value = amount;
+
+            // Calculate target date
+            const targetDate = new Date();
+            targetDate.setMonth(targetDate.getMonth() + months);
+            document.getElementById('targetDate').value = targetDate.toISOString().split('T')[0];
+
+            calculateSavings();
+        }
+
+        function calculateSavings() {
+            const targetAmount = parseFloat(document.getElementById('targetAmount').value) || 0;
+            const targetDate = new Date(document.getElementById('targetDate').value);
+            const today = new Date();
+
+            if (targetAmount > 0 && targetDate > today) {
+                const daysToGoal = Math.ceil((targetDate - today) / (1000 * 60 * 60 * 24));
+                const monthsToGoal = Math.ceil(daysToGoal / 30);
+                const weeksToGoal = Math.ceil(daysToGoal / 7);
+
+                const dailySavings = targetAmount / daysToGoal;
+                const weeklySavings = targetAmount / weeksToGoal;
+                const monthlySavings = targetAmount / monthsToGoal;
+
+                document.getElementById('timeToGoal').textContent = monthsToGoal + ' months';
+                document.getElementById('dailySavings').textContent = dailySavings.toFixed(2);
+                document.getElementById('weeklySavings').textContent = weeklySavings.toFixed(2);
+                document.getElementById('monthlySavings').textContent = monthlySavings.toFixed(2);
+
+                document.getElementById('goalSummary').style.display = 'block';
+            } else {
+                document.getElementById('goalSummary').style.display = 'none';
+            }
+        }
+
+        // Set minimum date to tomorrow
+        document.addEventListener('DOMContentLoaded', function() {
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('targetDate').min = tomorrow.toISOString().split('T')[0];
+
+            // Add event listeners for real-time calculation
+            document.getElementById('targetAmount').addEventListener('input', calculateSavings);
+            document.getElementById('targetDate').addEventListener('change', calculateSavings);
+        });
+    </script>
 </body>
 </html>

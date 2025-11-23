@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head}">
+    <title>Thêm giao dịch - Quản lý Tài chính Cá nhân</title>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navigation -->
+    <div th:replace="~{fragments/layout :: navbar}"></div>
+
+    <!-- Flash Messages -->
+    <div th:replace="~{fragments/layout :: flash-messages}"></div>
+
+    <!-- Main Content -->
+    <main class="container mb-4 flex-grow-1">
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">
+                <i class="bi bi-plus-circle"></i> Thêm giao dịch mới
+                <small class="text-muted">Ghi lại thu nhập hoặc chi tiêu của bạn</small>
+            </h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <a th:href="@{/transactions}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Quay lại Giao dịch
+                </a>
+            </div>
+        </div>
+
+        <!-- Add Transaction Form -->
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-receipt"></i> Tạo giao dịch mới
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/transactions/add}" th:object="${transactionForm}" method="post" novalidate>
+
+                            <!-- Transaction Type -->
+                            <div class="mb-3">
+                                <label class="form-label">Loại giao dịch *</label>
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="type" id="income" 
+                                           th:field="*{type}" value="INCOME" autocomplete="off">
+                                    <label class="btn btn-outline-success" for="income">
+                                        <i class="bi bi-arrow-up-circle"></i> Thu nhập
+                                    </label>
+
+                                    <input type="radio" class="btn-check" name="type" id="expense"
+                                           th:field="*{type}" value="EXPENSE" autocomplete="off">
+                                    <label class="btn btn-outline-danger" for="expense">
+                                        <i class="bi bi-arrow-down-circle"></i> Chi tiêu
+                                    </label>
+                                </div>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('type')}" th:errors="*{type}">
+                                    Loại giao dịch là bắt buộc
+                                </div>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Mô tả *</label>
+                                <input type="text" class="form-control" id="description" th:field="*{description}"
+                                       placeholder="ví dụ: Mua sắm tạp hóa, Thanh toán lương" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">
+                                    Mô tả là bắt buộc
+                                </div>
+                            </div>
+
+                            <!-- Amount -->
+                            <div class="mb-3">
+                                <label for="amount" class="form-label">Số tiền *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">VND</span>
+                                    <input type="number" class="form-control" id="amount" th:field="*{amount}"
+                                           step="1" min="1" placeholder="0" required>
+                                </div>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}">
+                                    Số tiền là bắt buộc và phải lớn hơn 0
+                                </div>
+                            </div>
+
+                            <!-- Category -->
+                            <div class="mb-3">
+                                <label for="categoryId" class="form-label">Danh mục *</label>
+                                <select class="form-select" id="categoryId" th:field="*{categoryId}" required>
+                                    <option value="">Chọn một danh mục</option>
+                                    <optgroup label="Danh mục Thu nhập" th:if="${incomeCategories}">
+                                        <option th:each="category : ${incomeCategories}"
+                                                th:value="${category.id}"
+                                                th:text="${category.name}">Danh mục Thu nhập</option>
+                                    </optgroup>
+                                    <optgroup label="Danh mục Chi tiêu" th:if="${expenseCategories}">
+                                        <option th:each="category : ${expenseCategories}"
+                                                th:value="${category.id}"
+                                                th:text="${category.name}">Danh mục Chi tiêu</option>
+                                    </optgroup>
+                                </select>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}">
+                                    Danh mục là bắt buộc
+                                </div>
+                            </div>
+
+                            <!-- Transaction Date -->
+                            <div class="mb-3">
+                                <label for="transactionDate" class="form-label">Ngày giao dịch</label>
+                                <input type="datetime-local" class="form-control" id="transactionDate"
+                                       th:field="*{transactionDate}">
+                                <small class="form-text text-muted">Để trống để sử dụng ngày và giờ hiện tại</small>
+                            </div>
+
+                            <!-- Notes -->
+                            <div class="mb-3">
+                                <label for="notes" class="form-label">Ghi chú</label>
+                                <textarea class="form-control" id="notes" th:field="*{notes}" rows="3"
+                                          placeholder="Ghi chú bổ sung về giao dịch này (tùy chọn)"></textarea>
+                            </div>
+
+                            <!-- Form Actions -->
+                            <div class="d-flex justify-content-between">
+                                <a th:href="@{/transactions}" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> Hủy
+                                </a>
+                                <button type="submit" class="btn btn-primary" id="submitBtn">
+                                    <i class="bi bi-check-circle"></i> Thêm giao dịch
+                                </button>
+                            </div>
+
+                            <!-- Global Form Errors -->
+                            <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger mt-3">
+                                <ul class="mb-0">
+                                    <li th:each="error : ${#fields.globalErrors()}" th:text="${error}">Global error</li>
+                                </ul>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <!-- Scripts -->
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+
+    <script>
+        // Auto-select appropriate categories based on transaction type
+        document.addEventListener('DOMContentLoaded', function() {
+            const incomeRadio = document.getElementById('income');
+            const expenseRadio = document.getElementById('expense');
+            const categorySelect = document.getElementById('categoryId');
+            
+            function updateCategoryOptions() {
+                const incomeOptgroup = categorySelect.querySelector('optgroup[label="Danh mục Thu nhập"]');
+                const expenseOptgroup = categorySelect.querySelector('optgroup[label="Danh mục Chi tiêu"]');
+                
+                if (incomeRadio.checked) {
+                    if (incomeOptgroup) incomeOptgroup.style.display = 'block';
+                    if (expenseOptgroup) expenseOptgroup.style.display = 'none';
+                } else if (expenseRadio.checked) {
+                    if (incomeOptgroup) incomeOptgroup.style.display = 'none';
+                    if (expenseOptgroup) expenseOptgroup.style.display = 'block';
+                } else {
+                    if (incomeOptgroup) incomeOptgroup.style.display = 'block';
+                    if (expenseOptgroup) expenseOptgroup.style.display = 'block';
+                }
+                
+                // Reset category selection when type changes
+                categorySelect.value = '';
+            }
+            
+            incomeRadio.addEventListener('change', updateCategoryOptions);
+            expenseRadio.addEventListener('change', updateCategoryOptions);
+            
+            // Initial setup
+            updateCategoryOptions();
+
+            // Debug form submission
+            const form = document.querySelector('form');
+            const submitBtn = document.getElementById('submitBtn');
+
+            submitBtn.addEventListener('click', function(e) {
+                console.log('Submit button clicked');
+                const formData = new FormData(form);
+                console.log('Form data:');
+                for (let [key, value] of formData.entries()) {
+                    console.log(key + ': ' + value);
+                }
+            });
+
+            form.addEventListener('submit', function(e) {
+                console.log('Form submitted');
+            });
+        });
+    </script>
+</body>
+</html>

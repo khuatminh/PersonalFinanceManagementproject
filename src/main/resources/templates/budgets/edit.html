@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head}">
+    <title>Chỉnh sửa Ngân sách - Quản lý Tài chính Cá nhân</title>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+<!-- Navigation -->
+<div th:replace="~{fragments/layout :: navbar}"></div>
+
+<!-- Flash Messages -->
+<div th:replace="~{fragments/layout :: flash-messages}"></div>
+
+<!-- Main Content -->
+<main class="container mb-4 flex-grow-1">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">
+            <i class="bi bi-pencil"></i> Chỉnh sửa Ngân sách
+            <small class="text-muted" th:text="'Cập nhật ' + ${budget.name}">Cập nhật ngân sách</small>
+        </h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <a th:href="@{/budgets}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Quay lại Ngân sách
+            </a>
+        </div>
+    </div>
+
+    <!-- Edit Budget Form -->
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">
+                        <i class="bi bi-pencil-square"></i> Chỉnh sửa Ngân sách: <span th:text="${budget.name}">Tên Ngân sách</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/budgets/edit/{id}(id=${budget.id})}" th:object="${budgetForm}" method="post" novalidate>
+
+                        <!-- Budget Name -->
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Tên ngân sách *</label>
+                            <input type="text" class="form-control" id="name" th:field="*{name}"
+                                   placeholder="ví dụ: Ngân sách hàng tháng cho hàng tạp hóa" required>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+                                Tên ngân sách là bắt buộc
+                            </div>
+                            <small class="form-text text-muted">Cập nhật tên ngân sách</small>
+                        </div>
+
+                        <!-- Budget Amount -->
+                        <div class="mb-3">
+                            <label for="amount" class="form-label">Số tiền ngân sách (VND) *</label>
+                            <div class="input-group">
+                                <span class="input-group-text">VND</span>
+                                <input type="number" class="form-control" id="amount" th:field="*{amount}"
+                                       step="1" min="1" placeholder="500000" required>
+                            </div>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}">
+                                Vui lòng nhập số tiền ngân sách hợp lệ
+                            </div>
+                            <small class="form-text text-muted">Ngân sách hiện tại: <span th:text="${#numbers.formatInteger(budget.amount, 3, 'COMMA')}">500,000</span> VND</small>
+                        </div>
+
+                        <!-- Category Selection -->
+                        <div class="mb-3">
+                            <label for="categoryId" class="form-label">Danh mục</label>
+                            <select class="form-select" id="categoryId" th:field="*{categoryId}">
+                                <option value="">Tất cả danh mục (Theo dõi tất cả chi tiêu)</option>
+                                <option th:each="category : ${categories}"
+                                        th:value="${category.id}"
+                                        th:text="${category.name}">
+                                    Danh mục
+                                </option>
+                            </select>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}">
+                                Vui lòng chọn một danh mục
+                            </div>
+                            <small class="form-text text-muted">
+                                Danh mục hiện tại:
+                                <span th:if="${budget.category != null}" th:text="${budget.category.name}">Danh mục</span>
+                                <span th:if="${budget.category == null}">Tất cả danh mục</span>
+                            </small>
+                        </div>
+
+                        <!-- Date Range -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="startDate" class="form-label">Ngày bắt đầu *</label>
+                                <input type="date" class="form-control" id="startDate" th:field="*{startDate}"
+                                       th:value="${#temporals.format(budget.startDate, 'yyyy-MM-dd')}" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}">
+                                    Ngày bắt đầu là bắt buộc
+                                </div>
+                                <small class="form-text text-muted">Ban đầu: <span th:text="${#temporals.format(budget.startDate, 'MMM dd, yyyy')}">Jan 01, 2024</span></small>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="endDate" class="form-label">Ngày kết thúc *</label>
+                                <input type="date" class="form-control" id="endDate" th:field="*{endDate}"
+                                       th:value="${#temporals.format(budget.endDate, 'yyyy-MM-dd')}" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}">
+                                    Ngày kết thúc là bắt buộc
+                                </div>
+                                <small class="form-text text-muted">Ban đầu: <span th:text="${#temporals.format(budget.endDate, 'MMM dd, yyyy')}">Jan 31, 2024</span></small>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-4">
+                            <label for="description" class="form-label">Mô tả</label>
+                            <textarea class="form-control" id="description" th:field="*{description}" rows="3"
+                                      placeholder="Mô tả tùy chọn cho ngân sách này..."></textarea>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">
+                                Mô tả quá dài
+                            </div>
+                            <small class="form-text text-muted">Cập nhật bất kỳ ghi chú bổ sung nào về ngân sách này (tùy chọn)</small>
+                        </div>
+
+                        <!-- Budget Status Info -->
+                        <div class="alert alert-info" role="alert">
+                            <h6 class="alert-heading">
+                                <i class="bi bi-info-circle"></i> Trạng thái Ngân sách
+                            </h6>
+                            <p class="mb-2">
+                                <strong>Thời hạn:</strong> <span th:text="${#numbers.formatDecimal(budget.getDurationInDays(), 1, 0)}">30</span> ngày<br>
+                                <strong>Đã tạo:</strong> <span th:text="${#temporals.format(budget.createdAt, 'MMM dd, yyyy')}">Jan 01, 2024</span>
+                            </p>
+                            <hr>
+                            <p class="mb-0">
+                                <small class="text-muted">Lưu ý: Thay đổi số tiền ngân sách hoặc phạm vi ngày sẽ ảnh hưởng đến cách các giao dịch được theo dõi theo ngân sách này.</small>
+                            </p>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <a th:href="@{/budgets}" class="btn btn-secondary me-2">
+                                    <i class="bi bi-x-circle"></i> Hủy
+                                </a>
+                                <a th:href="@{/budgets/view/{id}(id=${budget.id})}" class="btn btn-outline-info">
+                                    <i class="bi bi-eye"></i> Xem Ngân sách
+                                </a>
+                            </div>
+                            <button type="submit" class="btn btn-warning">
+                                <i class="bi bi-check-circle"></i> Cập nhật Ngân sách
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+
+<!-- Scripts -->
+<div th:replace="~{fragments/layout :: scripts}"></div>
+
+<script>
+    // Form validation
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+
+    // Date validation
+    document.addEventListener('DOMContentLoaded', function() {
+        var startDateInput = document.getElementById('startDate');
+        var endDateInput = document.getElementById('endDate');
+
+        // Ensure end date is after start date
+        startDateInput.addEventListener('change', function() {
+            endDateInput.min = this.value;
+            if (endDateInput.value && endDateInput.value < this.value) {
+                endDateInput.value = this.value;
+            }
+        });
+
+        endDateInput.addEventListener('change', function() {
+            if (startDateInput.value && this.value < startDateInput.value) {
+                this.value = startDateInput.value;
+            }
+        });
+    });
+</script>
+</body>
+</html>

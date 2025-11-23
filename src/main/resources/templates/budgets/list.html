@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head}">
+    <title>Ngân sách - Quản lý Tài chính Cá nhân</title>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navigation -->
+    <div th:replace="~{fragments/layout :: navbar}"></div>
+
+    <!-- Flash Messages -->
+    <div th:replace="~{fragments/layout :: flash-messages}"></div>
+
+    <!-- Main Content -->
+    <main class="container mb-4 flex-grow-1">
+        <!-- Page Header -->
+        <div
+            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">
+                <i class="bi bi-piggy-bank"></i> Ngân sách
+                <small class="text-muted">Quản lý giới hạn chi tiêu của bạn</small>
+            </h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <a th:href="@{/budgets/add}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Thêm Ngân sách
+                </a>
+            </div>
+        </div>
+
+        <!-- Budget Statistics -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">Tổng số ngân sách</h5>
+                        <h2 th:text="${totalBudgets}">0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">Ngân sách đang hoạt động</h5>
+                        <h2 th:text="${activeBudgets.size()}">0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">Ngân sách đã hết hạn</h5>
+                        <h2 th:text="${expiredBudgets.size()}">0</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">Ngân sách sắp tới</h5>
+                        <h2 th:text="${upcomingBudgets.size()}">0</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Budgets -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-success">
+                    <i class="bi bi-check-circle"></i> Ngân sách đang hoạt động
+                </h6>
+                <span class="badge bg-success" th:text="${activeBudgets.size()} + ' đang hoạt động'">0 đang hoạt
+                    động</span>
+            </div>
+            <div class="card-body">
+                <div th:if="${activeBudgets.empty}" class="text-center py-4">
+                    <i class="bi bi-piggy-bank text-muted" style="font-size: 3rem;"></i>
+                    <p class="text-muted mt-2">Không có ngân sách nào đang hoạt động. Tạo ngân sách đầu tiên để bắt đầu
+                        theo dõi chi tiêu!</p>
+                    <a th:href="@{/budgets/add}" class="btn btn-success">
+                        <i class="bi bi-plus-circle"></i> Tạo ngân sách
+                    </a>
+                </div>
+                <div th:if="${!activeBudgets.empty}" class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Tên ngân sách</th>
+                                <th>Danh mục</th>
+                                <th>Số tiền ngân sách</th>
+                                <th>Đã chi</th>
+                                <th>Còn lại</th>
+                                <th>Tiến độ</th>
+                                <th>Trạng thái</th>
+                                <th>Số ngày còn lại</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="budgetProgress : ${activeBudgets}">
+                                <td th:text="${budgetProgress.budget.name}">Groceries</td>
+                                <td>
+                                    <span th:if="${budgetProgress.budget.category != null}" class="badge"
+                                        th:style="'background-color: ' + ${budgetProgress.budget.category.color}"
+                                        th:text="${budgetProgress.budget.category.name}">
+                                        Food
+                                    </span>
+                                    <span th:if="${budgetProgress.budget.category == null}" class="badge bg-secondary">
+                                        Tất cả danh mục
+                                    </span>
+                                </td>
+                                <td
+                                    th:text="${#numbers.formatDecimal(budgetProgress.budget.amount, 1, 'COMMA', 0, 'POINT')} + ' VND'">
+                                    500.000 VND
+                                </td>
+                                <td th:class="${budgetProgress.overBudget ? 'text-danger' : 'text-dark'}"
+                                    th:text="${#numbers.formatDecimal(budgetProgress.spent, 1, 'COMMA', 0, 'POINT')} + ' VND'">
+                                    300.000 VND
+                                </td>
+                                <td th:class="${budgetProgress.overBudget ? 'text-danger' : 'text-success'}"
+                                    th:text="${#numbers.formatDecimal(budgetProgress.remaining, 1, 'COMMA', 0, 'POINT')} + ' VND'">
+                                    200.000 VND
+                                </td>
+                                <td>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar" role="progressbar"
+                                            th:style="'width: ' + ${#numbers.formatDecimal(budgetProgress.percentageSpent, 1, 1)} + '%'"
+                                            th:classappend="${budgetProgress.overBudget ? 'bg-danger' : (budgetProgress.percentageSpent >= 80 ? 'bg-warning' : 'bg-success')}"
+                                            th:text="${#numbers.formatDecimal(budgetProgress.percentageSpent, 1, 1)} + '%'">
+                                            60%
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge"
+                                        th:classappend="${budgetProgress.overBudget ? 'bg-danger' : (budgetProgress.percentageSpent >= 80 ? 'bg-warning' : 'bg-success')}"
+                                        th:text="${budgetProgress.status}">
+                                        On Track
+                                    </span>
+                                </td>
+                                <td>
+                                    <span th:text="${budgetProgress.daysRemaining}" class="badge bg-info">15</span>
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a th:href="@{/budgets/view/{id}(id=${budgetProgress.budget.id})}"
+                                            class="btn btn-outline-primary" title="Xem">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a th:href="@{/budgets/edit/{id}(id=${budgetProgress.budget.id})}"
+                                            class="btn btn-outline-warning" title="Sửa">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger"
+                                            th:onclick="'confirmDelete(' + ${budgetProgress.budget.id} + ')'"
+                                            title="Xóa">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Budgets -->
+        <div class="card shadow mb-4" th:if="${!upcomingBudgets.empty}">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-info">
+                    <i class="bi bi-calendar-event"></i> Ngân sách sắp tới
+                </h6>
+                <span class="badge bg-info" th:text="${upcomingBudgets.size()} + ' sắp tới'">0 sắp tới</span>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Tên ngân sách</th>
+                                <th>Danh mục</th>
+                                <th>Số tiền ngân sách</th>
+                                <th>Ngày bắt đầu</th>
+                                <th>Ngày kết thúc</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="budgetProgress : ${upcomingBudgets}">
+                                <td th:text="${budgetProgress.budget.name}">Future Budget</td>
+                                <td>
+                                    <span th:if="${budgetProgress.budget.category != null}" class="badge"
+                                        th:style="'background-color: ' + ${budgetProgress.budget.category.color}"
+                                        th:text="${budgetProgress.budget.category.name}">
+                                        Category
+                                    </span>
+                                    <span th:if="${budgetProgress.budget.category == null}" class="badge bg-secondary">
+                                        Tất cả danh mục
+                                    </span>
+                                </td>
+                                <td
+                                    th:text="${#numbers.formatDecimal(budgetProgress.budget.amount, 1, 'COMMA', 0, 'POINT')} + ' VND'">
+                                    500.000 VND
+                                </td>
+                                <td th:text="${#temporals.format(budgetProgress.budget.startDate, 'MMM dd, yyyy')}">
+                                    Jan 01, 2024
+                                </td>
+                                <td th:text="${#temporals.format(budgetProgress.budget.endDate, 'MMM dd, yyyy')}">
+                                    Jan 31, 2024
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a th:href="@{/budgets/edit/{id}(id=${budgetProgress.budget.id})}"
+                                            class="btn btn-outline-warning" title="Sửa">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger"
+                                            th:onclick="'confirmDelete(' + ${budgetProgress.budget.id} + ')'"
+                                            title="Xóa">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Expired Budgets -->
+        <div class="card shadow mb-4" th:if="${!expiredBudgets.empty}">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-secondary">
+                    <i class="bi bi-clock-history"></i> Ngân sách đã hết hạn
+                </h6>
+                <span class="badge bg-secondary" th:text="${expiredBudgets.size()} + ' đã hết hạn'">0 đã hết hạn</span>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Tên ngân sách</th>
+                                <th>Danh mục</th>
+                                <th>Số tiền ngân sách</th>
+                                <th>Đã chi</th>
+                                <th>Trạng thái cuối cùng</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="budgetProgress : ${expiredBudgets}">
+                                <td th:text="${budgetProgress.budget.name}">Old Budget</td>
+                                <td>
+                                    <span th:if="${budgetProgress.budget.category != null}" class="badge"
+                                        th:style="'background-color: ' + ${budgetProgress.budget.category.color}"
+                                        th:text="${budgetProgress.budget.category.name}">
+                                        Category
+                                    </span>
+                                    <span th:if="${budgetProgress.budget.category == null}" class="badge bg-secondary">
+                                        Tất cả danh mục
+                                    </span>
+                                </td>
+                                <td
+                                    th:text="${#numbers.formatDecimal(budgetProgress.budget.amount, 1, 'COMMA', 0, 'POINT')} + ' VND'">
+                                    500.000 VND
+                                </td>
+                                <td th:class="${budgetProgress.overBudget ? 'text-danger' : 'text-dark'}"
+                                    th:text="${#numbers.formatDecimal(budgetProgress.spent, 1, 'COMMA', 0, 'POINT')} + ' VND'">
+                                    300.000 VND
+                                </td>
+                                <td>
+                                    <span class="badge"
+                                        th:classappend="${budgetProgress.overBudget ? 'bg-danger' : 'bg-success'}"
+                                        th:text="${budgetProgress.status}">
+                                        On Track
+                                    </span>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-outline-danger"
+                                        th:onclick="'confirmDelete(' + ${budgetProgress.budget.id} + ')'" title="Xóa">
+                                        <i class="bi bi-trash"></i> Xóa
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <!-- Scripts -->
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+
+    <script>
+        function confirmDelete(budgetId) {
+            if (confirm('Bạn có chắc chắn muốn xóa ngân sách này? Hành động này không thể hoàn tác.')) {
+                window.location.href = '/budgets/delete/' + budgetId;
+            }
+        }
+    </script>
+</body>
+
+</html>

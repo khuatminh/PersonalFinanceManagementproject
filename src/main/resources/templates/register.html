@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head}">
+        <title>Đăng ký - Quản lý Tài chính Cá nhân</title>
+</head>
+
+<body class="bg-light">
+    <div class="container min-vh-100 d-flex align-items-center justify-content-center py-4">
+        <div class="row w-100">
+            <div class="col-md-6 col-lg-5 mx-auto">
+                <div class="card shadow-lg">
+                    <div class="card-body p-4">
+                        <!-- Logo and Title -->
+                        <div class="text-center mb-4">
+                            <i class="bi bi-person-plus text-success" style="font-size: 3rem;"></i>
+                            <h3 class="mt-2">Tạo tài khoản</h3>
+                            <p class="text-muted">Tham gia với chúng tôi để quản lý tài chính của bạn</p>
+                        </div>
+
+                        <!-- Error Messages -->
+                        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            <span th:text="${error}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+
+                        <!-- Registration Form -->
+                        <form th:action="@{/user/register}" th:object="${userForm}" method="post" novalidate>
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Tên đăng nhập</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-person"></i>
+                                    </span>
+                                    <input type="text" class="form-control" th:field="*{username}" id="username"
+                                           placeholder="Chọn một tên đăng nhập" required>
+                                </div>
+                                <div th:if="${#fields.hasErrors('username')}" class="text-danger small mt-1">
+                                    <i class="bi bi-exclamation-circle"></i>
+                                    <span th:errors="*{username}"></span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-envelope"></i>
+                                    </span>
+                                    <input type="email" class="form-control" th:field="*{email}" id="email"
+                                           placeholder="Nhập email của bạn" required>
+                                </div>
+                                <div th:if="${#fields.hasErrors('email')}" class="text-danger small mt-1">
+                                    <i class="bi bi-exclamation-circle"></i>
+                                    <span th:errors="*{email}"></span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Mật khẩu</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-lock"></i>
+                                    </span>
+                                    <input type="password" class="form-control" th:field="*{password}" id="password"
+                                           placeholder="Tạo một mật khẩu" required>
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                                <div th:if="${#fields.hasErrors('password')}" class="text-danger small mt-1">
+                                    <i class="bi bi-exclamation-circle"></i>
+                                    <span th:errors="*{password}"></span>
+                                </div>
+                                <div class="form-text">Mật khẩu phải có ít nhất 6 ký tự</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="confirmPassword" class="form-label">Xác nhận Mật khẩu</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-lock-fill"></i>
+                                    </span>
+                                    <input type="password" class="form-control" th:field="*{confirmPassword}"
+                                           id="confirmPassword" placeholder="Xác nhận lại mật khẩu" required>
+                                    <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                                <div th:if="${#fields.hasErrors('confirmPassword')}" class="text-danger small mt-1">
+                                    <i class="bi bi-exclamation-circle"></i>
+                                    <span th:errors="*{confirmPassword}"></span>
+                                </div>
+                            </div>
+
+                            <!-- Terms and Conditions -->
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="terms" required>
+                                    <label class="form-check-label" for="terms">
+                                        Tôi đồng ý với <a href="#" class="text-decoration-none">Điều khoản và Điều kiện</a>
+                                        và <a href="#" class="text-decoration-none">Chính sách Bảo mật</a>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="d-grid mb-3">
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="bi bi-person-plus"></i> Tạo tài khoản
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Login Link -->
+                        <div class="text-center">
+                            <p class="mb-0">
+                                Đã có tài khoản?
+                                <a th:href="@{/login}" class="text-decoration-none">
+                                    Đăng nhập tại đây
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Benefits Section -->
+                <div class="card mt-3 border-0 bg-light">
+                    <div class="card-body">
+                        <h6 class="card-title text-center mb-3">
+                            <i class="bi bi-star-fill text-warning"></i> Tại sao nên tham gia?
+                        </h6>
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <i class="bi bi-graph-up text-success" style="font-size: 1.5rem;"></i>
+                                <p class="small mb-0 mt-1">Theo dõi chi tiêu</p>
+                            </div>
+                            <div class="col-4">
+                                <i class="bi bi-piggy-bank text-primary" style="font-size: 1.5rem;"></i>
+                                <p class="small mb-0 mt-1">Đặt ngân sách</p>
+                            </div>
+                            <div class="col-4">
+                                <i class="bi bi-trophy text-warning" style="font-size: 1.5rem;"></i>
+                                <p class="small mb-0 mt-1">Đạt được mục tiêu</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle password visibility
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const icon = this.querySelector('i');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+        });
+
+        document.getElementById('toggleConfirmPassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('confirmPassword');
+            const icon = this.querySelector('i');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+        });
+
+        // Auto-focus on username field
+        document.getElementById('username').focus();
+
+        // Password strength indicator
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+
+            if (password.length >= 6) strength++;
+            if (password.length >= 10) strength++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+            if (/\d/.test(password)) strength++;
+            if (/[^a-zA-Z\d]/.test(password)) strength++;
+
+            // You can add a visual indicator here if needed
+        });
+    </script>
+</body>
+</html>

@@ -1,12 +1,17 @@
 package com.finance.service;
 
 import com.finance.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 @Service
 
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserStatisticsService {
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
     public long getUserCount() {
         return userRepository.count();
