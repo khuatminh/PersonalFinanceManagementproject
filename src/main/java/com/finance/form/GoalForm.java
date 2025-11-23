@@ -3,7 +3,7 @@ package com.finance.form;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
