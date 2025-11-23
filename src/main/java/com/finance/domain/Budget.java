@@ -86,6 +86,9 @@ public class Budget {
     }
 
     public long getDaysRemaining() {
+        if (endDate == null) {
+            return 0;
+        }
         LocalDate today = LocalDate.now();
         if (today.isAfter(endDate)) {
             return 0;

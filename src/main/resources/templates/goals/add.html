@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/main}">
+<head>
+    <title>Add Goal</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>Add New Goal</h1>
+
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <form th:action="@{/goals/add}" th:object="${goalForm}" method="post">
+        <div class="form-group">
+            <label for="name">Goal Name</label>
+            <input type="text" id="name" th:field="*{name}" class="form-control" required>
+            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></div>
+        </div>
+        <div class="form-group">
+            <label for="targetAmount">Target Amount</label>
+            <input type="number" id="targetAmount" th:field="*{targetAmount}" class="form-control" required step="0.01">
+            <div th:if="${#fields.hasErrors('targetAmount')}" th:errors="*{targetAmount}" class="text-danger"></div>
+        </div>
+        <div class="form-group">
+            <label for="targetDate">Target Date</label>
+            <input type="date" id="targetDate" th:field="*{targetDate}" class="form-control" required>
+            <div th:if="${#fields.hasErrors('targetDate')}" th:errors="*{targetDate}" class="text-danger"></div>
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" th:field="*{description}" class="form-control" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Create Goal</button>
+        <a href="/goals" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+</body>
+</html>

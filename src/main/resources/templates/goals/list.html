@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/main}">
+<head>
+    <title>My Goals</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>My Goals</h1>
+
+    <!-- Success/Error Messages -->
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <div class="card mb-4">
+        <div class="card-header">Goal Summary</div>
+        <div class="card-body" th:if="${goalSummary}">
+            <p>Active Goals: <span th:text="${goalSummary.activeGoalsCount}"></span></p>
+            <p>Completed Goals: <span th:text="${goalSummary.completedCount}"></span></p>
+            <p>Overdue Goals: <span th:text="${goalSummary.overdueCount}"></span></p>
+            <p>Overall Progress: <span th:text="${#numbers.formatDecimal(goalSummary.overallProgressPercentage, 1, 2)}"></span>%</p>
+            <p>Total Saved: <span th:text="${#numbers.formatCurrency(goalSummary.totalCurrentAmount)}"></span> / <span th:text="${#numbers.formatCurrency(goalSummary.totalTargetAmount)}"></span></p>
+        </div>
+    </div>
+
+    <a href="/goals/add" class="btn btn-primary mb-3">Add New Goal</a>
+
+    <!-- Active Goals -->
+    <h2>Active Goals</h2>
+    <div th:if="${activeGoals.isEmpty()}">
+        <p>No active goals. <a href="/goals/add">Create one now!</a></p>
+    </div>
+    <div class="list-group mb-4" th:if="!${activeGoals.isEmpty()}">
+        <div th:each="goal : ${activeGoals}" class="list-group-item">
+            <h5 th:text="${goal.name}">Goal Name</h5>
+            <p th:text="${goal.description}">Goal Description</p>
+            <p>
+                <strong th:text="${#numbers.formatCurrency(goal.currentAmount)}"></strong> /
+                <strong th:text="${#numbers.formatCurrency(goal.targetAmount)}"></strong>
+                (<span th:text="${#numbers.formatDecimal(goal.progressPercentage, 1, 1)}"></span>%)
+            </p>
+            <p>Target Date: <span th:text="${#temporals.format(goal.targetDate, 'dd-MM-yyyy')}"></span></p>
+            <div>
+                <a th:href="@{/goals/contribute/{id}(id=${goal.id})}" class="btn btn-sm btn-success">Contribute</a>
+                <a th:href="@{/goals/view/{id}(id=${goal.id})}">View</a>
+                <a th:href="@{/goals/edit/{id}(id=${goal.id})}" class="btn btn-sm btn-info">Edit</a>
+                <a th:href="@{/goals/delete/{id}(id=${goal.id})}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this goal?');">Delete</a>
+                <a th:href="@{/goals/complete/{id}(id=${goal.id})}" class="btn btn-sm btn-warning">Mark as Complete</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Completed Goals -->
+    <h2>Completed Goals</h2>
+    <div th:if="${completedGoals.isEmpty()}">
+        <p>No completed goals yet.</p>
+    </div>
+    <div class="list-group mb-4" th:if="!${completedGoals.isEmpty()}">
+        <div th:each="goal : ${completedGoals}" class="list-group-item">
+            <h5 th:text="${goal.name}">Goal Name</h5>
+            <p>Completed on: <span th:text="${#temporals.format(goal.completedAt, 'dd-MM-yyyy')}"></span></p>
+        </div>
+    </div>
+
+    <!-- Overdue Goals -->
+    <h2>Overdue Goals</h2>
+    <div th:if="${overdueGoals.isEmpty()}">
+        <p>No overdue goals.</p>
+    </div>
+    <div class="list-group mb-4" th:if="!${overdueGoals.isEmpty()}">
+         <div th:each="goal : ${overdueGoals}" class="list-group-item list-group-item-danger">
+            <h5 th:text="${goal.name}">Goal Name</h5>
+            <p>Target was: <span th:text="${#temporals.format(goal.targetDate, 'dd-MM-yyyy')}"></span></p>
+            <div>
+                <a th:href="@{/goals/contribute/{id}(id=${goal.id})}" class="btn btn-sm btn-success">Contribute</a>
+                <a th:href="@{/goals/edit/{id}(id=${goal.id})}" class="btn btn-sm btn-info">Edit</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
