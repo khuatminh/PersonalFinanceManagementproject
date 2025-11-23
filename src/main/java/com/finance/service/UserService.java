@@ -106,7 +106,7 @@ public class UserService {
 
     }
 
-    public User updateUser(Long id, User userDetails) {
+    public User updateUser(User userDetails) {
         if(id == null)
         {
             throw new IllegalArgumentException("User ID cannot be null");
