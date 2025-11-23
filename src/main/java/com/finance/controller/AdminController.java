@@ -7,7 +7,8 @@ import com.finance.repository.RoleRepository;
 import com.finance.service.UserService;
 
 import java.util.List;
-
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import com.finance.service.UserStatisticsService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -66,29 +67,49 @@ public class AdminController {
 
     @PostMapping("/users/update/{id}")
     public String update(@PathVariable Long id,
-            @Valid @ModelAttribute("userForm") AdminUserEditForm form,
-            BindingResult result,
-            Model model,
-            RedirectAttributes redirectAttributes) {
+                         @Valid @ModelAttribute("userForm") AdminUserEditForm form,
+                         BindingResult result,
+                         Model model,
+                         RedirectAttributes redirectAttributes,
+                         Authentication authentication) {
+
         User currentUser = userService.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
 
         if (userService.existsByUsername(form.getUsername()) &&
                 !currentUser.getUsername().equals(form.getUsername())) {
-            result.rejectValue("username", "error.form", "username is already taken");
+            result.rejectValue("username", "error.username", "Tên đăng nhập đã được sử dụng");
         }
+        if (userService.existsByEmail(form.getEmail()) &&
+                !currentUser.getEmail().equals(form.getEmail())) {
+            result.rejectValue("email", "error.email", "Email đã được sử dụng");
+        }
+        String currentLogin = authentication.getName();
+        boolean isSelfEditing = currentUser.getUsername().equals(currentLogin);
+        boolean isCurrentAdmin = currentUser.getUserRole() != null
+                && "ADMIN".equals(currentUser.getUserRole().getName());
+
+
+        boolean isRoleDowngraded = form.getRole() == null
+                || !"ADMIN".equals(form.getRole().getName());
+
+        if (isSelfEditing && isCurrentAdmin && isRoleDowngraded) {
+            result.rejectValue("role", "error.role", "Bạn không thể tự bỏ quyền ADMIN của chính mình!");
+        }
+
         if (result.hasErrors()) {
             model.addAttribute("roles", roleRespository.findAll());
             model.addAttribute("userId", id);
             return "admin/edit-user";
         }
-        User userToUpdate = new User();
-        userToUpdate.setUsername(form.getUsername());
-        userToUpdate.setEmail(form.getEmail());
-        userToUpdate.setUserRole(form.getRole());
-        userService.updateUser(id, userToUpdate);
 
-        redirectAttributes.addFlashAttribute("sucessMessage", "User updated successfully!");
+        currentUser.setUsername(form.getUsername());
+        currentUser.setEmail(form.getEmail());
+        currentUser.setUserRole(form.getRole());
+
+        userService.updateUser(currentUser); //
+
+        redirectAttributes.addFlashAttribute("successMessage", "Cập nhật người dùng thành công!");
         return "redirect:/admin/users";
     }
 
@@ -101,14 +122,27 @@ public class AdminController {
         return "admin/delete-user";
     }
 
-    @PostMapping("users/delete/{id}")
+    @PostMapping("/users/delete/{id}")
     public String deleteUser(@PathVariable Long id,
-            RedirectAttributes redirectAttributes) {
-        if (!userService.findById(id).isPresent()) {
-            throw new UserNotFoundException(id);
+                             RedirectAttributes redirectAttributes,
+                             Authentication authentication) {
+
+
+        User userToDelete = userService.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        String currentUsername = authentication.getName();
+        if (userToDelete.getUsername().equals(currentUsername)) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Không thể xóa tài khoản bạn đang đăng nhập!");
+            return "redirect:/admin/users";
         }
+
         userService.deleteById(id);
-        redirectAttributes.addFlashAttribute("sucessMessage", "User deleted successfully!");
+
+        redirectAttributes.addFlashAttribute("successMessage",
+                "Xóa người dùng thành công!");
+
         return "redirect:/admin/users";
     }
 
