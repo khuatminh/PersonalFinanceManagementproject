@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head}">
+    <title>Bảng Điều Khiển Quản Trị - Quản Lý Tài Chính Cá Nhân</title>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navigation -->
+    <div th:replace="~{fragments/layout :: navbar}"></div>
+
+    <!-- Flash Messages -->
+    <div th:replace="~{fragments/layout :: flash-messages}"></div>
+
+    <!-- Main Content -->
+    <main class="container mb-4 flex-grow-1">
+        <!-- Page Header -->
+        <div
+            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">
+                <i class="bi bi-gear"></i> Bảng Điều Khiển Quản Trị
+            </h1>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-header">
+                        <i class="bi bi-people"></i> Tổng Số Người Dùng
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${userCount}">0</h5>
+                        <p class="card-text">Người dùng đã đăng ký trong hệ thống</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-header">
+                        <i class="bi bi-shield-check"></i> Người Dùng Quản Trị
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${adminCount}">0</h5>
+                        <p class="card-text">Người dùng có quyền quản trị</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-info mb-3">
+                    <div class="card-header">
+                        <i class="bi bi-person"></i> Người Dùng Thường
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${regularUserCount}">0</h5>
+                        <p class="card-text">Tài khoản người dùng tiêu chuẩn</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title mb-0">
+                            <i class="bi bi-tools"></i> Công Cụ Quản Trị
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="d-grid">
+                                    <a th:href="@{/admin/users}" class="btn btn-outline-primary btn-lg">
+                                        <i class="bi bi-people-fill"></i> Quản Lý Người Dùng
+                                    </a>
+                                </div>
+                                <small class="text-muted">Xem, chỉnh sửa và xóa tài khoản người dùng</small>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="d-grid">
+                                    <button class="btn btn-outline-secondary btn-lg" disabled>
+                                        <i class="bi bi-bar-chart"></i> Báo Cáo Hệ Thống
+                                    </button>
+                                </div>
+                                <small class="text-muted">Sắp ra mắt - Phân tích và báo cáo hệ thống</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <div th:replace="~{fragments/layout :: footer}"></div>
+
+    <!-- Scripts -->
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+
+</html>

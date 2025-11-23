@@ -1,37 +1,175 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/main}">
-<head>
-    <title>Edit Goal</title>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head}">
+    <title>Chỉnh sửa mục tiêu - Quản lý tài chính cá nhân</title>
 </head>
-<body>
-<div layout:fragment="content">
-    <h1>Edit Goal</h1>
 
-    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navigation -->
+    <div th:replace="~{fragments/layout :: navbar}"></div>
 
-    <form th:action="@{/goals/edit/{id}(id=${goal.id})}" th:object="${goalForm}" method="post">
-        <div class="form-group">
-            <label for="name">Goal Name</label>
-            <input type="text" id="name" th:field="*{name}" class="form-control" required>
-            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></div>
+    <!-- Flash Messages -->
+    <div th:replace="~{fragments/layout :: flash-messages}"></div>
+
+    <!-- Main Content -->
+    <main class="container mb-4 flex-grow-1">
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">
+                <i class="bi bi-pencil"></i> Chỉnh sửa mục tiêu
+                <small class="text-muted" th:text="'Cập nhật ' + ${goal.name}">Cập nhật mục tiêu</small>
+            </h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <a th:href="@{/goals}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Quay lại danh sách mục tiêu
+                </a>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="targetAmount">Target Amount</label>
-            <input type="number" id="targetAmount" th:field="*{targetAmount}" class="form-control" required step="0.01">
-            <div th:if="${#fields.hasErrors('targetAmount')}" th:errors="*{targetAmount}" class="text-danger"></div>
+
+        <!-- Edit Goal Form -->
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card shadow">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0">
+                            <i class="bi bi-pencil-square"></i> Chỉnh sửa mục tiêu: <span th:text="${goal.name}">Tên mục tiêu</span>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/goals/edit/{id}(id=${goal.id})}" th:object="${goalForm}" method="post" novalidate>
+
+                            <!-- Goal Name -->
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Tên mục tiêu *</label>
+                                <input type="text" class="form-control" id="name" th:field="*{name}"
+                                       placeholder="ví dụ: Quỹ khẩn cấp, Du lịch" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+                                    Tên mục tiêu là bắt buộc
+                                </div>
+                                <small class="form-text text-muted">Cập nhật tên mục tiêu</small>
+                            </div>
+
+                            <!-- Target Amount -->
+                            <div class="mb-3">
+                                <label for="targetAmount" class="form-label">Số tiền mục tiêu (VND) *</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="targetAmount" th:field="*{targetAmount}"
+                                           step="1000" min="1000" placeholder="1000000" required>
+                                    <span class="input-group-text">VND</span>
+                                </div>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('targetAmount')}" th:errors="*{targetAmount}">
+                                    Vui lòng nhập số tiền mục tiêu hợp lệ
+                                </div>
+                                <small class="form-text text-muted">Mục tiêu hiện tại: <span th:text="${#numbers.formatInteger(goal.targetAmount, 3, 'COMMA')} + ' VND'">1,000,000 VND</span></small>
+                            </div>
+
+                            <!-- Target Date -->
+                            <div class="mb-3">
+                                <label for="targetDate" class="form-label">Ngày mục tiêu *</label>
+                                <input type="date" class="form-control" id="targetDate" th:field="*{targetDate}"
+                                       th:value="${#temporals.format(goal.targetDate, 'yyyy-MM-dd')}" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('targetDate')}" th:errors="*{targetDate}">
+                                    Ngày mục tiêu là bắt buộc
+                                </div>
+                                <small class="form-text text-muted">Ngày gốc: <span th:text="${#temporals.format(goal.targetDate, 'dd/MM/yyyy')}">31/12/2024</span></small>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="mb-4">
+                                <label for="description" class="form-label">Mô tả</label>
+                                <textarea class="form-control" id="description" th:field="*{description}" rows="3"
+                                          placeholder="Bạn đang tiết kiệm để làm gì? Cập nhật động lực của bạn..."></textarea>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">
+                                    Mô tả quá dài
+                                </div>
+                                <small class="form-text text-muted">Cập nhật các ghi chú bổ sung về mục tiêu này (tùy chọn)</small>
+                            </div>
+
+                            <!-- Current Progress Info -->
+                            <div class="alert alert-info" role="alert">
+                                <h6 class="alert-heading">
+                                    <i class="bi bi-info-circle"></i> Tiến độ hiện tại
+                                </h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>Số tiền hiện tại:</strong> <span th:text="${#numbers.formatInteger(goal.currentAmount, 3, 'COMMA')} + ' VND'">300,000 VND</span><br>
+                                        <strong>Tiến độ:</strong> <span th:text="${goal.progressPercentage} + '%'">30%</span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Còn lại:</strong> <span th:text="${#numbers.formatInteger(goal.getRemainingAmount(), 3, 'COMMA')} + ' VND'">700,000 VND</span><br>
+                                        <strong>Trạng thái:</strong> <span th:text="${goal.status}">ĐANG HOẠT ĐỘNG</span>
+                                    </div>
+                                </div>
+                                <hr>
+                                <p class="mb-0">
+                                    <small class="text-muted">
+                                        <i class="bi bi-lightbulb"></i> Lưu ý: Thay đổi số tiền mục tiêu có thể ảnh hưởng đến tỷ lệ phần trăm tiến độ của bạn.
+                                        Số tiền đã tiết kiệm hiện tại (<span th:text="${#numbers.formatInteger(goal.currentAmount, 3, 'COMMA')} + ' VND'">300,000 VND</span>) sẽ không thay đổi.
+                                    </small>
+                                </p>
+                            </div>
+
+                            <!-- Form Actions -->
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <a th:href="@{/goals}" class="btn btn-secondary me-2">
+                                        <i class="bi bi-x-circle"></i> Hủy
+                                    </a>
+                                    <a th:href="@{/goals/view/{id}(id=${goal.id})}" class="btn btn-outline-info">
+                                        <i class="bi bi-eye"></i> Xem mục tiêu
+                                    </a>
+                                    <a th:href="@{/goals/contribute/{id}(id=${goal.id})}"
+                                       th:if="${goal.status.name() == 'ACTIVE'}"
+                                       class="btn btn-outline-success">
+                                        <i class="bi bi-plus-circle"></i> Đóng góp
+                                    </a>
+                                </div>
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="bi bi-check-circle"></i> Cập nhật mục tiêu
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="targetDate">Target Date</label>
-            <input type="date" id="targetDate" th:field="*{targetDate}" class="form-control" required>
-            <div th:if="${#fields.hasErrors('targetDate')}" th:errors="*{targetDate}" class="text-danger"></div>
-        </div>
-        <div class="form-group">
-            <label for="description">Description</label>
-            <textarea id="description" th:field="*{description}" class="form-control" rows="3"></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Update Goal</button>
-        <a href="/goals" class="btn btn-secondary">Cancel</a>
-    </form>
-</div>
+    </main>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <!-- Scripts -->
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+
+    <script>
+        // Form validation
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+
+        // Set minimum date to tomorrow for active goals
+        document.addEventListener('DOMContentLoaded', function() {
+            const goalStatus = '[[${goal.status.name()}]]';
+            if (goalStatus === 'ACTIVE') {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                document.getElementById('targetDate').min = tomorrow.toISOString().split('T')[0];
+            }
+        });
+    </script>
 </body>
 </html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head}">
+    <title>Chỉnh Sửa Người Dùng - Quản Lý Tài Chính Cá Nhân</title>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navigation -->
+    <div th:replace="~{fragments/layout :: navbar}"></div>
+
+    <!-- Flash Messages -->
+    <div th:replace="~{fragments/layout :: flash-messages}"></div>
+
+    <!-- Main Content -->
+    <main class="container mb-4 flex-grow-1">
+        <!-- Page Header -->
+        <div
+            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">
+                <i class="bi bi-pencil"></i> Chỉnh Sửa Người Dùng
+            </h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <a th:href="@{/admin/users}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Quay lại Danh sách
+                </a>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title mb-0">
+                            <i class="bi bi-person-gear"></i> Thông Tin Người Dùng
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/admin/users/update/{id}(id=${user.id})}" th:object="${user}" method="post">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">
+                                    <i class="bi bi-person"></i> Tên đăng nhập
+                                </label>
+                                <input type="text" id="username" th:field="*{username}" class="form-control" required>
+                                <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}"
+                                    class="text-danger mt-1"></div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="email" class="form-label">
+                                    <i class="bi bi-envelope"></i> Email
+                                </label>
+                                <input type="email" id="email" th:field="*{email}" class="form-control" required>
+                                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+                                    class="text-danger mt-1"></div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="role" class="form-label">
+                                    <i class="bi bi-shield"></i> Vai trò
+                                </label>
+                                <select id="role" th:field="*{userRole}" class="form-select">
+                                    <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}">
+                                    </option>
+                                </select>
+                                <div class="form-text">Chọn cấp độ truy cập của người dùng</div>
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a th:href="@{/admin/users}" class="btn btn-outline-secondary me-md-2">
+                                    <i class="bi bi-x-circle"></i> Hủy bỏ
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-circle"></i> Cập Nhật Người Dùng
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <div th:replace="~{fragments/layout :: footer}"></div>
+
+    <!-- Scripts -->
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+
+</html>

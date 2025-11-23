@@ -86,3 +86,8 @@ MySQL-Setup-Guide.md
 Personal-Finance-Manager-Brief.md
 PersonalFinanceManager.iml
 query
+/PersonalFinanceManagement
+/.postman
+/postman
+PersonalFinanceManagementAPI.postman_collection.json
+test_endpoints.py

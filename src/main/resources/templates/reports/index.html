@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head}">
+    <title>Báo cáo tài chính - Quản lý tài chính cá nhân</title>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navigation -->
+    <div th:replace="~{fragments/layout :: navbar}"></div>
+
+    <!-- Flash Messages -->
+    <div th:replace="~{fragments/layout :: flash-messages}"></div>
+
+    <!-- Main Content -->
+    <main class="container mb-4 flex-grow-1">
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">
+                <i class="bi bi-graph-up"></i> Báo cáo tài chính
+                <small class="text-muted">Thông tin chi tiết về hiệu suất tài chính và mô hình chi tiêu của bạn</small>
+            </h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <button type="button" class="btn btn-outline-primary" onclick="window.print()">
+                    <i class="bi bi-printer"></i> In báo cáo
+                </button>
+            </div>
+        </div>
+
+        <!-- Date Range Filter -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="bi bi-calendar3"></i> Khoảng thời gian báo cáo
+                </h6>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/reports/generate}" method="post" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="startDate" class="form-label">Từ ngày</label>
+                        <input type="date"
+                               id="startDate"
+                               name="startDate"
+                               class="form-control"
+                               th:value="${startDate}"
+                               required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="endDate" class="form-label">Đến ngày</label>
+                        <input type="date"
+                               id="endDate"
+                               name="endDate"
+                               class="form-control"
+                               th:value="${endDate}"
+                               required>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-search"></i> Tạo báo cáo
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Summary Statistics -->
+        <div class="row mb-4" th:if="${summary != null}">
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Tổng thu nhập</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${summary.totalIncome != null ? #numbers.formatInteger(summary.totalIncome, 3, 'COMMA') + ' VND' : '0 VND'}">0 VND</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-graph-up-arrow text-success" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-danger shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Tổng chi tiêu</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${summary.totalExpenses != null ? #numbers.formatInteger(summary.totalExpenses, 3, 'COMMA') + ' VND' : '0 VND'}">0 VND</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-graph-down-arrow text-danger" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Tiết kiệm ròng</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${summary.netSavings != null ? #numbers.formatInteger(summary.netSavings, 3, 'COMMA') + ' VND' : '0 VND'}">0 VND</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-cash-stack text-primary" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="row" th:if="${summary != null}">
+            <!-- Expense Breakdown Chart -->
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-danger">
+                            <i class="bi bi-pie-chart-fill"></i> Phân tích chi tiêu
+                        </h6>
+                        <span class="badge bg-danger" th:if="${summary.expenseCategorySummary != null and !summary.expenseCategorySummary.empty}" th:text="${summary.expenseCategorySummary.size()} + ' danh mục'">0 danh mục</span>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${summary.expenseCategorySummary != null and !summary.expenseCategorySummary.empty}">
+                            <canvas id="expenseChart"></canvas>
+                        </div>
+                        <div th:if="${summary.expenseCategorySummary == null or summary.expenseCategorySummary.empty}" class="text-center py-4">
+                            <i class="bi bi-pie-chart text-muted" style="font-size: 3rem;"></i>
+                            <p class="text-muted mt-2">Không tìm thấy giao dịch chi tiêu nào trong khoảng thời gian này.</p>
+                            <a th:href="@{/transactions/add}" class="btn btn-danger">
+                                <i class="bi bi-plus-circle"></i> Thêm giao dịch
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Income Breakdown Chart -->
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-success">
+                            <i class="bi bi-bar-chart-fill"></i> Phân tích thu nhập
+                        </h6>
+                        <span class="badge bg-success" th:if="${summary.incomeCategorySummary != null and !summary.incomeCategorySummary.empty}" th:text="${summary.incomeCategorySummary.size()} + ' danh mục'">0 danh mục</span>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${summary.incomeCategorySummary != null and !summary.incomeCategorySummary.empty}">
+                            <canvas id="incomeChart"></canvas>
+                        </div>
+                        <div th:if="${summary.incomeCategorySummary == null or summary.incomeCategorySummary.empty}" class="text-center py-4">
+                            <i class="bi bi-bar-chart text-muted" style="font-size: 3rem;"></i>
+                            <p class="text-muted mt-2">Không tìm thấy giao dịch thu nhập nào trong khoảng thời gian này.</p>
+                            <a th:href="@{/transactions/add}" class="btn btn-success">
+                                <i class="bi bi-plus-circle"></i> Thêm giao dịch
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Data Tables -->
+        <div class="row" th:if="${summary != null}">
+            <!-- Expense Details Table -->
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-danger">
+                            <i class="bi bi-list-ul"></i> Chi tiết chi tiêu
+                        </h6>
+                        <button class="btn btn-sm btn-outline-danger" th:if="${summary.expenseCategorySummary != null and !summary.expenseCategorySummary.empty}" onclick="exportTableToCSV('expense-table', 'bao-cao-chi-tieu.csv')">
+                            <i class="bi bi-download"></i> Xuất file
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive" th:if="${summary.expenseCategorySummary != null and !summary.expenseCategorySummary.empty}">
+                            <table class="table table-hover" id="expense-table">
+                                <thead>
+                                    <tr>
+                                        <th>Danh mục</th>
+                                        <th class="text-center">Số lượng</th>
+                                        <th class="text-end">Số tiền</th>
+                                        <th class="text-end">%</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="item, iterStat : ${summary.expenseCategorySummary}">
+                                        <td>
+                                            <span class="badge" th:style="'background-color:' + ${T(com.finance.utils.ColorUtils).getColor(iterStat.index, 'expense')}" th:text="${item[0]}">Danh mục</span>
+                                        </td>
+                                        <td class="text-center" th:text="${item[1]}">0</td>
+                                        <td class="text-end text-danger" th:text="${#numbers.formatInteger(item[2], 3, 'COMMA')} + ' VND'">0 VND</td>
+                                        <td class="text-end" th:text="${#numbers.formatDecimal(item[2] * 100 / summary.totalExpenses, 1, 1)} + '%'">0%</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot th:if="${summary.expenseCategorySummary.size() > 1}">
+                                    <tr class="table-light">
+                                        <td><strong>Tổng cộng</strong></td>
+                                        <td class="text-center"><strong>-</strong></td>
+                                        <td class="text-end"><strong th:text="${#numbers.formatInteger(summary.totalExpenses, 3, 'COMMA')} + ' VND'">0 VND</strong></td>
+                                        <td class="text-end"><strong>100%</strong></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div th:if="${summary.expenseCategorySummary == null or summary.expenseCategorySummary.empty}" class="text-center py-4">
+                            <i class="bi bi-table text-muted" style="font-size: 3rem;"></i>
+                            <p class="text-muted mt-2">Không có dữ liệu chi tiêu để hiển thị.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Income Details Table -->
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-success">
+                            <i class="bi bi-list-ul"></i> Chi tiết thu nhập
+                        </h6>
+                        <button class="btn btn-sm btn-outline-success" th:if="${summary.incomeCategorySummary != null and !summary.incomeCategorySummary.empty}" onclick="exportTableToCSV('income-table', 'bao-cao-thu-nhap.csv')">
+                            <i class="bi bi-download"></i> Xuất file
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive" th:if="${summary.incomeCategorySummary != null and !summary.incomeCategorySummary.empty}">
+                            <table class="table table-hover" id="income-table">
+                                <thead>
+                                    <tr>
+                                        <th>Danh mục</th>
+                                        <th class="text-center">Số lượng</th>
+                                        <th class="text-end">Số tiền</th>
+                                        <th class="text-end">%</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="item, iterStat : ${summary.incomeCategorySummary}">
+                                        <td>
+                                            <span class="badge" th:style="'background-color:' + ${T(com.finance.utils.ColorUtils).getColor(iterStat.index, 'income')}" th:text="${item[0]}">Danh mục</span>
+                                        </td>
+                                        <td class="text-center" th:text="${item[1]}">0</td>
+                                        <td class="text-end text-success" th:text="${#numbers.formatInteger(item[2], 3, 'COMMA')} + ' VND'">0 VND</td>
+                                        <td class="text-end" th:text="${#numbers.formatDecimal(item[2] * 100 / summary.totalIncome, 1, 1)} + '%'">0%</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot th:if="${summary.incomeCategorySummary.size() > 1}">
+                                    <tr class="table-light">
+                                        <td><strong>Tổng cộng</strong></td>
+                                        <td class="text-center"><strong>-</strong></td>
+                                        <td class="text-end"><strong th:text="${#numbers.formatInteger(summary.totalIncome, 3, 'COMMA')} + ' VND'">0 VND</strong></td>
+                                        <td class="text-end"><strong>100%</strong></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div th:if="${summary.incomeCategorySummary == null or summary.incomeCategorySummary.empty}" class="text-center py-4">
+                            <i class="bi bi-table text-muted" style="font-size: 3rem;"></i>
+                            <p class="text-muted mt-2">Không có dữ liệu thu nhập để hiển thị.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Initialize Charts -->
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            const expenseData = {
+                labels: /*[[${expensePieChartLabels}]]*/ [],
+                values: /*[[${expensePieChartData}]]*/ []
+            };
+
+            const incomeData = {
+                labels: /*[[${incomePieChartLabels}]]*/ [],
+                values: /*[[${incomePieChartData}]]*/ []
+            };
+
+            // Initialize expense chart
+            if (expenseData.labels && expenseData.labels.length > 0) {
+                const expenseCtx = document.getElementById('expenseChart');
+                if (expenseCtx) {
+                    new Chart(expenseCtx, {
+                        type: 'pie',
+                        data: {
+                            labels: expenseData.labels,
+                            datasets: [{
+                                data: expenseData.values,
+                                backgroundColor: [
+                                    '#dc3545', '#fd7e14', '#ffc107', '#20c997',
+                                    '#0dcaf0', '#6f42c1', '#d63384', '#6c757d'
+                                ]
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom'
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+
+            // Initialize income chart
+            if (incomeData.labels && incomeData.labels.length > 0) {
+                const incomeCtx = document.getElementById('incomeChart');
+                if (incomeCtx) {
+                    new Chart(incomeCtx, {
+                        type: 'pie',
+                        data: {
+                            labels: incomeData.labels,
+                            datasets: [{
+                                data: incomeData.values,
+                                backgroundColor: [
+                                    '#198754', '#20c997', '#0dcaf0', '#0d6efd',
+                                    '#6f42c1', '#d63384', '#fd7e14', '#ffc107'
+                                ]
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom'
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+
+            // Export functionality
+            window.exportTableToCSV = function(tableId, filename) {
+                const table = document.getElementById(tableId);
+                if (!table) return;
+
+                let csv = [];
+                const rows = table.querySelectorAll('tr');
+
+                for (let i = 0; i < rows.length; i++) {
+                    const row = [];
+                    const cols = rows[i].querySelectorAll('td, th');
+
+                    for (let j = 0; j < cols.length; j++) {
+                        let cellText = cols[j].innerText.replace(/"/g, '""');
+                        row.push('"' + cellText + '"');
+                    }
+
+                    csv.push(row.join(','));
+                }
+
+                const csvFile = new Blob([csv.join('\n')], { type: 'text/csv' });
+                const downloadLink = document.createElement('a');
+                downloadLink.download = filename;
+                downloadLink.href = window.URL.createObjectURL(csvFile);
+                downloadLink.style.display = 'none';
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+            };
+        });
+    </script>
+
+    <!-- Global Scripts -->
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

@@ -1,31 +1,272 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/main}">
-<head>
-    <title>View Goal</title>
-</head>
-<body>
-<div layout:fragment="content">
-    <h1 th:text="${goal.name}">Goal Name</h1>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-    <div class="card">
-        <div class="card-body">
-            <p th:text="${goal.description}">Goal Description</p>
-            <p><strong>Target Amount:</strong> <span th:text="${#numbers.formatCurrency(goal.targetAmount)}"></span></p>
-            <p><strong>Current Amount:</strong> <span th:text="${#numbers.formatCurrency(goal.currentAmount)}"></span></p>
-            <p><strong>Remaining:</strong> <span th:text="${#numbers.formatCurrency(goal.getRemainingAmount())}"></span></p>
-            <p><strong>Progress:</strong> <span th:text="${#numbers.formatDecimal(goal.progressPercentage, 1, 1)}"></span>%</p>
-            <div class="progress mb-3">
-                <div class="progress-bar" role="progressbar" th:style="'width: ' + ${goal.progressPercentage} + '%;'" th:aria-valuenow="${goal.progressPercentage}" aria-valuemin="0" aria-valuemax="100"></div>
+<head th:replace="~{fragments/layout :: head}">
+    <title>Xem mục tiêu - Quản lý tài chính cá nhân</title>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navigation -->
+    <div th:replace="~{fragments/layout :: navbar}"></div>
+
+    <!-- Flash Messages -->
+    <div th:replace="~{fragments/layout :: flash-messages}"></div>
+
+    <!-- Main Content -->
+    <main class="container mb-4 flex-grow-1">
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">
+                <i class="bi bi-eye"></i> Chi tiết mục tiêu
+                <small class="text-muted" th:text="${goal.name}">Tên mục tiêu</small>
+            </h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <a th:href="@{/goals}" class="btn btn-secondary me-2">
+                    <i class="bi bi-arrow-left"></i> Quay lại danh sách mục tiêu
+                </a>
+                <a th:href="@{/goals/edit/{id}(id=${goal.id})}"
+                   th:if="${goal.status.name() == 'ACTIVE'}"
+                   class="btn btn-warning">
+                    <i class="bi bi-pencil"></i> Chỉnh sửa mục tiêu
+                </a>
             </div>
-            <p><strong>Target Date:</strong> <span th:text="${#temporals.format(goal.targetDate, 'dd-MM-yyyy')}"></span></p>
-            <p><strong>Days Remaining:</strong> <span th:text="${goal.getDaysRemaining()}"></span></p>
-            <p><strong>Status:</strong> <span th:text="${goal.status.displayName}"></span></p>
-            
-            <a href="/goals" class="btn btn-primary">Back to List</a>
-            <a th:href="@{/goals/edit/{id}(id=${goal.id})}" class="btn btn-info">Edit</a>
-            <a th:href="@{/goals/contribute/{id}(id=${goal.id})}" class="btn btn-success">Contribute</a>
         </div>
-    </div>
-</div>
+
+        <!-- Goal Progress Overview -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Số tiền mục tiêu</h5>
+                        <h3 th:text="${#numbers.formatInteger(goal.targetAmount, 3, 'COMMA')} + ' VND'">1,000,000 VND</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Tiến độ hiện tại</h5>
+                        <h3 th:text="${#numbers.formatInteger(goal.currentAmount, 3, 'COMMA')} + ' VND'">300,000 VND</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card" th:classappend="${goal.status.name() == 'COMPLETED' ? 'bg-warning' : 'bg-info'} + ' text-white'">
+                    <div class="card-body text-center">
+                        <h5 class="card-title" th:text="${goal.status.name() == 'COMPLETED' ? 'Đã hoàn thành' : 'Còn lại'}">
+                            Còn lại
+                        </h5>
+                        <h3 th:text="${#numbers.formatInteger(goal.getRemainingAmount(), 3, 'COMMA')} + ' VND'">700,000 VND</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card" th:classappend="${goal.status.name() == 'COMPLETED' ? 'bg-success' : (goal.isOverdue() ? 'bg-danger' : 'bg-secondary')} + ' text-white'">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Tiến độ</h5>
+                        <h3 th:text="${goal.progressPercentage} + '%'">30%</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Goal Details -->
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-info-circle"></i> Thông tin mục tiêu
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-borderless">
+                            <tr>
+                                <td><strong>Tên mục tiêu:</strong></td>
+                                <td th:text="${goal.name}">Tên mục tiêu</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Trạng thái:</strong></td>
+                                <td>
+                                    <span class="badge"
+                                          th:class="${goal.status.name() == 'COMPLETED' ? 'bg-success' : (goal.isOverdue() ? 'bg-danger' : 'bg-primary')}"
+                                          th:text="${goal.status}">
+                                        ĐANG HOẠT ĐỘNG
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr th:if="${goal.targetDate}">
+                                <td><strong>Ngày mục tiêu:</strong></td>
+                                <td th:text="${#temporals.format(goal.targetDate, 'dd/MM/yyyy')}">31/12/2024</td>
+                            </tr>
+                            <tr th:if="${goal.status.name() == 'ACTIVE'}">
+                                <td><strong>Số ngày còn lại:</strong></td>
+                                <td>
+                                    <span th:text="${goal.getDaysRemaining()}" class="badge"
+                                          th:class="${goal.getDaysRemaining() <= 7 ? 'bg-danger' : 'bg-info'}">30</span>
+                                    ngày
+                                </td>
+                            </tr>
+                            <tr th:if="${goal.status.name() == 'COMPLETED'}">
+                                <td><strong>Ngày hoàn thành:</strong></td>
+                                <td th:text="${#temporals.format(goal.completedAt, 'dd/MM/yyyy')}">15/12/2024</td>
+                            </tr>
+                            <tr th:if="${goal.isOverdue()}">
+                                <td><strong>Quá hạn:</strong></td>
+                                <td>
+                                    <span th:text="${goal.getDaysOverdue()}" class="badge bg-danger">5</span>
+                                    ngày
+                                </td>
+                            </tr>
+                            <tr th:if="${goal.description}">
+                                <td><strong>Mô tả:</strong></td>
+                                <td th:text="${goal.description}">Mô tả mục tiêu</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ngày tạo:</strong></td>
+                                <td th:text="${#temporals.format(goal.createdAt, 'dd/MM/yyyy')}">01/01/2024</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Visualization -->
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-graph-up"></i> Trực quan hóa tiến độ
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Progress Bar -->
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h6>Tiến độ mục tiêu</h6>
+                                <span class="badge" th:class="${goal.status.name() == 'COMPLETED' ? 'bg-success' : 'bg-primary'}"
+                                      th:text="${goal.progressPercentage} + '%'">
+                                    30%
+                                </span>
+                            </div>
+                            <div class="progress" style="height: 30px;">
+                                <div class="progress-bar" role="progressbar"
+                                     th:style="'width: ' + ${goal.progressPercentage} + '%'"
+                                     th:classappend="${goal.status.name() == 'COMPLETED' ? 'bg-success' : (goal.progressPercentage >= 80 ? 'bg-warning' : 'bg-primary')}"
+                                     th:text="${#numbers.formatInteger(goal.currentAmount, 3, 'COMMA')} + ' / ' + ${#numbers.formatInteger(goal.targetAmount, 3, 'COMMA')} + ' VND'">
+                                    300,000 / 1,000,000 VND
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Time Information -->
+                        <div class="mb-4" th:if="${goal.status.name() == 'ACTIVE'}">
+                            <h6>Phân tích thời gian</h6>
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <div class="border rounded p-2">
+                                        <div class="text-muted small">Ngày đã trôi qua</div>
+                                        <strong th:text="${goal.getDaysElapsed()}">15</strong>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="border rounded p-2">
+                                        <div class="text-muted small">Ngày còn lại</div>
+                                        <strong th:text="${goal.getDaysRemaining()}" class="text-info">30</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Savings Rate -->
+                        <div class="mb-3" th:if="${goal.status.name() == 'ACTIVE'}">
+                            <h6>Tỷ lệ tiết kiệm trung bình</h6>
+                            <div class="row text-center">
+                                <div class="col-4">
+                                    <div class="border rounded p-2">
+                                        <div class="text-muted small">Hàng ngày</div>
+                                        <strong class="text-success" th:text="${#numbers.formatInteger(goal.currentAmount / goal.getDaysElapsed(), 3, 'COMMA')} + ' VND'">
+                                            5,000 VND
+                                        </strong>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border rounded p-2">
+                                        <div class="text-muted small">Hàng tuần</div>
+                                        <strong class="text-success" th:text="${#numbers.formatInteger((goal.currentAmount / goal.getDaysElapsed()) * 7, 3, 'COMMA')} + ' VND'">
+                                            35,000 VND
+                                        </strong>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border rounded p-2">
+                                        <div class="text-muted small">Hàng tháng</div>
+                                        <strong class="text-success" th:text="${#numbers.formatInteger((goal.currentAmount / goal.getDaysElapsed()) * 30, 3, 'COMMA')} + ' VND'">
+                                            150,000 VND
+                                        </strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="card shadow">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <a th:href="@{/goals/edit/{id}(id=${goal.id})}"
+                           th:if="${goal.status.name() == 'ACTIVE'}"
+                           class="btn btn-warning me-2">
+                            <i class="bi bi-pencil"></i> Chỉnh sửa mục tiêu
+                        </a>
+                        <a th:href="@{/goals/contribute/{id}(id=${goal.id})}"
+                           th:if="${goal.status.name() == 'ACTIVE'}"
+                           class="btn btn-success me-2">
+                            <i class="bi bi-plus-circle"></i> Thêm đóng góp
+                        </a>
+                        <button type="button" class="btn btn-outline-info me-2"
+                                th:if="${goal.status.name() == 'ACTIVE'}"
+                                th:onclick="'confirmComplete(' + ${goal.id} + ')'">
+                            <i class="bi bi-check"></i> Đánh dấu hoàn thành
+                        </button>
+                        <button type="button" class="btn btn-outline-danger"
+                                th:onclick="'confirmDelete(' + ${goal.id} + ')'">
+                            <i class="bi bi-trash"></i> Xóa mục tiêu
+                        </button>
+                    </div>
+                    <div>
+                        <a th:href="@{/goals}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Quay lại danh sách mục tiêu
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <!-- Scripts -->
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+
+    <script>
+        function confirmDelete(goalId) {
+            if (confirm('Bạn có chắc chắn muốn xóa mục tiêu này? Hành động này không thể hoàn tác.')) {
+                window.location.href = '/goals/delete/' + goalId;
+            }
+        }
+
+        function confirmComplete(goalId) {
+            if (confirm('Bạn có chắc chắn muốn đánh dấu mục tiêu này là đã hoàn thành?')) {
+                window.location.href = '/goals/complete/' + goalId;
+            }
+        }
+    </script>
 </body>
 </html>

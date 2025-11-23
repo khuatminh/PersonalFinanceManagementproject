@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head}">
+    <title>Trang chủ - Quản lý Tài chính Cá nhân</title>
+</head>
+
+<body class="bg-light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/}">
+                <i class="bi bi-wallet2"></i> Quản lý Tài chính
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/login}">
+                            <i class="bi bi-box-arrow-in-right"></i> Đăng nhập
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/user/register}">
+                            <i class="bi bi-person-plus"></i> Đăng ký
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="container-fluid bg-primary text-white py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4 fw-bold mb-4">Quản lý Tài chính Cá nhân</h1>
+                    <p class="lead mb-4">
+                        Kiểm soát tài chính của bạn một cách dễ dàng và hiệu quả.
+                        Theo dõi thu nhập, chi tiêu, đặt mục tiêu và quản lý ngân sách.
+                    </p>
+                    <div class="d-flex gap-3">
+                        <a th:href="@{/user/register}" class="btn btn-light btn-lg">
+                            <i class="bi bi-person-plus"></i> Bắt đầu ngay
+                        </a>
+                        <a th:href="@{/login}" class="btn btn-outline-light btn-lg">
+                            <i class="bi bi-box-arrow-in-right"></i> Đăng nhập
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <i class="bi bi-graph-up-arrow" style="font-size: 8rem; opacity: 0.8;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="container py-5">
+        <div class="row text-center">
+            <div class="col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body p-4">
+                        <i class="bi bi-arrow-left-right text-primary" style="font-size: 3rem;"></i>
+                        <h4 class="mt-3 mb-3">Giao dịch</h4>
+                        <p class="text-muted">
+                            Ghi chép và theo dõi tất cả các giao dịch thu nhập và chi tiêu một cách thuận tiện.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body p-4">
+                        <i class="bi bi-piggy-bank text-success" style="font-size: 3rem;"></i>
+                        <h4 class="mt-3 mb-3">Ngân sách</h4>
+                        <p class="text-muted">
+                            Lập kế hoạch ngân sách và kiểm soát chi tiêu trong từng danh mục hiệu quả.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body p-4">
+                        <i class="bi bi-trophy text-warning" style="font-size: 3rem;"></i>
+                        <h4 class="mt-3 mb-3">Mục tiêu</h4>
+                        <p class="text-muted">
+                            Đặt mục tiêu tiết kiệm và theo dõi tiến độ đạt được các mục tiêu tài chính của bạn.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row text-center mt-4">
+            <div class="col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body p-4">
+                        <i class="bi bi-file-earmark-bar-graph text-info" style="font-size: 3rem;"></i>
+                        <h4 class="mt-3 mb-3">Báo cáo</h4>
+                        <p class="text-muted">
+                            Xem các báo cáo chi tiết và biểu đồ trực quan về tình hình tài chính của bạn.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body p-4">
+                        <i class="bi bi-bell text-danger" style="font-size: 3rem;"></i>
+                        <h4 class="mt-3 mb-3">Thông báo</h4>
+                        <p class="text-muted">
+                            Nhận thông báo về hạn mức ngân sách và các mục tiêu quan trọng.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body p-4">
+                        <i class="bi bi-robot text-secondary" style="font-size: 3rem;"></i>
+                        <h4 class="mt-3 mb-3">Trợ lý AI</h4>
+                        <p class="text-muted">
+                            Trợ lý thông minh giúp bạn ghi chép giao dịch nhanh chóng và dễ dàng.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="bg-light py-5">
+        <div class="container text-center">
+            <h2 class="mb-4">Sẵn sàng kiểm soát tài chính của bạn?</h2>
+            <p class="lead mb-4">
+                Tham gia hàng ngàn người dùng đang quản lý tài chính hiệu quả với ứng dụng của chúng tôi.
+            </p>
+            <a th:href="@{/user/register}" class="btn btn-primary btn-lg">
+                <i class="bi bi-person-plus"></i> Đăng ký miễn phí
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

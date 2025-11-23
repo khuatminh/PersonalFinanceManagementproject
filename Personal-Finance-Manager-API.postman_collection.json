@@ -1,0 +1,1180 @@
+{
+	"info": {
+		"_postman_id": "personal-finance-manager-api",
+		"name": "Personal Finance Manager API",
+		"description": "Complete API testing collection for Personal Finance Manager Spring Boot application",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "🔐 Authentication",
+			"item": [
+				{
+					"name": "GET Login Page",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["login"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "{{username}}"
+								},
+								{
+									"key": "password",
+									"value": "{{password}}"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/perform_login",
+							"host": ["{{baseUrl}}"],
+							"path": ["perform_login"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Register Page",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/register",
+							"host": ["{{baseUrl}}"],
+							"path": ["user", "register"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "testuser"
+								},
+								{
+									"key": "email",
+									"value": "test@example.com"
+								},
+								{
+									"key": "password",
+									"value": "password123"
+								},
+								{
+									"key": "confirmPassword",
+									"value": "password123"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/register",
+							"host": ["{{baseUrl}}"],
+							"path": ["user", "register"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/logout",
+							"host": ["{{baseUrl}}"],
+							"path": ["logout"]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "User authentication endpoints"
+		},
+		{
+			"name": "👤 User Management",
+			"item": [
+				{
+					"name": "GET Dashboard",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/dashboard",
+							"host": ["{{baseUrl}}"],
+							"path": ["user", "dashboard"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET User Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/profile",
+							"host": ["{{baseUrl}}"],
+							"path": ["user", "profile"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Edit Profile Form",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/edit",
+							"host": ["{{baseUrl}}"],
+							"path": ["user", "edit"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Update Profile",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "updateduser"
+								},
+								{
+									"key": "email",
+									"value": "updated@example.com"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/update",
+							"host": ["{{baseUrl}}"],
+							"path": ["user", "update"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Change Password Form",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/change-password",
+							"host": ["{{baseUrl}}"],
+							"path": ["user", "change-password"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Change Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "currentPassword",
+									"value": "{{currentPassword}}"
+								},
+								{
+									"key": "newPassword",
+									"value": "newpassword123"
+								},
+								{
+									"key": "confirmNewPassword",
+									"value": "newpassword123"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/change-password",
+							"host": ["{{baseUrl}}"],
+							"path": ["user", "change-password"]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "User profile management endpoints"
+		},
+		{
+			"name": "💰 Transactions",
+			"item": [
+				{
+					"name": "GET List Transactions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/transactions",
+							"host": ["{{baseUrl}}"],
+							"path": ["transactions"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Add Transaction Form",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/transactions/add",
+							"host": ["{{baseUrl}}"],
+							"path": ["transactions", "add"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Add Transaction - INCOME",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "description",
+									"value": "Salary Payment"
+								},
+								{
+									"key": "amount",
+									"value": "5000.00"
+								},
+								{
+									"key": "type",
+									"value": "INCOME"
+								},
+								{
+									"key": "categoryId",
+									"value": "1"
+								},
+								{
+									"key": "transactionDate",
+									"value": "2025-11-23T10:00:00"
+								},
+								{
+									"key": "notes",
+									"value": "Monthly salary"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/transactions/add",
+							"host": ["{{baseUrl}}"],
+							"path": ["transactions", "add"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Add Transaction - EXPENSE",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "description",
+									"value": "Grocery Shopping"
+								},
+								{
+									"key": "amount",
+									"value": "150.50"
+								},
+								{
+									"key": "type",
+									"value": "EXPENSE"
+								},
+								{
+									"key": "categoryId",
+									"value": "2"
+								},
+								{
+									"key": "transactionDate",
+									"value": "2025-11-23T15:30:00"
+								},
+								{
+									"key": "notes",
+									"value": "Weekly groceries"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/transactions/add",
+							"host": ["{{baseUrl}}"],
+							"path": ["transactions", "add"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Edit Transaction Form",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/transactions/edit/{{transactionId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["transactions", "edit", "{{transactionId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Update Transaction",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "description",
+									"value": "Updated Transaction"
+								},
+								{
+									"key": "amount",
+									"value": "200.00"
+								},
+								{
+									"key": "type",
+									"value": "EXPENSE"
+								},
+								{
+									"key": "categoryId",
+									"value": "3"
+								},
+								{
+									"key": "transactionDate",
+									"value": "2025-11-23T12:00:00"
+								},
+								{
+									"key": "notes",
+									"value": "Updated notes"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/transactions/edit/{{transactionId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["transactions", "edit", "{{transactionId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Delete Transaction",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/transactions/delete/{{transactionId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["transactions", "delete", "{{transactionId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Search Transactions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/transactions/search?keyword=grocery",
+							"host": ["{{baseUrl}}"],
+							"path": ["transactions", "search"],
+							"query": [
+								{
+									"key": "keyword",
+									"value": "grocery"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Filter Transactions by Type",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/transactions/filter?type=EXPENSE",
+							"host": ["{{baseUrl}}"],
+							"path": ["transactions", "filter"],
+							"query": [
+								{
+									"key": "type",
+									"value": "EXPENSE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Filter Transactions by Category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/transactions/filter?categoryId=1",
+							"host": ["{{baseUrl}}"],
+							"path": ["transactions", "filter"],
+							"query": [
+								{
+									"key": "categoryId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Filter Transactions by Date Range",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/transactions/filter?startDate=2025-11-01T00:00:00&endDate=2025-11-30T23:59:59",
+							"host": ["{{baseUrl}}"],
+							"path": ["transactions", "filter"],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2025-11-01T00:00:00"
+								},
+								{
+									"key": "endDate",
+									"value": "2025-11-30T23:59:59"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Transaction management endpoints"
+		},
+		{
+			"name": "📊 Budgets",
+			"item": [
+				{
+					"name": "GET List Budgets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/budgets",
+							"host": ["{{baseUrl}}"],
+							"path": ["budgets"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Add Budget Form",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/budgets/add",
+							"host": ["{{baseUrl}}"],
+							"path": ["budgets", "add"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Add Budget",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Monthly Food Budget"
+								},
+								{
+									"key": "amount",
+									"value": "500.00"
+								},
+								{
+									"key": "startDate",
+									"value": "2025-11-01"
+								},
+								{
+									"key": "endDate",
+									"value": "2025-11-30"
+								},
+								{
+									"key": "categoryId",
+									"value": "2"
+								},
+								{
+									"key": "description",
+									"value": "Monthly budget for groceries and dining"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/budgets/add",
+							"host": ["{{baseUrl}}"],
+							"path": ["budgets", "add"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Edit Budget Form",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/budgets/edit/{{budgetId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["budgets", "edit", "{{budgetId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Update Budget",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Updated Monthly Food Budget"
+								},
+								{
+									"key": "amount",
+									"value": "600.00"
+								},
+								{
+									"key": "startDate",
+									"value": "2025-11-01"
+								},
+								{
+									"key": "endDate",
+									"value": "2025-11-30"
+								},
+								{
+									"key": "categoryId",
+									"value": "2"
+								},
+								{
+									"key": "description",
+									"value": "Updated monthly budget for groceries and dining"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/budgets/edit/{{budgetId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["budgets", "edit", "{{budgetId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET View Budget Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/budgets/view/{{budgetId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["budgets", "view", "{{budgetId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Delete Budget",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/budgets/delete/{{budgetId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["budgets", "delete", "{{budgetId}}"]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Budget management endpoints"
+		},
+		{
+			"name": "🎯 Goals",
+			"item": [
+				{
+					"name": "GET List Goals",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/goals",
+							"host": ["{{baseUrl}}"],
+							"path": ["goals"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Add Goal Form",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/goals/add",
+							"host": ["{{baseUrl}}"],
+							"path": ["goals", "add"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Add Goal",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Emergency Fund"
+								},
+								{
+									"key": "targetAmount",
+									"value": "10000.00"
+								},
+								{
+									"key": "targetDate",
+									"value": "2025-12-31"
+								},
+								{
+									"key": "description",
+									"value": "Build emergency fund equal to 6 months expenses"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/goals/add",
+							"host": ["{{baseUrl}}"],
+							"path": ["goals", "add"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Edit Goal Form",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/goals/edit/{{goalId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["goals", "edit", "{{goalId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Update Goal",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Updated Emergency Fund"
+								},
+								{
+									"key": "targetAmount",
+									"value": "12000.00"
+								},
+								{
+									"key": "targetDate",
+									"value": "2025-12-31"
+								},
+								{
+									"key": "description",
+									"value": "Updated emergency fund goal"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/goals/edit/{{goalId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["goals", "edit", "{{goalId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET View Goal Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/goals/view/{{goalId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["goals", "view", "{{goalId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Delete Goal",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/goals/delete/{{goalId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["goals", "delete", "{{goalId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Complete Goal",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/goals/complete/{{goalId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["goals", "complete", "{{goalId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Contribute Form",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/goals/contribute/{{goalId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["goals", "contribute", "{{goalId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Contribute to Goal",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "amount",
+									"value": "500.00"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/goals/contribute/{{goalId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["goals", "contribute", "{{goalId}}"]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Savings goals management endpoints"
+		},
+		{
+			"name": "🔔 Notifications",
+			"item": [
+				{
+					"name": "GET List Notifications",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/notifications",
+							"host": ["{{baseUrl}}"],
+							"path": ["notifications"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Mark Notification as Read",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "id",
+									"value": "{{notificationId}}"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/notifications/mark-read",
+							"host": ["{{baseUrl}}"],
+							"path": ["notifications", "mark-read"]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Notification management endpoints"
+		},
+		{
+			"name": "🛡️ Admin",
+			"item": [
+				{
+					"name": "GET Admin Dashboard",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin",
+							"host": ["{{baseUrl}}"],
+							"path": ["admin"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET List Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/user",
+							"host": ["{{baseUrl}}"],
+							"path": ["admin", "user"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Edit User Form",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/users/edit/{{userId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["admin", "users", "edit", "{{userId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Update User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "updateduser"
+								},
+								{
+									"key": "email",
+									"value": "updated@example.com"
+								},
+								{
+									"key": "role",
+									"value": "USER"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/users/update/{{userId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["admin", "users", "update", "{{userId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Delete User Form",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/users/delete/{{userId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["admin", "users", "delete", "{{userId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Delete User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/users/delete/{{userId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["admin", "users", "delete", "{{userId}}"]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Admin-only endpoints for user management"
+		},
+		{
+			"name": "🏠 Public & Static",
+			"item": [
+				{
+					"name": "GET Home Page",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/",
+							"host": ["{{baseUrl}}"],
+							"path": [""]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Access Denied",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/access-denied",
+							"host": ["{{baseUrl}}"],
+							"path": ["access-denied"]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Public endpoints and static resources"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// This script runs before each request",
+					"console.log('Sending request to: ' + pm.info.requestName);",
+					"",
+					"// You can add authentication headers here if needed",
+					"// if (pm.environment.get('auth_token')) {",
+					"//     pm.request.headers.add({",
+					"//         key: 'Authorization',",
+					"//         value: 'Bearer ' + pm.environment.get('auth_token')",
+					"//     });",
+					"// }"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// This script runs after each response",
+					"console.log('Response status: ' + pm.response.code);",
+					"",
+					"// Basic response tests",
+					"pm.test('Status code is not 500', function () {",
+					"    pm.expect(pm.response.code).to.not.equal(500);",
+					"});",
+					"",
+					"pm.test('Response time is less than 5000ms', function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+					"});",
+					"",
+					"// Check for authentication redirects (302) for protected endpoints",
+					"if (pm.request.url.path.includes('/user') || ",
+					"    pm.request.url.path.includes('/admin') || ",
+					"    pm.request.url.path.includes('/transactions') || ",
+					"    pm.request.url.path.includes('/budgets') || ",
+					"    pm.request.url.path.includes('/goals') || ",
+					"    pm.request.url.path.includes('/notifications')) {",
+					"    ",
+					"    if (pm.response.code === 302) {",
+					"        pm.test('Redirected to login for protected endpoint', function () {",
+					"            pm.expect(pm.response.headers.get('Location')).to.include('/login');",
+					"        });",
+					"    }",
+					"}"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "username",
+			"value": "testuser",
+			"type": "string"
+		},
+		{
+			"key": "password",
+			"value": "password123",
+			"type": "string"
+		},
+		{
+			"key": "currentPassword",
+			"value": "password123",
+			"type": "string"
+		},
+		{
+			"key": "transactionId",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "budgetId",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "goalId",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "userId",
+			"value": "2",
+			"type": "string"
+		},
+		{
+			"key": "notificationId",
+			"value": "1",
+			"type": "string"
+		}
+	]
+}

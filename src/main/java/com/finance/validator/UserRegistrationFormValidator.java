@@ -4,16 +4,17 @@ import com.finance.form.UserRegistrationForm;
 import com.finance.service.UserService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import lombok.RequiredArgsConstructor;
+
 @Component
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserRegistrationFormValidator implements Validator {
 
-    @Autowired
     UserService userService;
 
     @Override

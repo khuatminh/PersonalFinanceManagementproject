@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+    th:fragment="html">
+
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title != null ? title + ' - Quản lý Tài chính Cá nhân' : 'Quản lý Tài chính Cá nhân'}">
+        Quản lý Tài chính Cá nhân
+    </title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+
+    <!-- AI Chat Styles -->
+    <style>
+        /* Floating Chat Button */
+        .chat-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50% !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .chat-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .chat-button i {
+            font-size: 24px;
+        }
+
+        /* Modal Chat Styles */
+        .modal-lg {
+            max-width: 600px;
+        }
+
+        .chat-container {
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            border: none;
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            max-height: 350px;
+        }
+
+        .chat-input-container {
+            padding: 20px;
+            background-color: white;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message.bot {
+            justify-content: flex-start;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            word-wrap: break-word;
+        }
+
+        .message.user .message-content {
+            background-color: #007bff;
+            color: white;
+            margin-left: auto;
+        }
+
+        .message.bot .message-content {
+            background-color: #e9ecef;
+            color: #333;
+            margin-right: auto;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 0 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .message.user .message-avatar {
+            background-color: #007bff;
+            color: white;
+            order: 1;
+        }
+
+        .message.bot .message-avatar {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .typing-indicator .message-content {
+            background-color: #e9ecef;
+            padding: 10px 15px;
+            border-radius: 18px;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #6c757d;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+            }
+
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .transaction-extracted {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 8px;
+            border-radius: 5px;
+            margin-top: 8px;
+            font-size: 0.9em;
+        }
+
+        .chat-welcome {
+            text-align: center;
+            padding: 30px 20px;
+            color: #6c757d;
+        }
+
+        .chat-welcome i {
+            font-size: 36px;
+            margin-bottom: 15px;
+            color: #007bff;
+        }
+
+        .chat-welcome h5 {
+            margin-bottom: 15px;
+            color: #495057;
+        }
+
+        .chat-welcome p {
+            margin-bottom: 20px;
+            font-size: 0.95em;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .chat-button {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+            }
+
+            .chat-button i {
+                font-size: 20px;
+            }
+
+            .modal-lg {
+                max-width: 95%;
+                margin: 10px;
+            }
+
+            .chat-container {
+                height: 400px;
+            }
+
+            .chat-messages {
+                max-height: 250px;
+            }
+
+            .message-content {
+                max-width: 85%;
+            }
+        }
+
+        /* Animation for modal entrance */
+        #chatModal .modal-dialog {
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Custom scrollbar */
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/dashboard}">
+                <i class="bi bi-wallet2"></i> Quản lý Tài chính
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" th:href="@{/dashboard}">
+                            <i class="bi bi-house"></i> Bảng điều khiển
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" th:href="@{/transactions}">
+                            <i class="bi bi-arrow-left-right"></i> Giao dịch
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" th:href="@{/budgets}">
+                            <i class="bi bi-piggy-bank"></i> Ngân sách
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" th:href="@{/goals}">
+                            <i class="bi bi-trophy"></i> Mục tiêu
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" th:href="@{/reports}">
+                            <i class="bi bi-file-earmark-bar-graph"></i> Báo cáo
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                        <a class="nav-link" th:href="@{/admin}">
+                            <i class="bi bi-gear"></i> Quản trị
+                        </a>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav">
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" th:href="@{/notifications}">
+                            <i class="bi bi-bell"></i> Thông báo
+                            <span th:if="${unreadNotificationCount > 0}" class="badge rounded-pill bg-danger"
+                                th:text="${unreadNotificationCount}"></span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i>
+                            <span sec:authentication="name">User</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" th:href="@{/user/profile}">
+                                    <i class="bi bi-person"></i> Hồ sơ
+                                </a></li>
+                            <li><a class="dropdown-item" th:href="@{/user/change-password}">
+                                    <i class="bi bi-key"></i> Đổi mật khẩu
+                                </a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" th:href="@{/logout}">
+                                    <i class="bi bi-box-arrow-right"></i> Đăng xuất
+                                </a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAnonymous()">
+                        <a class="nav-link" th:href="@{/login}">
+                            <i class="bi bi-box-arrow-in-right"></i> Đăng nhập
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAnonymous()">
+                        <a class="nav-link" th:href="@{/user/register}">
+                            <i class="bi bi-person-plus"></i> Đăng ký
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    <div th:fragment="flash-messages" class="container mt-3">
+        <!-- Flash Messages from RedirectAttributes -->
+        <div th:if="${param.success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> <span th:text="${param.success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle"></i> <span th:text="${param.error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Success messages from model -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Error messages from model -->
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle"></i> <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Success messages from model (alternative name) -->
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Error messages from model (alternative name) -->
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-circle"></i> <span th:text="${errorMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Info messages from model -->
+        <div th:if="${message}" class="alert alert-info alert-dismissible fade show" role="alert">
+            <i class="bi bi-info-circle"></i> <span th:text="${message}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main th:fragment="content" class="container mb-4">
+        <div th:replace="${content}"></div>
+    </main>
+
+    <!-- Footer -->
+    <footer th:fragment="footer" class="bg-light text-center py-3 mt-auto">
+        <div class="container">
+            <p class="mb-0 text-muted">
+                &copy; 2025 Quản lý Tài chính Cá nhân |
+                <a href="#" class="text-decoration-none">Về chúng tôi</a> |
+                <a href="#" class="text-decoration-none">Liên hệ</a> |
+                <a href="#" class="text-decoration-none">Chính sách bảo mật</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- AI Chat Button (Floating) -->
+    <div th:fragment="chat-button" sec:authorize="isAuthenticated()">
+        <button type="button" class="btn btn-primary btn-lg rounded-circle chat-button" data-bs-toggle="modal"
+            data-bs-target="#chatModal" title="Trợ lý tài chính AI">
+            <i class="bi bi-chat-dots-fill"></i>
+        </button>
+    </div>
+
+    <!-- AI Chat Modal -->
+    <div th:fragment="chat-modal" sec:authorize="isAuthenticated()">
+        <div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="chatModalLabel">
+                            <i class="bi bi-robot"></i> Trợ lý tài chính AI
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-0">
+                        <!-- Chat Container -->
+                        <div class="chat-container">
+                            <!-- Chat Messages Area -->
+                            <div class="chat-messages" id="modalChatMessages">
+                                <div class="chat-welcome">
+                                    <i class="bi bi-chat-dots"></i>
+                                    <h5>Xin chào! Tôi là trợ lý tài chính AI</h5>
+                                    <p class="mb-3">Tôi có thể giúp bạn ghi chép giao dịch một cách nhanh chóng.</p>
+                                    <div class="text-start">
+                                        <p><strong>Ví dụ:</strong></p>
+                                        <ul class="list-unstyled">
+                                            <li>• "Hôm nay tôi mua cà phê 25.000 đồng"</li>
+                                            <li>• "Nhận lương tháng này 15.000.000 VNĐ"</li>
+                                            <li>• "Tiền điện 250.000, tiền nước 120.000"</li>
+                                            <li>• "Ăn trưa với bạn bè 150.000"</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Typing Indicator -->
+                            <div class="typing-indicator" id="modalTypingIndicator">
+                                <div class="message-avatar">
+                                    <i class="bi bi-robot"></i>
+                                </div>
+                                <div class="message-content">
+                                    <div class="typing-dots">
+                                        <div class="typing-dot"></div>
+                                        <div class="typing-dot"></div>
+                                        <div class="typing-dot"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Chat Input -->
+                            <div class="chat-input-container">
+                                <form id="modalChatForm">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="modalMessageInput"
+                                            placeholder="Nhập mô tả giao dịch..." autocomplete="off" required>
+                                        <button class="btn btn-primary" type="submit" id="modalSendButton">
+                                            <i class="bi bi-send"></i> Gửi
+                                        </button>
+                                    </div>
+                                </form>
+                                <small class="text-muted mt-2 d-block">
+                                    <i class="bi bi-info-circle"></i>
+                                    Mô tả chi tiết giao dịch sẽ giúp AI nhận dạng chính xác hơn
+                                </small>
+
+                                <!-- Quick Actions -->
+                                <div class="mt-3">
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <button class="btn btn-outline-danger btn-sm w-100 quick-transaction"
+                                                data-message="Ăn sáng 35.000">
+                                                <i class="bi bi-cup-hot"></i> Ăn sáng
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-outline-danger btn-sm w-100 quick-transaction"
+                                                data-message="Cà phê 25.000">
+                                                <i class="bi bi-cup"></i> Cà phê
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-outline-danger btn-sm w-100 quick-transaction"
+                                                data-message="Đi xe bus 7.000">
+                                                <i class="bi bi-bus-front"></i> Xe bus
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-outline-success btn-sm w-100 quick-transaction"
+                                                data-message="Nhận lương 15.000.000">
+                                                <i class="bi bi-cash"></i> Lương
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <div th:fragment="scripts">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script th:src="@{/js/scripts.js}"></script>
+
+        <!-- AI Chat JavaScript -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const chatModal = document.getElementById('chatModal');
+                const chatForm = document.getElementById('modalChatForm');
+                const messageInput = document.getElementById('modalMessageInput');
+                const sendButton = document.getElementById('modalSendButton');
+                const chatMessages = document.getElementById('modalChatMessages');
+                const typingIndicator = document.getElementById('modalTypingIndicator');
+
+                // Only initialize chat if the modal exists (user is authenticated)
+                if (chatModal && chatForm) {
+                    let conversationHistory = [];
+
+                    // Clear chat history when modal is closed
+                    chatModal.addEventListener('hide.bs.modal', function () {
+                        setTimeout(() => {
+                            clearChat();
+                        }, 300);
+                    });
+
+                    // Focus input when modal is shown
+                    chatModal.addEventListener('shown.bs.modal', function () {
+                        messageInput.focus();
+                    });
+
+                    // Clear chat function
+                    function clearChat() {
+                        conversationHistory = [];
+                        chatMessages.innerHTML = `
+                            <div class="chat-welcome">
+                                <i class="bi bi-chat-dots"></i>
+                                <h5>Xin chào! Tôi là trợ lý tài chính AI</h5>
+                                <p class="mb-3">Tôi có thể giúp bạn ghi chép giao dịch một cách nhanh chóng.</p>
+                                <div class="text-start">
+                                    <p><strong>Ví dụ:</strong></p>
+                                    <ul class="list-unstyled">
+                                        <li>• "Hôm nay tôi mua cà phê 25.000 đồng"</li>
+                                        <li>• "Nhận lương tháng này 15.000.000 VNĐ"</li>
+                                        <li>• "Tiền điện 250.000, tiền nước 120.000"</li>
+                                        <li>• "Ăn trưa với bạn bè 150.000"</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        `;
+                        messageInput.value = '';
+                    }
+
+                    // Hide welcome message when first message is sent
+                    function hideWelcomeMessage() {
+                        const welcomeMessage = chatMessages.querySelector('.chat-welcome');
+                        if (welcomeMessage) {
+                            welcomeMessage.style.display = 'none';
+                        }
+                    }
+
+                    // Add message to chat
+                    function addMessage(content, isUser = false, transactionInfo = null) {
+                        hideWelcomeMessage();
+
+                        const messageDiv = document.createElement('div');
+                        messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+
+                        const avatarDiv = document.createElement('div');
+                        avatarDiv.className = 'message-avatar';
+                        avatarDiv.innerHTML = isUser ? '<i class="bi bi-person"></i>' : '<i class="bi bi-robot"></i>';
+
+                        const contentDiv = document.createElement('div');
+                        contentDiv.className = 'message-content';
+                        contentDiv.innerHTML = content.replace(/\n/g, '<br>');
+
+                        messageDiv.appendChild(avatarDiv);
+                        messageDiv.appendChild(contentDiv);
+
+                        // Add transaction info if available
+                        if (transactionInfo) {
+                            const transactionDiv = document.createElement('div');
+                            transactionDiv.className = 'transaction-extracted';
+                            transactionDiv.innerHTML = `
+                                <strong><i class="bi bi-check-circle"></i> Đã ghi nhận giao dịch:</strong><br>
+                                ${transactionInfo.type === 'INCOME' ? 'Thu nhập' : 'Chi tiêu'}:
+                                ${transactionInfo.amount} VNĐ - ${transactionInfo.category}
+                                ${transactionInfo.description ? '<br>Mô tả: ' + transactionInfo.description : ''}
+                            `;
+                            contentDiv.appendChild(transactionDiv);
+                        }
+
+                        chatMessages.appendChild(messageDiv);
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                        // Add to conversation history
+                        conversationHistory.push({
+                            role: isUser ? 'user' : 'assistant',
+                            content: content
+                        });
+                    }
+
+                    // Show/hide typing indicator
+                    function showTypingIndicator() {
+                        typingIndicator.style.display = 'flex';
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }
+
+                    function hideTypingIndicator() {
+                        typingIndicator.style.display = 'none';
+                    }
+
+                    // Send message to API
+                    async function sendMessage(message) {
+                        try {
+                            const response = await fetch('/api/chat', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    message: message
+                                })
+                            });
+
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+
+                            const data = await response.json();
+
+                            // Prepare transaction info if available
+                            let transactionInfo = null;
+                            if (data.transactionId) {
+                                transactionInfo = {
+                                    type: data.type,
+                                    amount: data.amount,
+                                    category: data.category,
+                                    description: message
+                                };
+                            }
+
+                            addMessage(data.message, false, transactionInfo);
+
+                        } catch (error) {
+                            console.error('Error:', error);
+                            addMessage('❌ Xin lỗi, đã xảy ra lỗi khi xử lý tin nhắn. Vui lòng thử lại sau.', false);
+                        }
+                    }
+
+                    // Handle form submission
+                    chatForm.addEventListener('submit', async function (e) {
+                        e.preventDefault();
+
+                        const message = messageInput.value.trim();
+                        if (!message) return;
+
+                        // Add user message
+                        addMessage(message, true);
+
+                        // Clear input and disable send button
+                        messageInput.value = '';
+                        sendButton.disabled = true;
+                        sendButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Đang gửi...';
+
+                        // Show typing indicator
+                        showTypingIndicator();
+
+                        // Send message to API
+                        await sendMessage(message);
+
+                        // Hide typing indicator and re-enable send button
+                        hideTypingIndicator();
+                        sendButton.disabled = false;
+                        sendButton.innerHTML = '<i class="bi bi-send"></i> Gửi';
+
+                        // Focus back to input
+                        messageInput.focus();
+                    });
+
+                    // Quick transaction buttons
+                    document.querySelectorAll('.quick-transaction').forEach(button => {
+                        button.addEventListener('click', function () {
+                            const message = this.getAttribute('data-message');
+                            messageInput.value = message;
+                            messageInput.focus();
+                            chatForm.dispatchEvent(new Event('submit'));
+                        });
+                    });
+
+                    // Handle Enter key in input
+                    messageInput.addEventListener('keypress', function (e) {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            chatForm.dispatchEvent(new Event('submit'));
+                        }
+                    });
+                }
+            });
+        </script>
+    </div>
+</body>
+
+</html>

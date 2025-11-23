@@ -5,7 +5,6 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,19 +22,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import lombok.RequiredArgsConstructor;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
-@Controller  
+@Controller
 @RequestMapping("/goals")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class GoalController {
 
-    @Autowired 
-    private GoalService goalService ; 
-    @Autowired 
-    private UserService userService;
+    GoalService goalService;
+    UserService userService;
 
-    
     @GetMapping
     public String listGoals(Principal principal, Model model) {
         User user = userService.findByUsername(principal.getName())
@@ -69,7 +70,7 @@ public class GoalController {
 
     @PostMapping("/add")
     public String addGoal(@Valid GoalForm goalForm, BindingResult result,
-                         Principal principal, Model model, RedirectAttributes redirectAttributes) {
+            Principal principal, Model model, RedirectAttributes redirectAttributes) {
         User user = userService.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -84,8 +85,7 @@ public class GoalController {
                     goalForm.getTargetAmount(),
                     goalForm.getTargetDate(),
                     user,
-                    goalForm.getDescription()
-            );
+                    goalForm.getDescription());
 
             redirectAttributes.addFlashAttribute("success", "Goal created successfully!");
             return "redirect:/goals";
@@ -108,7 +108,7 @@ public class GoalController {
         // Check if goal belongs to current user
         if (!goal.getUser().getId().equals(user.getId())) {
             return "redirect:/goals?error=Goal not found";
-        }   
+        }
 
         GoalForm goalForm = new GoalForm();
         goalForm.setName(goal.getName());
@@ -125,7 +125,7 @@ public class GoalController {
 
     @PostMapping("/edit/{id}")
     public String updateGoal(@PathVariable Long id, @Valid GoalForm goalForm, BindingResult result,
-                            Principal principal, Model model, RedirectAttributes redirectAttributes) {
+            Principal principal, Model model, RedirectAttributes redirectAttributes) {
         User user = userService.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -225,7 +225,7 @@ public class GoalController {
 
     @PostMapping("/contribute/{id}")
     public String contributeToGoal(@PathVariable Long id, @RequestParam java.math.BigDecimal amount,
-                                  Principal principal, RedirectAttributes redirectAttributes) {
+            Principal principal, RedirectAttributes redirectAttributes) {
         User user = userService.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -239,7 +239,7 @@ public class GoalController {
         try {
             goalService.contributeToGoal(id, amount);
             redirectAttributes.addFlashAttribute("success",
-                String.format("Successfully contributed $%.2f to %s!", amount, goal.getName()));
+                    String.format("Successfully contributed $%.2f to %s!", amount, goal.getName()));
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error contributing to goal: " + e.getMessage());
         }
@@ -265,8 +265,4 @@ public class GoalController {
         return "goals/view";
     }
 
-
-    
-    
-    
 }

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/layout :: head}">
+    <title>Giao dịch - Quản lý Tài chính Cá nhân</title>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navigation -->
+    <div th:replace="~{fragments/layout :: navbar}"></div>
+
+    <!-- Flash Messages -->
+    <div th:replace="~{fragments/layout :: flash-messages}"></div>
+
+    <!-- Main Content -->
+    <main class="container mb-4 flex-grow-1">
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">
+                <i class="bi bi-receipt"></i> Giao dịch
+                <small class="text-muted">Theo dõi thu nhập và chi tiêu của bạn</small>
+            </h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <a th:href="@{/transactions/add}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Thêm giao dịch
+                </a>
+            </div>
+        </div>
+
+        <!-- Transaction Statistics -->
+        <div class="row mb-4" th:if="${stats}">
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">Tổng thu nhập</h5>
+                        <h2 th:text="${#numbers.formatDecimal(stats.totalIncome, 1, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-danger text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">Tổng chi tiêu</h5>
+                        <h2 th:text="${#numbers.formatDecimal(stats.totalExpenses, 1, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">Số dư ròng</h5>
+                        <h2 th:text="${#numbers.formatDecimal(stats.balance, 1, 'COMMA', 0, 'POINT')} + ' VND'"
+                            th:class="${stats.balance >= 0 ? 'text-white' : 'text-warning'}">0 VND</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">Tổng giao dịch</h5>
+                        <h2 th:text="${stats.totalCount}">0</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="bi bi-funnel"></i> Tìm kiếm & Lọc
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Search Form -->
+                    <div class="col-md-6">
+                        <form th:action="@{/transactions/search}" method="get" class="mb-3">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="keyword" 
+                                       th:value="${searchKeyword}" placeholder="Tìm kiếm giao dịch...">
+                                <button class="btn btn-outline-secondary" type="submit">
+                                    <i class="bi bi-search"></i> Tìm kiếm
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Filter Form -->
+                    <div class="col-md-6">
+                        <form th:action="@{/transactions/filter}" method="get">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <select name="type" class="form-select form-select-sm">
+                                        <option value="">Tất cả loại</option>
+                                        <option value="INCOME" th:selected="${selectedType?.name() == 'INCOME'}">Thu nhập</option>
+                                        <option value="EXPENSE" th:selected="${selectedType?.name() == 'EXPENSE'}">Chi tiêu</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="submit" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-funnel"></i> Lọc
+                                    </button>
+                                    <a th:href="@{/transactions}" class="btn btn-outline-secondary btn-sm">
+                                        <i class="bi bi-x-circle"></i> Xóa
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transactions List -->
+        <div class="card shadow">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="bi bi-list-ul"></i> Giao dịch gần đây
+                </h6>
+                <span class="badge bg-primary" th:text="${transactions.size()} + ' giao dịch'">0 giao dịch</span>
+            </div>
+            <div class="card-body">
+                <div th:if="${transactions.empty}" class="text-center py-4">
+                    <i class="bi bi-receipt text-muted" style="font-size: 3rem;"></i>
+                    <p class="text-muted mt-2">Không tìm thấy giao dịch nào. Thêm giao dịch đầu tiên để bắt đầu!</p>
+                    <a th:href="@{/transactions/add}" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> Thêm giao dịch
+                    </a>
+                </div>
+                <div th:if="${!transactions.empty}" class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Ngày</th>
+                                <th>Mô tả</th>
+                                <th>Danh mục</th>
+                                <th>Loại</th>
+                                <th>Số tiền</th>
+                                <th>Ghi chú</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="transaction : ${transactions}">
+                                <td th:text="${#temporals.format(transaction.transactionDate, 'MMM dd, yyyy HH:mm')}">
+                                    Jan 01, 2024 10:30
+                                </td>
+                                <td th:text="${transaction.description}">Transaction Description</td>
+                                <td>
+                                    <span class="badge"
+                                          th:style="'background-color: ' + ${transaction.category.color}"
+                                          th:text="${transaction.category.name}">
+                                        Category
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge"
+                                          th:class="${transaction.type.name() == 'INCOME' ? 'bg-success' : 'bg-danger'}"
+                                          th:text="${transaction.type.displayName}">
+                                        Income
+                                    </span>
+                                </td>
+                                <td th:class="${transaction.type.name() == 'INCOME' ? 'text-success' : 'text-danger'}"
+                                    th:text="${#numbers.formatDecimal(transaction.amount, 1, 'COMMA', 0, 'POINT')} + ' VND'">
+                                    100.000 VND
+                                </td>
+                                <td th:text="${transaction.notes ?: '-'}" class="text-muted">Notes</td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a th:href="@{/transactions/edit/{id}(id=${transaction.id})}"
+                                           class="btn btn-outline-warning" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger"
+                                                th:onclick="'confirmDelete(' + ${transaction.id} + ')'"
+                                                title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <!-- Scripts -->
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+
+    <script>
+        function confirmDelete(transactionId) {
+            if (confirm('Bạn có chắc chắn muốn xóa giao dịch này? Hành động này không thể hoàn tác.')) {
+                window.location.href = '/transactions/delete/' + transactionId;
+            }
+        }
+    </script>
+</body>
+</html>
