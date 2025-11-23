@@ -568,21 +568,21 @@
                     function clearChat() {
                         conversationHistory = [];
                         chatMessages.innerHTML = `
-                            <div class="chat-welcome">
-                                <i class="bi bi-chat-dots"></i>
-                                <h5>Xin chào! Tôi là trợ lý tài chính AI</h5>
-                                <p class="mb-3">Tôi có thể giúp bạn ghi chép giao dịch một cách nhanh chóng.</p>
-                                <div class="text-start">
-                                    <p><strong>Ví dụ:</strong></p>
-                                    <ul class="list-unstyled">
-                                        <li>• "Hôm nay tôi mua cà phê 25.000 đồng"</li>
-                                        <li>• "Nhận lương tháng này 15.000.000 VNĐ"</li>
-                                        <li>• "Tiền điện 250.000, tiền nước 120.000"</li>
-                                        <li>• "Ăn trưa với bạn bè 150.000"</li>
-                                    </ul>
+                                <div class="chat-welcome">
+                                    <i class="bi bi-chat-dots"></i>
+                                    <h5>Xin chào! Tôi là trợ lý tài chính AI</h5>
+                                    <p class="mb-3">Tôi có thể giúp bạn ghi chép giao dịch một cách nhanh chóng.</p>
+                                    <div class="text-start">
+                                        <p><strong>Ví dụ:</strong></p>
+                                        <ul class="list-unstyled">
+                                            <li>• "Hôm nay tôi mua cà phê 25.000 đồng"</li>
+                                            <li>• "Nhận lương tháng này 15.000.000 VNĐ"</li>
+                                            <li>• "Tiền điện 250.000, tiền nước 120.000"</li>
+                                            <li>• "Ăn trưa với bạn bè 150.000"</li>
+                                        </ul>
+                                    </div>
                                 </div>
-                            </div>
-                        `;
+                            `;
                         messageInput.value = '';
                     }
 
@@ -617,11 +617,11 @@
                             const transactionDiv = document.createElement('div');
                             transactionDiv.className = 'transaction-extracted';
                             transactionDiv.innerHTML = `
-                                <strong><i class="bi bi-check-circle"></i> Đã ghi nhận giao dịch:</strong><br>
-                                ${transactionInfo.type === 'INCOME' ? 'Thu nhập' : 'Chi tiêu'}:
-                                ${transactionInfo.amount} VNĐ - ${transactionInfo.category}
-                                ${transactionInfo.description ? '<br>Mô tả: ' + transactionInfo.description : ''}
-                            `;
+                                    <strong><i class="bi bi-check-circle"></i> Đã ghi nhận giao dịch:</strong><br>
+                                    ${transactionInfo.type === 'INCOME' ? 'Thu nhập' : 'Chi tiêu'}:
+                                    ${transactionInfo.amount} VNĐ - ${transactionInfo.category}
+                                    ${transactionInfo.description ? '<br>Mô tả: ' + transactionInfo.description : ''}
+                                `;
                             contentDiv.appendChild(transactionDiv);
                         }
 

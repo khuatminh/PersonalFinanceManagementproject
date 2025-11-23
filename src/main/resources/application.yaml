@@ -39,3 +39,8 @@ spring:
     encoding: UTF-8
     servlet:
       content-type: text/html
+
+# Gemini API Configuration
+gemini:
+  api:
+    key: ${GEMINI_API_KEY}

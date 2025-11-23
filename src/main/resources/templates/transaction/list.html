@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="~{fragments/layout :: head}">
     <title>Giao dịch - Quản lý Tài chính Cá nhân</title>
@@ -16,7 +15,8 @@
     <!-- Main Content -->
     <main class="container mb-4 flex-grow-1">
         <!-- Page Header -->
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <div
+            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2">
                 <i class="bi bi-receipt"></i> Giao dịch
                 <small class="text-muted">Theo dõi thu nhập và chi tiêu của bạn</small>
@@ -29,37 +29,92 @@
         </div>
 
         <!-- Transaction Statistics -->
+        <!-- Transaction Statistics -->
         <div class="row mb-4" th:if="${stats}">
-            <div class="col-md-3">
-                <div class="card bg-success text-white">
+            <!-- Total Income -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
                     <div class="card-body">
-                        <h5 class="card-title">Tổng thu nhập</h5>
-                        <h2 th:text="${#numbers.formatDecimal(stats.totalIncome, 1, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</h2>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    Tổng thu nhập
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"
+                                    th:text="${#numbers.formatDecimal(stats.totalIncome, 1, 'COMMA', 0, 'POINT')} + ' VND'">
+                                    0 VND
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-graph-up-arrow text-success" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card bg-danger text-white">
+
+            <!-- Total Expenses -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-danger shadow h-100 py-2">
                     <div class="card-body">
-                        <h5 class="card-title">Tổng chi tiêu</h5>
-                        <h2 th:text="${#numbers.formatDecimal(stats.totalExpenses, 1, 'COMMA', 0, 'POINT')} + ' VND'">0 VND</h2>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                    Tổng chi tiêu
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"
+                                    th:text="${#numbers.formatDecimal(stats.totalExpenses, 1, 'COMMA', 0, 'POINT')} + ' VND'">
+                                    0 VND
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-graph-down-arrow text-danger" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card bg-info text-white">
+
+            <!-- Net Balance -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-info shadow h-100 py-2">
                     <div class="card-body">
-                        <h5 class="card-title">Số dư ròng</h5>
-                        <h2 th:text="${#numbers.formatDecimal(stats.balance, 1, 'COMMA', 0, 'POINT')} + ' VND'"
-                            th:class="${stats.balance >= 0 ? 'text-white' : 'text-warning'}">0 VND</h2>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                    Số dư ròng
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"
+                                    th:text="${#numbers.formatDecimal(stats.balance, 1, 'COMMA', 0, 'POINT')} + ' VND'"
+                                    th:classappend="${stats.balance < 0 ? 'text-danger' : ''}">
+                                    0 VND
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-wallet2 text-info" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card bg-primary text-white">
+
+            <!-- Total Transactions -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
                     <div class="card-body">
-                        <h5 class="card-title">Tổng giao dịch</h5>
-                        <h2 th:text="${stats.totalCount}">0</h2>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Tổng giao dịch
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${stats.totalCount}">
+                                    0
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-list-ul text-primary" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -78,15 +133,15 @@
                     <div class="col-md-6">
                         <form th:action="@{/transactions/search}" method="get" class="mb-3">
                             <div class="input-group">
-                                <input type="text" class="form-control" name="keyword" 
-                                       th:value="${searchKeyword}" placeholder="Tìm kiếm giao dịch...">
+                                <input type="text" class="form-control" name="keyword" th:value="${searchKeyword}"
+                                    placeholder="Tìm kiếm giao dịch...">
                                 <button class="btn btn-outline-secondary" type="submit">
                                     <i class="bi bi-search"></i> Tìm kiếm
                                 </button>
                             </div>
                         </form>
                     </div>
-                    
+
                     <!-- Filter Form -->
                     <div class="col-md-6">
                         <form th:action="@{/transactions/filter}" method="get">
@@ -94,8 +149,10 @@
                                 <div class="col-md-6">
                                     <select name="type" class="form-select form-select-sm">
                                         <option value="">Tất cả loại</option>
-                                        <option value="INCOME" th:selected="${selectedType?.name() == 'INCOME'}">Thu nhập</option>
-                                        <option value="EXPENSE" th:selected="${selectedType?.name() == 'EXPENSE'}">Chi tiêu</option>
+                                        <option value="INCOME" th:selected="${selectedType?.name() == 'INCOME'}">Thu
+                                            nhập</option>
+                                        <option value="EXPENSE" th:selected="${selectedType?.name() == 'EXPENSE'}">Chi
+                                            tiêu</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
@@ -149,16 +206,15 @@
                                 </td>
                                 <td th:text="${transaction.description}">Transaction Description</td>
                                 <td>
-                                    <span class="badge"
-                                          th:style="'background-color: ' + ${transaction.category.color}"
-                                          th:text="${transaction.category.name}">
+                                    <span class="badge" th:style="'background-color: ' + ${transaction.category.color}"
+                                        th:text="${transaction.category.name}">
                                         Category
                                     </span>
                                 </td>
                                 <td>
                                     <span class="badge"
-                                          th:class="${transaction.type.name() == 'INCOME' ? 'bg-success' : 'bg-danger'}"
-                                          th:text="${transaction.type.displayName}">
+                                        th:class="${transaction.type.name() == 'INCOME' ? 'bg-success' : 'bg-danger'}"
+                                        th:text="${transaction.type.displayName}">
                                         Income
                                     </span>
                                 </td>
@@ -170,12 +226,11 @@
                                 <td>
                                     <div class="btn-group btn-group-sm">
                                         <a th:href="@{/transactions/edit/{id}(id=${transaction.id})}"
-                                           class="btn btn-outline-warning" title="Edit">
+                                            class="btn btn-outline-warning" title="Edit">
                                             <i class="bi bi-pencil"></i>
                                         </a>
                                         <button type="button" class="btn btn-outline-danger"
-                                                th:onclick="'confirmDelete(' + ${transaction.id} + ')'"
-                                                title="Delete">
+                                            th:onclick="'confirmDelete(' + ${transaction.id} + ')'" title="Delete">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </div>
@@ -202,4 +257,5 @@
         }
     </script>
 </body>
+
 </html>

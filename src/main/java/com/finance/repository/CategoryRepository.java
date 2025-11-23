@@ -11,4 +11,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     List<Category> findByType(Category.CategoryType type);
 
+    java.util.Optional<Category> findByNameIgnoreCase(String name);
 }

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="~{fragments/layout :: head}">
     <title>Mục tiêu - Quản lý Tài chính Cá nhân</title>
@@ -16,7 +15,8 @@
     <!-- Main Content -->
     <main class="container mb-4 flex-grow-1">
         <!-- Page Header -->
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <div
+            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2">
                 <i class="bi bi-trophy"></i> Mục tiêu Tiết kiệm
                 <small class="text-muted">Theo dõi các mục tiêu tài chính của bạn</small>
@@ -29,36 +29,92 @@
         </div>
 
         <!-- Goal Statistics -->
+        <!-- Goal Statistics -->
         <div class="row mb-4">
-            <div class="col-md-3">
-                <div class="card bg-primary text-white">
+            <!-- Active Goals -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
                     <div class="card-body">
-                        <h5 class="card-title">Mục tiêu đang hoạt động</h5>
-                        <h2 th:text="${goalSummary.activeGoalsCount}">0</h2>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Mục tiêu đang hoạt động
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"
+                                    th:text="${goalSummary.activeGoalsCount}">
+                                    0
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-flag text-primary" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card bg-success text-white">
+
+            <!-- Completed Goals -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
                     <div class="card-body">
-                        <h5 class="card-title">Đã hoàn thành</h5>
-                        <h2 th:text="${goalSummary.completedCount}">0</h2>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    Đã hoàn thành
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"
+                                    th:text="${goalSummary.completedCount}">
+                                    0
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-check-circle text-success" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card bg-warning text-white">
+
+            <!-- Near Completion Goals -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
                     <div class="card-body">
-                        <h5 class="card-title">Gần đạt mục tiêu</h5>
-                        <h2 th:text="${goalSummary.nearCompletionCount}">0</h2>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                    Gần đạt mục tiêu
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"
+                                    th:text="${goalSummary.nearCompletionCount}">
+                                    0
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-graph-up-arrow text-warning" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card bg-danger text-white">
+
+            <!-- Overdue Goals -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-danger shadow h-100 py-2">
                     <div class="card-body">
-                        <h5 class="card-title">Quá hạn</h5>
-                        <h2 th:text="${goalSummary.overdueCount}">0</h2>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                    Quá hạn
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"
+                                    th:text="${goalSummary.overdueCount}">
+                                    0
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-exclamation-triangle text-danger" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -76,19 +132,25 @@
                     <div class="col-md-8">
                         <div class="progress" style="height: 30px;">
                             <div class="progress-bar bg-success" role="progressbar"
-                                 th:style="'width: ' + ${#numbers.formatDecimal(goalSummary.overallProgressPercentage, 1, 1)} + '%'"
-                                 th:text="${#numbers.formatDecimal(goalSummary.overallProgressPercentage, 1, 1)} + '%'">
+                                th:style="'width: ' + ${#numbers.formatDecimal(goalSummary.overallProgressPercentage, 1, 1)} + '%'"
+                                th:text="${#numbers.formatDecimal(goalSummary.overallProgressPercentage, 1, 1)} + '%'">
                                 50%
                             </div>
                         </div>
                         <div class="d-flex justify-content-between mt-2">
-                            <span>Tổng đã tiết kiệm: <span th:text="${#numbers.formatDecimal(goalSummary.totalCurrentAmount, 1, 'COMMA', 0, 'POINT')}">0</span> VND</span>
-                            <span>Tổng mục tiêu: <span th:text="${#numbers.formatDecimal(goalSummary.totalTargetAmount, 1, 'COMMA', 0, 'POINT')}">0</span> VND</span>
+                            <span>Tổng đã tiết kiệm: <span
+                                    th:text="${#numbers.formatDecimal(goalSummary.totalCurrentAmount, 1, 'COMMA', 0, 'POINT')}">0</span>
+                                VND</span>
+                            <span>Tổng mục tiêu: <span
+                                    th:text="${#numbers.formatDecimal(goalSummary.totalTargetAmount, 1, 'COMMA', 0, 'POINT')}">0</span>
+                                VND</span>
                         </div>
                     </div>
                     <div class="col-md-4 text-center">
                         <div class="h4 mb-0">
-                            <span th:text="${#numbers.formatDecimal(goalSummary.getTotalRemainingAmount(), 1, 'COMMA', 0, 'POINT')}">0</span> VND
+                            <span
+                                th:text="${#numbers.formatDecimal(goalSummary.getTotalRemainingAmount(), 1, 'COMMA', 0, 'POINT')}">0</span>
+                            VND
                         </div>
                         <small class="text-muted">Còn lại để đạt được tất cả các mục tiêu</small>
                     </div>
@@ -102,12 +164,14 @@
                 <h6 class="m-0 font-weight-bold text-primary">
                     <i class="bi bi-flag"></i> Mục tiêu đang hoạt động
                 </h6>
-                <span class="badge bg-primary" th:text="${goalSummary.activeGoalsCount} + ' đang hoạt động'">0 đang hoạt động</span>
+                <span class="badge bg-primary" th:text="${goalSummary.activeGoalsCount} + ' đang hoạt động'">0 đang hoạt
+                    động</span>
             </div>
             <div class="card-body">
                 <div th:if="${activeGoals.empty}" class="text-center py-4">
                     <i class="bi bi-trophy text-muted" style="font-size: 3rem;"></i>
-                    <p class="text-muted mt-2">Không có mục tiêu nào đang hoạt động. Đặt mục tiêu tiết kiệm đầu tiên của bạn để bắt đầu theo dõi!</p>
+                    <p class="text-muted mt-2">Không có mục tiêu nào đang hoạt động. Đặt mục tiêu tiết kiệm đầu tiên của
+                        bạn để bắt đầu theo dõi!</p>
                     <a th:href="@{/goals/add}" class="btn btn-success">
                         <i class="bi bi-plus-circle"></i> Tạo mục tiêu
                     </a>
@@ -130,65 +194,71 @@
                                 <td>
                                     <div>
                                         <strong th:text="${goal.name}">Vacation Fund</strong>
-                                        <div th:if="${goal.description}" class="small text-muted" th:text="${goal.description}">
+                                        <div th:if="${goal.description}" class="small text-muted"
+                                            th:text="${goal.description}">
                                             Description
                                         </div>
                                     </div>
                                 </td>
-                                <td th:text="${#numbers.formatDecimal(goal.targetAmount, 1, 'COMMA', 0, 'POINT')} + ' VND'">
+                                <td
+                                    th:text="${#numbers.formatDecimal(goal.targetAmount, 1, 'COMMA', 0, 'POINT')} + ' VND'">
                                     2.000.000 VND
                                 </td>
                                 <td>
-                                    <div class="fw-bold" th:text="${#numbers.formatDecimal(goal.currentAmount, 1, 'COMMA', 0, 'POINT')} + ' VND'">
+                                    <div class="fw-bold"
+                                        th:text="${#numbers.formatDecimal(goal.currentAmount, 1, 'COMMA', 0, 'POINT')} + ' VND'">
                                         500.000 VND
                                     </div>
                                     <small class="text-muted">
-                                        <span th:text="${#numbers.formatDecimal(goal.getRemainingAmount(), 1, 'COMMA', 0, 'POINT')}">1500</span> VND còn lại
+                                        <span
+                                            th:text="${#numbers.formatDecimal(goal.getRemainingAmount(), 1, 'COMMA', 0, 'POINT')}">1500</span>
+                                        VND còn lại
                                     </small>
                                 </td>
                                 <td>
                                     <div class="progress" style="height: 20px; min-width: 100px;">
                                         <div class="progress-bar" role="progressbar"
-                                             th:style="'width: ' + ${goal.progressPercentage} + '%'"
-                                             th:classappend="${goal.progressPercentage >= 80 ? 'bg-warning' : 'bg-success'}"
-                                             th:text="${goal.progressPercentage} + '%'">
+                                            th:style="'width: ' + ${goal.progressPercentage} + '%'"
+                                            th:classappend="${goal.progressPercentage >= 80 ? 'bg-warning' : 'bg-success'}"
+                                            th:text="${goal.progressPercentage} + '%'">
                                             25%
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <div th:text="${#temporals.format(goal.targetDate, 'MMM dd, yyyy')}">Dec 31, 2024</div>
-                                    <small class="text-muted" th:text="${goal.getDaysRemaining() + ' ngày còn lại'}">30 ngày còn lại</small>
+                                    <div th:text="${#temporals.format(goal.targetDate, 'MMM dd, yyyy')}">Dec 31, 2024
+                                    </div>
+                                    <small class="text-muted" th:text="${goal.getDaysRemaining() + ' ngày còn lại'}">30
+                                        ngày còn lại</small>
                                 </td>
                                 <td>
                                     <span class="badge"
-                                          th:class="${goal.isOverdue() ? 'bg-danger' : (goal.progressPercentage >= 80 ? 'bg-warning' : 'bg-success')}"
-                                          th:text="${goal.isOverdue() ? 'Quá hạn' : 'Đúng tiến độ'}">
+                                        th:class="${goal.isOverdue() ? 'bg-danger' : (goal.progressPercentage >= 80 ? 'bg-warning' : 'bg-success')}"
+                                        th:text="${goal.isOverdue() ? 'Quá hạn' : 'Đúng tiến độ'}">
                                         Đúng tiến độ
                                     </span>
                                 </td>
                                 <td>
                                     <div class="btn-group btn-group-sm">
-                                        <a th:href="@{/goals/view/{id}(id=${goal.id})}"
-                                           class="btn btn-outline-primary" title="Xem">
+                                        <a th:href="@{/goals/view/{id}(id=${goal.id})}" class="btn btn-outline-primary"
+                                            title="Xem">
                                             <i class="bi bi-eye"></i>
                                         </a>
                                         <a th:href="@{/goals/contribute/{id}(id=${goal.id})}"
-                                           class="btn btn-outline-success" title="Đóng góp">
+                                            class="btn btn-outline-success" title="Đóng góp">
                                             <i class="bi bi-plus"></i>
                                         </a>
-                                        <a th:href="@{/goals/edit/{id}(id=${goal.id})}"
-                                           class="btn btn-outline-warning" title="Sửa">
+                                        <a th:href="@{/goals/edit/{id}(id=${goal.id})}" class="btn btn-outline-warning"
+                                            title="Sửa">
                                             <i class="bi bi-pencil"></i>
                                         </a>
                                         <button type="button" class="btn btn-outline-info"
-                                                th:onclick="'confirmComplete(' + ${goal.id} + ')'"
-                                                title="Đánh dấu hoàn thành">
+                                            th:onclick="'confirmComplete(' + ${goal.id} + ')'"
+                                            title="Đánh dấu hoàn thành">
                                             <i class="bi bi-check"></i>
                                         </button>
                                         <button type="button" class="btn btn-outline-danger"
-                                                th:onclick="'confirmDelete(' + ${goal.id} + ')'"
-                                                title="Xóa">
+                                            th:onclick="'confirmDelete(' + ${goal.id} + ')'" title="Xóa">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </div>
@@ -226,44 +296,50 @@
                                 <td>
                                     <div>
                                         <strong th:text="${goal.name}">Goal Name</strong>
-                                        <div th:if="${goal.description}" class="small text-muted" th:text="${goal.description}">
+                                        <div th:if="${goal.description}" class="small text-muted"
+                                            th:text="${goal.description}">
                                             Description
                                         </div>
                                     </div>
                                 </td>
-                                <td th:text="${#numbers.formatDecimal(goal.targetAmount, 1, 'COMMA', 0, 'POINT')} + ' VND'">
+                                <td
+                                    th:text="${#numbers.formatDecimal(goal.targetAmount, 1, 'COMMA', 0, 'POINT')} + ' VND'">
                                     1.000.000 VND
                                 </td>
                                 <td>
-                                    <div class="fw-bold" th:text="${#numbers.formatDecimal(goal.currentAmount, 1, 'COMMA', 0, 'POINT')} + ' VND'">
+                                    <div class="fw-bold"
+                                        th:text="${#numbers.formatDecimal(goal.currentAmount, 1, 'COMMA', 0, 'POINT')} + ' VND'">
                                         300.000 VND
                                     </div>
                                     <small class="text-muted">
-                                        <span th:text="${#numbers.formatDecimal(goal.getRemainingAmount(), 1, 'COMMA', 0, 'POINT')}">700</span> VND còn lại
+                                        <span
+                                            th:text="${#numbers.formatDecimal(goal.getRemainingAmount(), 1, 'COMMA', 0, 'POINT')}">700</span>
+                                        VND còn lại
                                     </small>
                                 </td>
                                 <td>
                                     <div class="progress" style="height: 20px; min-width: 100px;">
                                         <div class="progress-bar bg-danger" role="progressbar"
-                                             th:style="'width: ' + ${goal.progressPercentage} + '%'"
-                                             th:text="${goal.progressPercentage} + '%'">
+                                            th:style="'width: ' + ${goal.progressPercentage} + '%'"
+                                            th:text="${goal.progressPercentage} + '%'">
                                             30%
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <div th:text="${#temporals.format(goal.targetDate, 'MMM dd, yyyy')}">Jan 01, 2024</div>
-                                    <small class="text-danger" th:text="${goal.getDaysOverdue() + ' ngày quá hạn'}">5 ngày quá hạn</small>
+                                    <div th:text="${#temporals.format(goal.targetDate, 'MMM dd, yyyy')}">Jan 01, 2024
+                                    </div>
+                                    <small class="text-danger" th:text="${goal.getDaysOverdue() + ' ngày quá hạn'}">5
+                                        ngày quá hạn</small>
                                 </td>
                                 <td>
                                     <div class="btn-group btn-group-sm">
-                                        <a th:href="@{/goals/edit/{id}(id=${goal.id})}"
-                                           class="btn btn-outline-warning" title="Sửa ngày">
+                                        <a th:href="@{/goals/edit/{id}(id=${goal.id})}" class="btn btn-outline-warning"
+                                            title="Sửa ngày">
                                             <i class="bi bi-pencil"></i>
                                         </a>
                                         <button type="button" class="btn btn-outline-danger"
-                                                th:onclick="'confirmDelete(' + ${goal.id} + ')'"
-                                                title="Xóa">
+                                            th:onclick="'confirmDelete(' + ${goal.id} + ')'" title="Xóa">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </div>
@@ -281,7 +357,8 @@
                 <h6 class="m-0 font-weight-bold text-success">
                     <i class="bi bi-check-circle"></i> Mục tiêu đã hoàn thành
                 </h6>
-                <span class="badge bg-success" th:text="${completedGoals.size()} + ' đã hoàn thành'">0 đã hoàn thành</span>
+                <span class="badge bg-success" th:text="${completedGoals.size()} + ' đã hoàn thành'">0 đã hoàn
+                    thành</span>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -300,22 +377,24 @@
                                 <td>
                                     <div>
                                         <strong th:text="${goal.name}">Completed Goal</strong>
-                                        <div th:if="${goal.description}" class="small text-muted" th:text="${goal.description}">
+                                        <div th:if="${goal.description}" class="small text-muted"
+                                            th:text="${goal.description}">
                                             Description
                                         </div>
                                     </div>
                                 </td>
-                                <td th:text="${#numbers.formatDecimal(goal.targetAmount, 1, 'COMMA', 0, 'POINT')} + ' VND'">
+                                <td
+                                    th:text="${#numbers.formatDecimal(goal.targetAmount, 1, 'COMMA', 0, 'POINT')} + ' VND'">
                                     1.000.000 VND
                                 </td>
-                                <td class="text-success fw-bold" th:text="${#numbers.formatDecimal(goal.currentAmount, 1, 'COMMA', 0, 'POINT')} + ' VND'">
+                                <td class="text-success fw-bold"
+                                    th:text="${#numbers.formatDecimal(goal.currentAmount, 1, 'COMMA', 0, 'POINT')} + ' VND'">
                                     1.200.000 VND
                                 </td>
                                 <td th:text="${#temporals.format(goal.completedAt, 'MMM dd, yyyy')}">Dec 15, 2024</td>
                                 <td>
                                     <button type="button" class="btn btn-sm btn-outline-danger"
-                                            th:onclick="'confirmDelete(' + ${goal.id} + ')'"
-                                            title="Xóa">
+                                        th:onclick="'confirmDelete(' + ${goal.id} + ')'" title="Xóa">
                                         <i class="bi bi-trash"></i> Xóa
                                     </button>
                                 </td>
@@ -347,4 +426,5 @@
         }
     </script>
 </body>
+
 </html>

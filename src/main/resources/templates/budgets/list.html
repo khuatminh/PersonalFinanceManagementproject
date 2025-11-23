@@ -29,36 +29,88 @@
         </div>
 
         <!-- Budget Statistics -->
+        <!-- Budget Statistics -->
         <div class="row mb-4">
-            <div class="col-md-3">
-                <div class="card bg-primary text-white">
+            <!-- Total Budgets -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
                     <div class="card-body">
-                        <h5 class="card-title">Tổng số ngân sách</h5>
-                        <h2 th:text="${totalBudgets}">0</h2>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Tổng số ngân sách
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${totalBudgets}">
+                                    0
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-wallet2 text-primary" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card bg-success text-white">
+
+            <!-- Active Budgets -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
                     <div class="card-body">
-                        <h5 class="card-title">Ngân sách đang hoạt động</h5>
-                        <h2 th:text="${activeBudgets.size()}">0</h2>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    Ngân sách đang hoạt động
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${activeBudgets.size()}">
+                                    0
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-check-circle text-success" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card bg-warning text-white">
+
+            <!-- Expired Budgets -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
                     <div class="card-body">
-                        <h5 class="card-title">Ngân sách đã hết hạn</h5>
-                        <h2 th:text="${expiredBudgets.size()}">0</h2>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                    Ngân sách đã hết hạn
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${expiredBudgets.size()}">
+                                    0
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-clock-history text-warning" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card bg-info text-white">
+
+            <!-- Upcoming Budgets -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-info shadow h-100 py-2">
                     <div class="card-body">
-                        <h5 class="card-title">Ngân sách sắp tới</h5>
-                        <h2 th:text="${upcomingBudgets.size()}">0</h2>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                    Ngân sách sắp tới
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${upcomingBudgets.size()}">
+                                    0
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-calendar-event text-info" style="font-size: 2rem;"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
