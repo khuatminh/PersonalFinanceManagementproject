@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="~{fragments/layout :: head}">
     <title>Bảng điều khiển - Quản lý Tài chính Cá nhân</title>
@@ -15,8 +14,9 @@
 
     <!-- Main Content -->
     <main class="container mb-4 flex-grow-1">
-    <!-- Page Header -->
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <!-- Page Header -->
+        <div
+            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2">
                 <i class="bi bi-speedometer2"></i> Bảng điều khiển
                 <small class="text-muted">Chào mừng trở lại, <span th:text="${user.username}">User</span>!</small>
@@ -27,15 +27,25 @@
                         <i class="bi bi-plus-circle"></i> Thêm giao dịch
                     </a>
                     <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
-                        <i class="bi bi-calendar3"></i> Tháng này
+                        <i class="bi bi-calendar3"></i>
+                        <span
+                            th:text="${currentFilter == 'week' ? 'Tuần này' : (currentFilter == 'year' ? 'Năm này' : (currentFilter == 'custom' ? 'Tùy chọn' : 'Tháng này'))}">Tháng
+                            này</span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Tuần này</a></li>
-                        <li><a class="dropdown-item" href="#">Tháng này</a></li>
-                        <li><a class="dropdown-item" href="#">Năm này</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Tùy chọn thời gian</a></li>
+                        <li><a class="dropdown-item" th:href="@{/dashboard(filter='week')}">Tuần này</a></li>
+                        <li><a class="dropdown-item" th:href="@{/dashboard(filter='month')}">Tháng này</a></li>
+                        <li><a class="dropdown-item" th:href="@{/dashboard(filter='year')}">Năm này</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                data-bs-target="#customDateModal">Tùy chọn thời gian</a></li>
                     </ul>
+                </div>
+                <div class="d-flex align-items-center ms-2">
+                    <small class="text-muted" th:if="${startDate != null}"
+                        th:text="'(' + ${#temporals.format(startDate, 'dd/MM/yyyy')} + ' - ' + ${#temporals.format(endDate, 'dd/MM/yyyy')} + ')'"></small>
                 </div>
             </div>
         </div>
@@ -51,7 +61,7 @@
                                     Số dư
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800"
-                                     th:text="${#numbers.formatDecimal(stats.balance, 0, 'COMMA', 0, 'POINT')} + ' VND'">
+                                    th:text="${#numbers.formatDecimal(stats.balance, 0, 'COMMA', 0, 'POINT')} + ' VND'">
                                     0 VND
                                 </div>
                             </div>
@@ -72,7 +82,7 @@
                                     Tổng thu nhập
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800"
-                                     th:text="${#numbers.formatDecimal(stats.totalIncome, 0, 'COMMA', 0, 'POINT')} + ' VND'">
+                                    th:text="${#numbers.formatDecimal(stats.totalIncome, 0, 'COMMA', 0, 'POINT')} + ' VND'">
                                     0 VND
                                 </div>
                             </div>
@@ -93,7 +103,7 @@
                                     Tổng chi tiêu
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800"
-                                     th:text="${#numbers.formatDecimal(stats.totalExpenses, 0, 'COMMA', 0, 'POINT')} + ' VND'">
+                                    th:text="${#numbers.formatDecimal(stats.totalExpenses, 0, 'COMMA', 0, 'POINT')} + ' VND'">
                                     0 VND
                                 </div>
                             </div>
@@ -113,8 +123,7 @@
                                 <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                                     Giao dịch
                                 </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800"
-                                     th:text="${stats.totalCount}">
+                                <div class="h5 mb-0 font-weight-bold text-gray-800" th:text="${stats.totalCount}">
                                     0
                                 </div>
                             </div>
@@ -141,7 +150,8 @@
                     <div class="card-body">
                         <div th:if="${recentTransactions.empty}" class="text-center py-4">
                             <i class="bi bi-inbox text-muted" style="font-size: 3rem;"></i>
-                            <p class="text-muted mt-2">Chưa có giao dịch nào. Bắt đầu bằng cách thêm giao dịch đầu tiên của bạn!</p>
+                            <p class="text-muted mt-2">Chưa có giao dịch nào. Bắt đầu bằng cách thêm giao dịch đầu tiên
+                                của bạn!</p>
                             <a th:href="@{/transactions/add}" class="btn btn-primary">
                                 <i class="bi bi-plus-circle"></i> Thêm giao dịch
                             </a>
@@ -161,14 +171,15 @@
                                         <td th:text="${transaction.description}">Groceries</td>
                                         <td>
                                             <span class="badge"
-                                                  th:style="'background-color: ' + ${transaction.category.color}"
-                                                  th:text="${transaction.category.name}">
+                                                th:style="'background-color: ' + ${transaction.category.color}"
+                                                th:text="${transaction.category.name}">
                                                 Food
                                             </span>
                                         </td>
                                         <td>
-                                            <span th:class="${transaction.type.name() == 'INCOME' ? 'text-success' : 'text-danger'}"
-                                                  th:text="${#numbers.formatDecimal(transaction.amount, 0, 'COMMA', 0, 'POINT')} + ' VND'">
+                                            <span
+                                                th:class="${transaction.type.name() == 'INCOME' ? 'text-success' : 'text-danger'}"
+                                                th:text="${#numbers.formatDecimal(transaction.amount, 0, 'COMMA', 0, 'POINT')} + ' VND'">
                                                 50.000 VND
                                             </span>
                                         </td>
@@ -201,20 +212,25 @@
                             <div th:each="goal : ${activeGoals}" class="mb-3">
                                 <div class="d-flex justify-content-between align-items-center mb-1">
                                     <small class="fw-bold" th:text="${goal.name}">Vacation Fund</small>
-                                    <small th:text="${#numbers.formatPercent(goal.progressPercentage / 100, 1, 1)}">25%</small>
+                                    <small
+                                        th:text="${#numbers.formatPercent(goal.progressPercentage / 100, 1, 1)}">25%</small>
                                 </div>
                                 <div class="progress" style="height: 8px;">
                                     <div class="progress-bar" role="progressbar"
-                                         th:style="'width: ' + ${goal.progressPercentage} + '%'"
-                                         th:classappend="${goal.progressPercentage >= 80 ? 'bg-warning' : 'bg-success'}">
+                                        th:style="'width: ' + ${goal.progressPercentage} + '%'"
+                                        th:classappend="${goal.progressPercentage >= 80 ? 'bg-warning' : 'bg-success'}">
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-between mt-1">
                                     <small class="text-muted">
-                                        <span th:text="${#numbers.formatDecimal(goal.currentAmount, 0, 'COMMA', 0, 'POINT')}">500</span> VND
+                                        <span
+                                            th:text="${#numbers.formatDecimal(goal.currentAmount, 0, 'COMMA', 0, 'POINT')}">500</span>
+                                        VND
                                     </small>
                                     <small class="text-muted">
-                                        <span th:text="${#numbers.formatDecimal(goal.targetAmount, 0, 'COMMA', 0, 'POINT')}">2000</span> VND
+                                        <span
+                                            th:text="${#numbers.formatDecimal(goal.targetAmount, 0, 'COMMA', 0, 'POINT')}">2000</span>
+                                        VND
                                     </small>
                                 </div>
                             </div>
@@ -242,22 +258,26 @@
                                 <div class="d-flex justify-content-between align-items-center mb-1">
                                     <small class="fw-bold" th:text="${budget.budget.name}">Food Budget</small>
                                     <small th:class="${budget.overBudget ? 'text-danger' : 'text-success'}"
-                                          th:text="${#numbers.formatPercent(budget.percentageSpent / 100, 1, 1)}">
+                                        th:text="${#numbers.formatPercent(budget.percentageSpent / 100, 1, 1)}">
                                         75%
                                     </small>
                                 </div>
                                 <div class="progress" style="height: 8px;">
                                     <div class="progress-bar" role="progressbar"
-                                         th:style="'width: ' + ${#numbers.formatDecimal(budget.percentageSpent, 1, 1)} + '%'"
-                                         th:classappend="${budget.overBudget ? 'bg-danger' : (budget.percentageSpent >= 80 ? 'bg-warning' : 'bg-info')}">
+                                        th:style="'width: ' + ${#numbers.formatDecimal(budget.percentageSpent, 1, 1)} + '%'"
+                                        th:classappend="${budget.overBudget ? 'bg-danger' : (budget.percentageSpent >= 80 ? 'bg-warning' : 'bg-info')}">
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-between mt-1">
                                     <small class="text-muted">
-                                        <span th:text="${#numbers.formatDecimal(budget.spent, 0, 'COMMA', 0, 'POINT')}">300</span> VND đã chi
+                                        <span
+                                            th:text="${#numbers.formatDecimal(budget.spent, 0, 'COMMA', 0, 'POINT')}">300</span>
+                                        VND đã chi
                                     </small>
                                     <small class="text-muted">
-                                        <span th:text="${#numbers.formatDecimal(budget.budget.amount, 0, 'COMMA', 0, 'POINT')}">500</span> VND tổng
+                                        <span
+                                            th:text="${#numbers.formatDecimal(budget.budget.amount, 0, 'COMMA', 0, 'POINT')}">500</span>
+                                        VND tổng
                                     </small>
                                 </div>
                             </div>
@@ -283,5 +303,35 @@
     <!-- Scripts -->
     <div th:replace="~{fragments/layout :: scripts}"></div>
 
+    <!-- Custom Date Modal -->
+    <div class="modal fade" id="customDateModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Chọn khoảng thời gian</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form th:action="@{/dashboard}" method="get">
+                    <div class="modal-body">
+                        <input type="hidden" name="filter" value="custom">
+                        <div class="mb-3">
+                            <label for="startDate" class="form-label">Từ ngày</label>
+                            <input type="date" class="form-control" id="startDate" name="startDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="endDate" class="form-label">Đến ngày</label>
+                            <input type="date" class="form-control" id="endDate" name="endDate" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-primary">Áp dụng</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </body>
+
 </html>

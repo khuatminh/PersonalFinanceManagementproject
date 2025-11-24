@@ -18,7 +18,12 @@ public class HomeController {
     @GetMapping("/login")
     public String login(@RequestParam(value = "error", required = false) String error,
             @RequestParam(value = "logout", required = false) String logout,
-            Model model) {
+            Model model, Principal principal) {
+        // If user is already authenticated, redirect to dashboard
+        if (principal != null) {
+            return "redirect:/dashboard";
+        }
+
         if (error != null) {
             model.addAttribute("error", "Invalid username or password.");
         }

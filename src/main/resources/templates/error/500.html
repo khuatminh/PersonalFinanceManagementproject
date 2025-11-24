@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head}">
+    <title>Lỗi Server - Quản lý Tài chính Cá nhân</title>
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navigation -->
+    <div th:replace="~{fragments/layout :: navbar}"></div>
+
+    <!-- Main Content -->
+    <main class="container mb-4 flex-grow-1">
+        <div class="d-flex justify-content-center align-items-center" style="min-height: 60vh;">
+            <div class="text-center">
+                <div class="error-icon mb-4">
+                    <i class="bi bi-exclamation-triangle-fill text-warning" style="font-size: 4rem;"></i>
+                </div>
+                <h1 class="display-4 fw-bold text-danger">500</h1>
+                <h2 class="mb-3">Lỗi Server</h2>
+                <p class="lead text-muted mb-4">
+                    Đã có lỗi xảy ra khi xử lý yêu cầu của bạn. Vui lòng thử lại sau.
+                </p>
+
+                <div class="d-flex gap-2 justify-content-center">
+                    <a th:href="@{/dashboard}" class="btn btn-primary">
+                        <i class="bi bi-house"></i> Về trang chủ
+                    </a>
+                    <button onclick="history.back()" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Quay lại
+                    </button>
+                    <button onclick="location.reload()" class="btn btn-outline-primary">
+                        <i class="bi bi-arrow-clockwise"></i> Thử lại
+                    </button>
+                </div>
+
+                <div th:if="${debug}" class="mt-4">
+                    <details class="text-start">
+                        <summary class="btn btn-sm btn-outline-danger">Chi tiết lỗi (Debug)</summary>
+                        <pre class="mt-2 p-3 bg-light border rounded text-start"
+                              style="font-size: 0.875rem; max-height: 300px; overflow-y: auto;"
+                              th:text="${error}">Error details</pre>
+                    </details>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <!-- Scripts -->
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+
+    <style>
+        .error-icon {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</body>
+</html>

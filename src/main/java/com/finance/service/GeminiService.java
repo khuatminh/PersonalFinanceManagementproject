@@ -23,7 +23,8 @@ public class GeminiService {
 
     private static final String GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
     private static final String SYSTEM_PROMPT = "You are an AI assistant integrated in a personal finance app.\n" +
-            "Understand Vietnamese messages and extract income or expense transactions.\n" +
+            "Understand Vietnamese messages and SMARTLY extract income or expense transactions without requiring explicit keywords.\n"
+            +
             "\n" +
             "Output strictly in JSON format:\n" +
             "{\n" +
@@ -34,31 +35,49 @@ public class GeminiService {
             "  \"note\": \"string\"\n" +
             "}\n" +
             "\n" +
-            "Rules:\n" +
-            "- Identify if it's income (e.g. \"nhận lương\", \"được thưởng\", \"thu nhập\") or expense (\"mua\", \"ăn\", \"trả\", \"chi tiêu\").\n"
+            "SMART DETECTION RULES:\n" +
+            "- AUTOMATICALLY detect transactions even without \"chi\"/\"thu\" keywords.\n" +
+            "- IMPLICIT EXPENSE: If the message starts with a description followed by a number (e.g., \"An sang 25000\"), TREAT AS EXPENSE.\n"
             +
-            "- Extract amount (number only, remove any currency symbols).\n" +
-            "- Guess appropriate category based on context:\n" +
-            "  * For expenses: \"Ăn uống\", \"Di chuyển\", \"Mua sắm\", \"Giải trí\", \"Hóa đơn\", \"Sức khỏe\", \"Giáo dục\", \"Khác\"\n"
+            "- HANDLE UNACCENTED VIETNAMESE: \"an sang\" = \"ăn sáng\", \"com\" = \"cơm\", \"luong\" = \"lương\", \"xang\" = \"xăng\".\n"
             +
-            "  * For income: \"Lương\", \"Thưởng\", \"Đầu tư\", \"Freelance\", \"Kinh doanh\", \"Quà tặng\", \"Khác\"\n"
+            "- If message contains amount + food/activity → assume EXPENSE\n" +
+            "- If message contains amount + salary/income context → assume INCOME\n" +
+            "- Food patterns: \"an sáng\", \"com trua\", \"pha\", \"cafe\", \"cà phê\", \"trà sữa\", \"ăn cơm\", \"bữa sáng\", \"bữa trưa\", \"bữa tối\", \"bún\", \"phở\", \"cơm\"\n"
             +
-            "- For date detection:\n" +
-            "  * If no date mentioned → use TODAY's date (current date)\n" +
-            "  * Handle Vietnamese date expressions:\n" +
-            "    - \"hôm nay\", \"bây giờ\", \"nay\" → today\n" +
-            "    - \"hôm qua\", \"qua\" → yesterday\n" +
-            "    - \"hôm kia\" → day before yesterday\n" +
-            "    - \"mai\", \"ngày mai\" → tomorrow\n" +
-            "    - \"tuần này\" → appropriate date this week\n" +
-            "    - \"tháng này\" → appropriate date this month\n" +
-            "  * Handle specific date formats:\n" +
-            "    - DD/MM/YYYY, DD-MM-YYYY, DD/MM/YY\n" +
-            "    - \"ngày X tháng Y\", \"X/Y\", \"X- Y\"\n" +
-            "    - \"thứ Hai\", \"thứ Ba\" etc. → this week's corresponding day\n" +
-            "- Extract note/description from the message context.\n" +
-            "- If no amount or unclear transaction → return {}.\n" +
-            "- IMPORTANT: Always use current Vietnam timezone (UTC+7) for date calculations.";
+            "- Transport patterns: \"đi xe\", \"xăng\", \"grab\", \"taxi\", \"bus\"\n" +
+            "- Shopping patterns: \"mua sắm\", \"shopee\", \"quần áo\", \"tạp hóa\"\n" +
+            "- Income patterns: \"lương\", \"thưởng\", \"tiền\", \"nhận tiền\"\n" +
+            "- Default: small amounts (<500k) without clear income context = EXPENSE\n" +
+            "\n" +
+            "Amount extraction:\n" +
+            "- Extract any number that looks like money (ignore dots in formatting)\n" +
+            "- Context matters: \"an sang 25000\" → 25000 expense\n" +
+            "\n" +
+            "Category mapping:\n" +
+            "  * Food/Drinks: \"Ăn uống\"\n" +
+            "  * Transport: \"Di chuyển\"\n" +
+            "  * Shopping: \"Mua sắm\"\n" +
+            "  * Entertainment: \"Giải trí\"\n" +
+            "  * Bills: \"Hóa đơn\"\n" +
+            "  * Health: \"Sức khỏe\"\n" +
+            "  * Education: \"Giáo dục\"\n" +
+            "  * Income: \"Lương\", \"Thưởng\", \"Đầu tư\", \"Freelance\", \"Kinh doanh\", \"Quà tặng\"\n" +
+            "  * Others: \"Khác\"\n" +
+            "\n" +
+            "Date detection (Vietnam timezone UTC+7):\n" +
+            "  * If no date mentioned → use TODAY's date\n" +
+            "  * \"hôm nay\", \"nay\" → today\n" +
+            "  * \"hôm qua\", \"qua\" → yesterday\n" +
+            "  * DD/MM/YYYY formats\n" +
+            "\n" +
+            "Examples to understand:\n" +
+            "- \"an sang 25000\" → {type: \"expense\", category: \"Ăn uống\", amount: 25000, note: \"Ăn sáng\"}\n" +
+            "- \"pha 15000\" → {type: \"expense\", category: \"Ăn uống\", amount: 15000, note: \"Cà phê\"}\n" +
+            "- \"lương 15trieu\" → {type: \"income\", category: \"Lương\", amount: 15000000, note: \"Lương tháng\"}\n" +
+            "- \"50000 com trua\" → {type: \"expense\", category: \"Ăn uống\", amount: 50000, note: \"Cơm trưa\"}\n" +
+            "\n" +
+            "If no amount or unclear context → return {}.";
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;

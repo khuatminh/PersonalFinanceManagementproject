@@ -23,7 +23,6 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString(exclude = {"user", "category"})
 public class Budget {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

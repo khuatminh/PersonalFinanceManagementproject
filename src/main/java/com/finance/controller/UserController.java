@@ -36,7 +36,12 @@ public class UserController {
 
     // ĐĂNG KÍ
     @GetMapping("/register")
-    public String registerForm(Model model) {
+    public String registerForm(Model model, Principal principal) {
+        // If user is already authenticated, redirect to dashboard
+        if (principal != null) {
+            return "redirect:/dashboard";
+        }
+
         model.addAttribute("userForm", new UserRegistrationForm());
         return "register";
     }

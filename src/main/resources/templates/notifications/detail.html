@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head}">
+    <title>Chi tiết thông báo - Quản lý Tài chính Cá nhân</title>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navigation -->
+    <div th:replace="~{fragments/layout :: navbar}"></div>
+
+    <!-- Flash Messages -->
+    <div th:replace="~{fragments/layout :: flash-messages}"></div>
+
+    <!-- Main Content -->
+    <main class="container mb-4 flex-grow-1">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2"><i class="bi bi-bell"></i> Chi tiết thông báo</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <a th:href="@{/notifications}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Quay lại
+                </a>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="notification-icon"
+                                 th:classappend="'text-' + (${notification.type} == 'SUCCESS' ? 'success' :
+                                                    ${notification.type} == 'WARNING' ? 'warning' :
+                                                    ${notification.type} == 'ERROR' ? 'danger' :
+                                                    ${notification.type} == 'GOAL' ? 'info' :
+                                                    ${notification.type} == 'BUDGET' ? 'primary' : 'secondary')">
+                                <i th:if="${notification.type} == 'SUCCESS'" class="bi bi-check-circle-fill"></i>
+                                <i th:if="${notification.type} == 'WARNING'" class="bi bi-exclamation-triangle-fill"></i>
+                                <i th:if="${notification.type} == 'ERROR'" class="bi bi-x-circle-fill"></i>
+                                <i th:if="${notification.type} == 'GOAL'" class="bi bi-trophy-fill"></i>
+                                <i th:if="${notification.type} == 'BUDGET'" class="bi bi-piggy-bank-fill"></i>
+                                <i th:if="${notification.type} == 'TRANSACTION'" class="bi bi-arrow-left-right-fill"></i>
+                                <i th:if="${notification.type} == 'SYSTEM'" class="bi bi-gear-fill"></i>
+                                <i th:if="${notification.type} == 'GENERAL'" class="bi bi-info-circle-fill"></i>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h5 class="mb-0" th:text="${notification.title ?: 'Thông báo'}">Tiêu đề thông báo</h5>
+                                <small class="text-muted">
+                                    <i class="bi bi-clock"></i>
+                                    <span th:text="${#temporals.format(notification.createdAt, 'dd/MM/yyyy HH:mm:ss')}">01/01/2025 10:30:00</span>
+                                </small>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <span class="badge"
+                                      th:classappend="'bg-' + (${notification.type} == 'SUCCESS' ? 'success' :
+                                                        ${notification.type} == 'WARNING' ? 'warning' :
+                                                        ${notification.type} == 'ERROR' ? 'danger' :
+                                                        ${notification.type} == 'GOAL' ? 'info' :
+                                                        ${notification.type} == 'BUDGET' ? 'primary' : 'secondary')">
+                                    <span th:if="${notification.type} == 'SUCCESS'}>Thành công</span>
+                                    <span th:if="${notification.type} == 'WARNING'">Cảnh báo</span>
+                                    <span th:if="${notification.type} == 'ERROR'">Lỗi</span>
+                                    <span th:if="${notification.type} == 'GOAL'">Mục tiêu</span>
+                                    <span th:if="${notification.type} == 'BUDGET'">Ngân sách</span>
+                                    <span th:if="${notification.type} == 'TRANSACTION'">Giao dịch</span>
+                                    <span th:if="${notification.type} == 'SYSTEM'">Hệ thống</span>
+                                    <span th:if="${notification.type} == 'GENERAL'">Chung</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="notification-content mb-4">
+                            <p class="fs-5" th:text="${notification.message}">Nội dung thông báo</p>
+                        </div>
+
+                        <div th:if="${notification.actionUrl}" class="mb-4">
+                            <a th:href="${notification.actionUrl}" class="btn btn-primary">
+                                <i class="bi bi-arrow-right"></i> Xem chi tiết
+                            </a>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <dl class="row">
+                                    <dt class="col-sm-4">Trạng thái:</dt>
+                                    <dd class="col-sm-8">
+                                        <span th:if="${notification.isRead()}" class="badge bg-success">
+                                            <i class="bi bi-check-circle"></i> Đã đọc
+                                        </span>
+                                        <span th:unless="${notification.isRead()}" class="badge bg-warning">
+                                            <i class="bi bi-circle"></i> Chưa đọc
+                                        </span>
+                                    </dd>
+
+                                    <dt class="col-sm-4">Ngày tạo:</dt>
+                                    <dd class="col-sm-8">
+                                        <span th:text="${#temporals.format(notification.createdAt, 'dd/MM/yyyy HH:mm')}"></span>
+                                    </dd>
+
+                                    <dt th:if="${notification.readAt}" class="col-sm-4">Đã đọc lúc:</dt>
+                                    <dd th:if="${notification.readAt}" class="col-sm-8">
+                                        <span th:text="${#temporals.format(notification.readAt, 'dd/MM/yyyy HH:mm')}"></span>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between">
+                            <div class="btn-group">
+                                <form th:if="${!notification.isRead()}"
+                                      th:action="@{/notifications/mark-read/{id}(id=${notification.id})}"
+                                      method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-primary">
+                                        <i class="bi bi-check"></i> Đánh dấu đã đọc
+                                    </button>
+                                </form>
+                                <form th:if="${notification.isRead()}"
+                                      th:action="@{/notifications/mark-unread/{id}(id=${notification.id})}"
+                                      method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-secondary">
+                                        <i class="bi bi-circle"></i> Đánh dấu chưa đọc
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="btn-group">
+                                <form th:action="@{/notifications/delete/{id}(id=${notification.id})}"
+                                      method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-danger"
+                                            onclick="return confirm('Bạn có chắc muốn xóa thông báo này?')">
+                                        <i class="bi bi-trash"></i> Xóa thông báo
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Related Actions -->
+                <div th:if="${notification.actionUrl}" class="card mt-3">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="bi bi-box-arrow-right"></i> Hành động liên quan</h6>
+                    </div>
+                    <div class="card-body text-center">
+                        <a th:href="${notification.actionUrl}" class="btn btn-primary btn-lg">
+                            <i class="bi bi-arrow-right"></i> Xem chi tiết
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <!-- Scripts -->
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+
+    <style>
+        .notification-icon {
+            font-size: 2rem;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: rgba(0,0,0,0.1);
+        }
+
+        .notification-content {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid #007bff;
+        }
+    </style>
+</body>
+</html>

@@ -23,6 +23,10 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 @Controller
 @RequestMapping("/transactions")
 @RequiredArgsConstructor
@@ -36,16 +40,27 @@ public class TransactionController {
     UserService userService;
 
     @GetMapping
-    public String listTransactions(Principal principal, Model model) {
+    public String listTransactions(Principal principal, Model model,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         User user = userService.findByUsername(principal.getName())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        List<Transaction> transactions = transactionService.findByUserOrderByDateDesc(user);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Transaction> transactionPage = transactionService.findPaginatedByUser(user, pageable);
         TransactionService.TransactionStatistics stats = transactionService.getTransactionStatistics(user);
 
-        model.addAttribute("transactions", transactions);
+        model.addAttribute("transactions", transactionPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", transactionPage.getTotalPages());
+        model.addAttribute("totalItems", transactionPage.getTotalElements());
+        model.addAttribute("size", size);
         model.addAttribute("stats", stats);
         model.addAttribute("user", user);
+
+        // Add categories for filter dropdowns
+        model.addAttribute("incomeCategories", categoryService.getIncomeCategories());
+        model.addAttribute("expenseCategories", categoryService.getExpenseCategories());
 
         return "transaction/list";
     }

@@ -15,6 +15,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 @Transactional
@@ -39,6 +41,10 @@ public class TransactionService {
 
     public List<Transaction> findByUserOrderByDateDesc(User user) {
         return transactionRepository.findByUserOrderByTransactionDateDesc(user);
+    }
+
+    public Page<Transaction> findPaginatedByUser(User user, Pageable pageable) {
+        return transactionRepository.findByUserOrderByTransactionDateDesc(user, pageable);
     }
 
     public List<Transaction> findRecentTransactionsByUser(User user, int limit) {

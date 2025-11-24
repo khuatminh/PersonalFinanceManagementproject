@@ -9,31 +9,182 @@
     <!-- Navigation -->
     <div th:replace="~{fragments/layout :: navbar}"></div>
 
+    <!-- Flash Messages -->
+    <div th:replace="~{fragments/layout :: flash-messages}"></div>
+
     <!-- Main Content -->
     <main class="container mb-4 flex-grow-1">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2"><i class="bi bi-bell"></i> Thông báo</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <div class="btn-group me-2">
+                    <form th:action="@{/notifications/mark-all-read}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-outline-primary btn-sm"
+                                th:if="${totalItems > 0}"
+                                onclick="return confirm('Đánh dấu tất cả thông báo là đã đọc?')">
+                            <i class="bi bi-check-all"></i> Đánh dấu tất cả đã đọc
+                        </button>
+                    </form>
+                    <form th:action="@{/notifications/delete-read}" method="post"
+                          th:if="${totalItems > 0}" class="d-inline">
+                        <button type="submit" class="btn btn-outline-danger btn-sm"
+                                onclick="return confirm('Xóa tất cả thông báo đã đọc?')">
+                            <i class="bi bi-trash"></i> Xóa đã đọc
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
 
+        <!-- Filters -->
+        <div class="row mb-3">
+            <div class="col-md-8">
+                <div class="btn-group" role="group">
+                    <a th:href="@{/notifications(filter='all')}"
+                       class="btn btn-sm"
+                       th:classappend="${filter == 'all'} ? 'btn-primary' : 'btn-outline-primary'">
+                        <i class="bi bi-list-ul"></i> Tất cả
+                    </a>
+                    <a th:href="@{/notifications(filter='unread')}"
+                       class="btn btn-sm position-relative"
+                       th:classappend="${filter == 'unread'} ? 'btn-primary' : 'btn-outline-primary'">
+                        <i class="bi bi-circle"></i> Chưa đọc
+                        <span th:if="${unreadCount > 0}" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            <span th:text="${unreadCount}"></span>
+                        </span>
+                    </a>
+                    <a th:href="@{/notifications(filter='read')}"
+                       class="btn btn-sm"
+                       th:classappend="${filter == 'read'} ? 'btn-primary' : 'btn-outline-primary'">
+                        <i class="bi bi-check-circle"></i> Đã đọc
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4 text-end">
+                <small class="text-muted">
+                    <span th:text="${totalItems}">0</span> thông báo
+                    <span th:if="${unreadCount > 0}">(<span th:text="${unreadCount}"></span> chưa đọc)</span>
+                </small>
+            </div>
+        </div>
+
+        <!-- Notification List -->
         <div th:if="${notifications.isEmpty()}" class="text-center py-5">
             <i class="bi bi-bell-slash text-muted" style="font-size: 4rem;"></i>
-            <p class="mt-3">Bạn không có thông báo mới.</p>
+            <h5 class="mt-3 text-muted">
+                <span th:if="${filter == 'unread'}">Không có thông báo chưa đọc</span>
+                <span th:if="${filter == 'read'}">Không có thông báo đã đọc</span>
+                <span th:if="${filter == 'all'}">Bạn không có thông báo nào</span>
+            </h5>
+            <p class="text-muted">
+                <span th:if="${filter != 'all'}">
+                    <a th:href="@{/notifications(filter='all')}">Xem tất cả thông báo</a>
+                </span>
+                <span th:if="${filter == 'all'}">
+                    Các thông báo mới sẽ xuất hiện ở đây
+                </span>
+            </p>
         </div>
 
-        <div th:unless="${notifications.isEmpty()}" class="list-group">
-            <a th:each="notification : ${notifications}" th:href="@{/notifications/mark-as-read/{id}(id=${notification.id})}"
-               class="list-group-item list-group-item-action"
-               th:classappend="${!notification.isRead()} ? 'list-group-item-light fw-bold' : ''">
-                <div class="d-flex w-100 justify-content-between">
-                    <p class="mb-1" th:text="${notification.message}">Nội dung thông báo.</p>
-                    <small th:text="${#temporals.format(notification.createdAt, 'dd/MM/yyyy HH:mm')}"></small>
+        <div th:unless="${notifications.isEmpty()}" class="notification-list">
+            <!-- Notification Items -->
+            <div class="card mb-2 notification-item"
+                 th:each="notification : ${notifications}"
+                 th:classappend="${!notification.isRead()} ? 'border-left-4 border-primary bg-light' : ''">
+                <div class="card-body p-3">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <div class="notification-icon"
+                                 th:classappend="${notification.type.name() == 'SUCCESS' ? 'text-success' :
+                                                    notification.type.name() == 'WARNING' ? 'text-warning' :
+                                                    notification.type.name() == 'ERROR' ? 'text-danger' :
+                                                    notification.type.name() == 'GOAL' ? 'text-info' :
+                                                    notification.type.name() == 'BUDGET' ? 'text-primary' : 'text-secondary'}">
+                                <i th:if="${notification.type.name() == 'SUCCESS'}" class="bi bi-check-circle-fill"></i>
+                                <i th:if="${notification.type.name() == 'WARNING'}" class="bi bi-exclamation-triangle-fill"></i>
+                                <i th:if="${notification.type.name() == 'ERROR'}" class="bi bi-x-circle-fill"></i>
+                                <i th:if="${notification.type.name() == 'GOAL'}" class="bi bi-trophy-fill"></i>
+                                <i th:if="${notification.type.name() == 'BUDGET'}" class="bi bi-piggy-bank-fill"></i>
+                                <i th:if="${notification.type.name() == 'TRANSACTION'}" class="bi bi-arrow-left-right-fill"></i>
+                                <i th:if="${notification.type.name() == 'SYSTEM'}" class="bi bi-gear-fill"></i>
+                                <i th:if="${notification.type.name() == 'GENERAL'}" class="bi bi-info-circle-fill"></i>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="d-flex w-100 justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1"
+                                        th:classappend="${!notification.isRead()} ? 'fw-bold' : ''"
+                                        th:text="${notification.title ?: 'Thông báo'}">
+                                        Tiêu đề thông báo
+                                    </h6>
+                                    <p class="mb-1" th:text="${notification.message}">Nội dung thông báo.</p>
+                                    <small class="text-muted">
+                                        <i class="bi bi-clock"></i>
+                                        <span th:text="${#temporals.format(notification.createdAt, 'dd/MM/yyyy HH:mm')}">01/01/2025 10:30</span>
+                                        <span th:if="${notification.readAt}" class="ms-3">
+                                            <i class="bi bi-check-circle"></i>
+                                            Đã đọc lúc <span th:text="${#temporals.format(notification.readAt, 'dd/MM/yyyy HH:mm')}"></span>
+                                        </span>
+                                    </small>
+                                </div>
+                                <div class="flex-shrink-0 ms-3">
+                                    <div class="btn-group-vertical">
+                                        <a th:if="${!notification.isRead()}"
+                                           th:href="@{/notifications/mark-read/{id}(id=${notification.id})}"
+                                           class="btn btn-sm btn-outline-primary mb-1"
+                                           title="Đánh dấu đã đọc">
+                                            <i class="bi bi-check"></i>
+                                        </a>
+                                        <a th:if="${notification.isRead()}"
+                                           th:href="@{/notifications/mark-unread/{id}(id=${notification.id})}"
+                                           class="btn btn-sm btn-outline-secondary mb-1"
+                                           title="Đánh dấu chưa đọc">
+                                            <i class="bi bi-circle"></i>
+                                        </a>
+                                        <form th:action="@{/notifications/delete/{id}(id=${notification.id})}"
+                                              method="post" class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                    onclick="return confirm('Xóa thông báo này?')"
+                                                    title="Xóa thông báo">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:if="${notification.actionUrl}" class="mt-2">
+                                <a th:href="${notification.actionUrl}" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-arrow-right"></i> Xem chi tiết
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </a>
+            </div>
         </div>
 
-        <div class="mt-3" th:if="${!notifications.isEmpty()}">
-            <a th:href="@{/notifications/mark-all-as-read}" class="btn btn-primary">Đánh dấu tất cả là đã đọc</a>
-        </div>
+        <!-- Pagination -->
+        <nav th:if="${totalPages > 1}" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{/notifications(page=${currentPage - 1}, filter=${filter})}">
+                        <i class="bi bi-chevron-left"></i> Trước
+                    </a>
+                </li>
+
+                <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                    class="page-item" th:classappend="${i == currentPage} ? 'active'">
+                    <a class="page-link" th:href="@{/notifications(page=${i}, filter=${filter})}" th:text="${i + 1}">1</a>
+                </li>
+
+                <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                    <a class="page-link" th:href="@{/notifications(page=${currentPage + 1}, filter=${filter})}">
+                        Tiếp <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </main>
 
     <!-- Footer -->
@@ -41,5 +192,140 @@
 
     <!-- Scripts -->
     <div th:replace="~{fragments/layout :: scripts}"></div>
+
+    <!-- Notification System JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-refresh notification count every 30 seconds
+            function updateNotificationCount() {
+                fetch('/notifications/api/unread-count')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const badge = document.querySelector('.navbar .badge.bg-danger');
+                            if (badge) {
+                                if (data.count > 0) {
+                                    badge.textContent = data.count;
+                                    badge.style.display = 'inline-block';
+                                } else {
+                                    badge.style.display = 'none';
+                                }
+                            }
+                        }
+                    })
+                    .catch(error => console.error('Error updating notification count:', error));
+            }
+
+            // Update count every 30 seconds
+            setInterval(updateNotificationCount, 30000);
+
+            // Handle AJAX form submissions for mark as read/unread
+            document.querySelectorAll('.notification-item form').forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    const formData = new FormData(this);
+                    const action = this.action;
+                    const notificationItem = this.closest('.notification-item');
+
+                    fetch(action, {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => {
+                        if (response.redirected) {
+                            window.location.reload();
+                        } else {
+                            // Remove the notification item with animation
+                            notificationItem.style.transition = 'opacity 0.3s';
+                            notificationItem.style.opacity = '0';
+                            setTimeout(() => {
+                                notificationItem.remove();
+                                updateNotificationCount();
+
+                                // Check if there are no more notifications
+                                const remainingItems = document.querySelectorAll('.notification-item');
+                                if (remainingItems.length === 0) {
+                                    location.reload();
+                                }
+                            }, 300);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        // Fallback to regular form submission
+                        this.submit();
+                    });
+                });
+            });
+
+            // Handle mark as read/unread links
+            document.querySelectorAll('.notification-item a[href*="mark-read"], .notification-item a[href*="mark-unread"]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    const action = this.href;
+                    const notificationItem = this.closest('.notification-item');
+
+                    fetch(action, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            // Update the UI to reflect read/unread status
+                            location.reload();
+                        } else {
+                            // Fallback to regular navigation
+                            window.location.href = action;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        // Fallback to regular navigation
+                        window.location.href = action;
+                    });
+                });
+            });
+        });
+    </script>
+
+    <style>
+        .border-left-4 {
+            border-left-width: 4px !important;
+        }
+
+        .notification-icon {
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: rgba(0,0,0,0.1);
+        }
+
+        .notification-item {
+            transition: all 0.3s ease;
+        }
+
+        .notification-item:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .btn-group-vertical .btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .badge {
+            min-width: 18px;
+            text-align: center;
+        }
+    </style>
 </body>
 </html>

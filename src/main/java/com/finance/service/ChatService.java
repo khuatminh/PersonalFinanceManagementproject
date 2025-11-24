@@ -56,7 +56,7 @@ public class ChatService {
             // Check if AI detected a valid transaction
             if (transactionData.isEmpty()) {
                 response.put("message",
-                        "❌ Không nhận diện được giao dịch. Vui lòng thử lại với thông tin rõ ràng hơn.");
+                        "❌ Không nhận diện được giao dịch. Vui lòng thử lại với thông tin rõ ràng hơn (ví dụ: 'chi 50000 ăn trưa' hoặc 'thu 5000000 lương').");
                 return response;
             }
 
@@ -79,7 +79,7 @@ public class ChatService {
 
         } catch (Exception e) {
             logger.error("Error processing message: {}", e.getMessage(), e);
-            response.put("message", "❌ Đã xảy ra lỗi khi xử lý tin nhắn. Vui lòng thử lại sau.");
+            response.put("message", "❌ Đã xảy ra lỗi khi xử lý tin nhắn: " + e.getMessage());
         }
 
         return response;
