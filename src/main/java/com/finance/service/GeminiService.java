@@ -1,15 +1,15 @@
 package com.finance.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.ai.chat.model.ChatModel;
+import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.chat.messages.UserMessage;
+import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
+import jakarta.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -21,8 +21,7 @@ public class GeminiService {
 
     private static final Logger logger = LoggerFactory.getLogger(GeminiService.class);
 
-    private static final String GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
-    private static final String SYSTEM_PROMPT = "You are an AI assistant integrated in a personal finance app.\n" +
+    private static final String SYSTEM_PROMPT_TEXT = "You are an AI assistant integrated in a personal finance app.\n" +
             "Understand Vietnamese messages and SMARTLY extract income or expense transactions without requiring explicit keywords.\n"
             +
             "\n" +
@@ -79,111 +78,56 @@ public class GeminiService {
             "\n" +
             "If no amount or unclear context → return {}.";
 
-    private final RestTemplate restTemplate;
+    private final ChatModel chatModel;
     private final ObjectMapper objectMapper;
 
-    // API key injected from application.yaml
-    @Value("${gemini.api.key:#{null}}")
-    private String geminiApiKey;
-
-    public GeminiService() {
-        this.restTemplate = new RestTemplate();
+    public GeminiService(ChatModel chatModel) {
+        this.chatModel = chatModel;
         this.objectMapper = new ObjectMapper();
     }
 
     @jakarta.annotation.PostConstruct
     public void init() {
-        if (isConfigured()) {
-            logger.info("✓ Gemini API Service initialized successfully with API key from .env file");
-        } else {
-            logger.warn("⚠ Gemini API key is not configured. Please set GEMINI_API_KEY in your .env file");
-        }
+        logger.info("✓ Gemini API Service initialized with Spring AI");
     }
 
     public Map<String, Object> extractTransactionFromMessage(String message) throws Exception {
         logger.debug("Extracting transaction from message: {}", message);
 
         try {
-            // Build the request payload for Gemini API
-            Map<String, Object> requestBody = buildGeminiRequest(message);
+            // Get current date for context
+            String currentDate = LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh")).format(DateTimeFormatter.ISO_LOCAL_DATE);
+            String currentDayOfWeek = LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh")).getDayOfWeek().toString();
 
-            // Set up HTTP headers
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
+            String fullPrompt = "\n\nIMPORTANT CONTEXT:" +
+                    "\nCurrent date (Vietnam timezone): " + currentDate +
+                    "\nCurrent day of week: " + currentDayOfWeek +
+                    "\n\nUser message: " + message;
 
-            // Build the complete URL with API key
-            String urlWithKey = GEMINI_API_URL + "?key=" + geminiApiKey;
+            SystemMessage systemMessage = new SystemMessage(SYSTEM_PROMPT_TEXT);
+            UserMessage userMessage = new UserMessage(fullPrompt);
+            Prompt prompt = new Prompt(java.util.List.of(systemMessage, userMessage));
 
-            // Create HTTP entity
-            HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
+            String response = chatModel.call(prompt).getResult().getOutput().getText();
 
-            // Make the API call
-            ResponseEntity<String> response = restTemplate.postForEntity(urlWithKey, entity, String.class);
-
-            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-                return parseGeminiResponse(response.getBody());
-            } else {
-                logger.error("Gemini API returned error status: {}", response.getStatusCode());
-                return new HashMap<>();
+            // Clean up response if it contains markdown code blocks
+            if (response.contains("```json")) {
+                response = response.replace("```json", "").replace("```", "").trim();
+            } else if (response.contains("```")) {
+                response = response.replace("```", "").trim();
             }
 
+            return parseGeminiResponse(response);
+
         } catch (Exception e) {
-            logger.error("Error calling Gemini API: {}", e.getMessage(), e);
+            logger.error("Error calling Gemini API via Spring AI: {}", e.getMessage(), e);
             throw new Exception("Failed to process message with AI: " + e.getMessage());
         }
     }
 
-    private Map<String, Object> buildGeminiRequest(String message) {
-        // Get current date for context
-        String currentDate = LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh")).format(DateTimeFormatter.ISO_LOCAL_DATE);
-        String currentDayOfWeek = LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh")).getDayOfWeek().toString();
-
-        // Create the main content structure with date context
-        Map<String, Object> textPart = new HashMap<>();
-        String fullPrompt = SYSTEM_PROMPT +
-                "\n\nIMPORTANT CONTEXT:" +
-                "\nCurrent date (Vietnam timezone): " + currentDate +
-                "\nCurrent day of week: " + currentDayOfWeek +
-                "\n\nUser message: " + message;
-        textPart.put("text", fullPrompt);
-
-        Map<String, Object> content = new HashMap<>();
-        content.put("parts", new Object[] { textPart });
-
-        // Build generation config
-        Map<String, Object> generationConfig = new HashMap<>();
-        generationConfig.put("temperature", 0.1);
-        generationConfig.put("maxOutputTokens", 250);
-        generationConfig.put("responseMimeType", "application/json");
-
-        // Build the complete request
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("contents", new Object[] { content });
-        requestBody.put("generationConfig", generationConfig);
-
-        return requestBody;
-    }
-
     @SuppressWarnings("unchecked")
-    private Map<String, Object> parseGeminiResponse(String responseBody) throws Exception {
+    private Map<String, Object> parseGeminiResponse(String jsonText) throws Exception {
         try {
-            JsonNode rootNode = objectMapper.readTree(responseBody);
-
-            // Navigate to the content text
-            JsonNode candidates = rootNode.path("candidates");
-            if (!candidates.isArray() || candidates.size() == 0) {
-                logger.warn("No candidates in Gemini response");
-                return new HashMap<>();
-            }
-
-            JsonNode content = candidates.get(0).path("content");
-            JsonNode parts = content.path("parts");
-            if (!parts.isArray() || parts.size() == 0) {
-                logger.warn("No parts in Gemini response");
-                return new HashMap<>();
-            }
-
-            String jsonText = parts.get(0).path("text").asText();
             logger.debug("Gemini response text: {}", jsonText);
 
             // Parse the JSON text into a map
@@ -342,6 +286,6 @@ public class GeminiService {
     }
 
     public boolean isConfigured() {
-        return geminiApiKey != null && !geminiApiKey.trim().isEmpty();
+        return true; // Spring AI handles configuration checks
     }
 }

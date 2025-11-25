@@ -1,11 +1,12 @@
 # 💰 Personal Finance Management System
 
 [![Java Version](https://img.shields.io/badge/Java-21-orange.svg)](https://openjdk.org/)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.12-brightgreen.svg)](https://spring.io/projects/spring-boot)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.0-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0+-blue.svg)](https://www.mysql.com/)
+[![Spring AI](https://img.shields.io/badge/Spring%20AI-1.1.0-green.svg)](https://spring.io/projects/spring-ai)
 [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](https://spring.io/projects/spring-boot)
 
-> A comprehensive, AI-powered personal finance management web application built with modern Java 21 and Spring Boot 3.2.12. Features intelligent transaction recording, budget planning, goal tracking, and advanced financial analytics with Vietnamese language support.
+> A comprehensive, AI-powered personal finance management web application built with modern Java 21, Spring Boot 3.4.0, and Spring AI. Features intelligent transaction recording, budget planning, goal tracking, and advanced financial analytics with Vietnamese language support.
 
 ## 🌟 Key Features
 
@@ -13,7 +14,7 @@
 - **Natural Language Processing**: Record transactions using conversational Vietnamese
 - **Smart Transaction Extraction**: AI automatically identifies amount, category, and description
 - **Auto-categorization**: Intelligent category suggestions based on transaction patterns
-- **Gemini AI Integration**: Google's advanced AI for natural language understanding
+- **Spring AI Integration**: Seamless integration with Google Gemini via Spring AI framework
 
 ### 💳 Comprehensive Financial Management
 - **Transaction Tracking**: Complete income/expense management with detailed categorization
@@ -58,7 +59,8 @@
 
 #### Backend Technologies
 - **Java 21** - Latest Java with modern features and performance improvements
-- **Spring Boot 3.2.12** - Modern Spring framework with auto-configuration
+- **Spring Boot 3.4.0** - Modern Spring framework with auto-configuration
+- **Spring AI** - Unified AI application framework for Java
 - **Spring Security 6** - Comprehensive security framework
 - **Spring Data JPA** - Advanced database abstraction layer
 - **Hibernate 6** - Powerful ORM framework
@@ -81,7 +83,8 @@
 - **dotenv-java** - Environment variable management
 
 #### AI & External Services
-- **Google Gemini API** - Advanced natural language processing
+- **Spring AI** - Abstraction layer for AI models
+- **Google Gemini API** - Advanced natural language processing via Spring AI
 - **RESTful APIs** - Modern API design patterns
 
 ### 🏛️ Clean Architecture
@@ -310,8 +313,8 @@ GEMINI_API_KEY=your_gemini_api_key_here
 
 # Database Configuration (MySQL)
 DATABASE_URL=jdbc:mysql://localhost:3306/personal_finance_db
-DATABASE_USERNAME=financeapp
-DATABASE_PASSWORD=StrongPassword123!
+DATABASE_USERNAME=root
+DATABASE_PASSWORD=your_password
 ```
 
 #### 4. **Build and Run**
@@ -372,6 +375,7 @@ The application features an intelligent chat system that allows users to record 
 
 **AI Features:**
 - **Natural Language Processing**: Understands conversational Vietnamese
+- **Powered by Spring AI**: Leverages Google's Gemini 2.0 Flash model for high speed and accuracy
 - **Date Expression Handling**: Processes relative dates ("hôm qua", "tháng này")
 - **Currency Recognition**: Handles various Vietnamese currency formats
 - **Smart Categorization**: Learns from user patterns for better suggestions
@@ -510,14 +514,24 @@ server:
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/personal_finance_db
-    username: ${DATABASE_USERNAME:financeapp}
-    password: ${DATABASE_PASSWORD:StrongPassword123!}
+    username: ${DATABASE_USERNAME:root}
+    password: ${DATABASE_PASSWORD:your_password}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       maximum-pool-size: 20
       minimum-idle: 5
       connection-timeout: 20000
       idle-timeout: 300000
+
+  # Spring AI Configuration
+  ai:
+    google:
+      genai:
+        api-key: ${GEMINI_API_KEY}
+        chat:
+          options:
+            model: gemini-2.0-flash
+            temperature: 0.1
 ```
 
 **JPA/Hibernate Configuration:**
