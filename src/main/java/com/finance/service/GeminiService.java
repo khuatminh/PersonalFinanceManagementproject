@@ -110,7 +110,6 @@ public class GeminiService {
 
             String response = chatModel.call(prompt).getResult().getOutput().getText();
 
-            // Clean up response if it contains markdown code blocks
             if (response.contains("```json")) {
                 response = response.replace("```json", "").replace("```", "").trim();
             } else if (response.contains("```")) {
@@ -201,12 +200,7 @@ public class GeminiService {
         }
     }
 
-    /**
-     * Processes Vietnamese date expressions and returns standardized date format.
-     *
-     * @param dateInput The date string from AI response, can be null
-     * @return Date in yyyy-MM-dd format for Vietnam timezone
-     */
+
     private String processVietnameseDate(String dateInput) {
         LocalDate today = LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh"));
 
@@ -286,6 +280,6 @@ public class GeminiService {
     }
 
     public boolean isConfigured() {
-        return true; // Spring AI handles configuration checks
+        return true;
     }
 }

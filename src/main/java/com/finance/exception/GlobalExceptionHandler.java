@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ModelAndView handleGenericException(Exception ex) {
-        ModelAndView modelAndView = new ModelAndView("error/500");
+        ModelAndView modelAndView = new ModelAndView("error");
         modelAndView.addObject("errorCode", ErrorType.GENERIC_ERROR.getCode());
         modelAndView.addObject("errorMessage", ErrorType.GENERIC_ERROR.getMessage());
         ex.printStackTrace();

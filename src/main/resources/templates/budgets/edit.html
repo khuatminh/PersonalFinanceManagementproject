@@ -95,7 +95,7 @@
                                 <div class="invalid-feedback" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}">
                                     Ngày bắt đầu là bắt buộc
                                 </div>
-                                <small class="form-text text-muted">Ban đầu: <span th:text="${#temporals.format(budget.startDate, 'MMM dd, yyyy')}">Jan 01, 2024</span></small>
+                                <small class="form-text text-muted">Ban đầu: <span th:text="${#temporals.format(budget.startDate, 'dd/MM/yyyy')}">01/01/2024</span></small>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="endDate" class="form-label">Ngày kết thúc *</label>
@@ -104,7 +104,7 @@
                                 <div class="invalid-feedback" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}">
                                     Ngày kết thúc là bắt buộc
                                 </div>
-                                <small class="form-text text-muted">Ban đầu: <span th:text="${#temporals.format(budget.endDate, 'MMM dd, yyyy')}">Jan 31, 2024</span></small>
+                                <small class="form-text text-muted">Ban đầu: <span th:text="${#temporals.format(budget.endDate, 'dd/MM/yyyy')}">31/01/2024</span></small>
                             </div>
                         </div>
 
@@ -126,7 +126,7 @@
                             </h6>
                             <p class="mb-2">
                                 <strong>Thời hạn:</strong> <span th:text="${#numbers.formatDecimal(budget.getDurationInDays(), 1, 0)}">30</span> ngày<br>
-                                <strong>Đã tạo:</strong> <span th:text="${#temporals.format(budget.createdAt, 'MMM dd, yyyy')}">Jan 01, 2024</span>
+                                <strong>Đã tạo:</strong> <span th:text="${#temporals.format(budget.createdAt, 'dd/MM/yyyy')}">01/01/2024</span>
                             </p>
                             <hr>
                             <p class="mb-0">

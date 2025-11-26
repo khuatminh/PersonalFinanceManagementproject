@@ -226,7 +226,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div th:text="${#temporals.format(goal.targetDate, 'MMM dd, yyyy')}">Dec 31, 2024
+                                    <div th:text="${#temporals.format(goal.targetDate, 'dd/MM/yyyy')}">31/12/2024
                                     </div>
                                     <small class="text-muted" th:text="${goal.getDaysRemaining() + ' ngày còn lại'}">30
                                         ngày còn lại</small>
@@ -327,7 +327,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div th:text="${#temporals.format(goal.targetDate, 'MMM dd, yyyy')}">Jan 01, 2024
+                                    <div th:text="${#temporals.format(goal.targetDate, 'dd/MM/yyyy')}">01/01/2024
                                     </div>
                                     <small class="text-danger" th:text="${goal.getDaysOverdue() + ' ngày quá hạn'}">5
                                         ngày quá hạn</small>
@@ -391,7 +391,7 @@
                                     th:text="${#numbers.formatDecimal(goal.currentAmount, 1, 'COMMA', 0, 'POINT')} + ' VND'">
                                     1.200.000 VND
                                 </td>
-                                <td th:text="${#temporals.format(goal.completedAt, 'MMM dd, yyyy')}">Dec 15, 2024</td>
+                                <td th:text="${#temporals.format(goal.completedAt, 'dd/MM/yyyy')}">15/12/2024</td>
                                 <td>
                                     <button type="button" class="btn btn-sm btn-outline-danger"
                                         th:onclick="'confirmDelete(' + ${goal.id} + ')'" title="Xóa">

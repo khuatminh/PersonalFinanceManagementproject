@@ -217,7 +217,6 @@ public class GoalService {
         );
     }
 
-    // [ĐÃ SỬA LẠI] Thêm Getters để HTML đọc được dữ liệu
     public static class GoalSummary {
         private final long activeGoalsCount;
         private final BigDecimal totalTargetAmount;

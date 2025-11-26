@@ -18,7 +18,7 @@
         <div
             class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2">
-                <i class="bi bi-person-circle"></i> User Profile
+                <i class="bi bi-person-circle"></i> Tài khoản cá nhân
             </h1>
         </div>
 
@@ -27,7 +27,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title mb-0">
-                            <i class="bi bi-person-badge"></i> Profile Information
+                            <i class="bi bi-person-badge"></i> Thông tin tài khoản
                         </h3>
                     </div>
                     <div class="card-body">
@@ -53,9 +53,9 @@
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-sm-3"><strong>Member Since:</strong></div>
+                            <div class="col-sm-3"><strong>Ngày tham gia:</strong></div>
                             <div class="col-sm-9"
-                                th:text="${user.createdAt != null ? #temporals.format(user.createdAt, 'MMMM dd, yyyy') : 'N/A'}">
+                                th:text="${user.createdAt != null ? #temporals.format(user.createdAt, 'dd/MM/yyyy') : 'N/A'}">
                             </div>
                         </div>
 
@@ -63,10 +63,10 @@
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                             <a th:href="@{/user/edit}" class="btn btn-primary me-md-2">
-                                <i class="bi bi-pencil"></i> Edit Profile
+                                <i class="bi bi-pencil"></i> Chỉnh sửa thông tin
                             </a>
                             <a th:href="@{/user/change-password}" class="btn btn-outline-secondary">
-                                <i class="bi bi-key"></i> Change Password
+                                <i class="bi bi-key"></i> Thay đổi mật khẩu
                             </a>
                         </div>
                     </div>

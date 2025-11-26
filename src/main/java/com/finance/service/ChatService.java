@@ -115,8 +115,6 @@ public class ChatService {
             transaction.setUser(user);
             transaction.setCategory(category);
             transaction.setNotes("Tự động thêm từ chatbot: " + description);
-
-            // Save transaction
             Transaction savedTransaction = transactionRepository.save(transaction);
 
             logger.debug("Saved transaction: {}", savedTransaction);
@@ -131,9 +129,7 @@ public class ChatService {
     private LocalDateTime parseTransactionDate(String dateStr) {
         try {
             LocalDate date = LocalDate.parse(dateStr, DateTimeFormatter.ISO_LOCAL_DATE);
-            // Use current time in Vietnam timezone instead of start of day (00:00)
             LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
-            // Combine the date from AI with the actual current time
             return date.atTime(now.toLocalTime());
         } catch (Exception e) {
             logger.warn("Invalid date format: {}, using current date and time in Vietnam timezone", dateStr);
@@ -143,7 +139,6 @@ public class ChatService {
 
     private Category findOrCreateCategory(String categoryName, Transaction.TransactionType transactionType, User user) {
         try {
-            // Try to find existing category by name
             Optional<Category> existingCategory = categoryRepository.findByNameIgnoreCase(categoryName.trim());
 
             if (existingCategory.isPresent()) {
@@ -184,13 +179,11 @@ public class ChatService {
                 ? Category.CategoryType.INCOME
                 : Category.CategoryType.EXPENSE;
 
-        // Try to find the default category
         Optional<Category> defaultCategory = categoryRepository.findByNameIgnoreCase(defaultCategoryName);
         if (defaultCategory.isPresent()) {
             return defaultCategory.get();
         }
 
-        // Create default category if it doesn't exist
         Category category = new Category();
         category.setName(defaultCategoryName);
         category.setType(categoryType);

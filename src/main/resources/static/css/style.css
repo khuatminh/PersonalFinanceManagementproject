@@ -63,7 +63,7 @@ h4,
 h5,
 h6 {
     font-weight: 600;
-    color: var(--dark-color);
+    color: var(--primary-color);
     letter-spacing: -0.025em;
     margin-bottom: 0.75rem;
 }
@@ -296,7 +296,11 @@ a:hover {
     color: var(--success-color);
     font-weight: 600;
 }
-
+.page-title {
+    color: #e2e8f0;
+    font-size: 48px;
+    margin-bottom: 30px;
+}
 .expense-amount {
     color: var(--danger-color);
     font-weight: 600;

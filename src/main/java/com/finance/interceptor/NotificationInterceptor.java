@@ -14,9 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-/**
- * Interceptor to add notification data to all templates
- */
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -45,7 +42,6 @@ public class NotificationInterceptor implements HandlerInterceptor {
                         log.debug("Added {} unread notifications to model for user {}", unreadCount, auth.getName());
                     }
                 } catch (Exception e) {
-                    // Don't let notification errors break the page
                     log.warn("Could not load notification count for user {}: {}", auth.getName(), e.getMessage());
                 }
             }

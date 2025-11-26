@@ -1,4 +1,4 @@
-# 💰 Personal Finance Management System
+# 💰 Hệ Thống Quản Lý Tài Chính Cá Nhân
 
 [![Java Version](https://img.shields.io/badge/Java-21-orange.svg)](https://openjdk.org/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.0-brightgreen.svg)](https://spring.io/projects/spring-boot)
@@ -6,203 +6,204 @@
 [![Spring AI](https://img.shields.io/badge/Spring%20AI-1.1.0-green.svg)](https://spring.io/projects/spring-ai)
 [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](https://spring.io/projects/spring-boot)
 
-> A comprehensive, AI-powered personal finance management web application built with modern Java 21, Spring Boot 3.4.0, and Spring AI. Features intelligent transaction recording, budget planning, goal tracking, and advanced financial analytics with Vietnamese language support.
+> Ứng dụng web quản lý tài chính cá nhân toàn diện, tích hợp AI hiện đại được xây dựng với Java 21, Spring Boot 3.4.0, và Spring AI. Có các tính năng ghi nhận giao dịch thông minh, lập kế hoạch ngân sách, theo dõi mục tiêu và phân tích tài chính nâng cao với hỗ trợ ngôn ngữ tiếng Việt.
 
-## 🌟 Key Features
+## 🌟 Tính Năng Nổi Bật
 
-### 🤖 AI-Powered Transaction Management
-- **Natural Language Processing**: Record transactions using conversational Vietnamese
-- **Smart Transaction Extraction**: AI automatically identifies amount, category, and description
-- **Auto-categorization**: Intelligent category suggestions based on transaction patterns
-- **Spring AI Integration**: Seamless integration with Google Gemini via Spring AI framework
+### 🤖 Quản Lý Giao Dịch Tích Hợp AI
+- **Xử Lý Ngôn Ngữ Tự Nhiên**: Ghi nhận giao dịch bằng tiếng Việt hội thoại
+- **Trích Xuất Giao Dịch Thông Minh**: AI tự động nhận diện số tiền, danh mục và mô tả
+- **Tự Động Phân Loại**: Gợi ý danh mục thông minh dựa trên mẫu giao dịch
+- **Tích Hợp Spring AI**: Kết nối liền mạch với Google Gemini qua framework Spring AI
 
-### 💳 Comprehensive Financial Management
-- **Transaction Tracking**: Complete income/expense management with detailed categorization
-- **Advanced Search & Filtering**: Find transactions by date, type, category, or keywords
-- **Real-time Statistics**: Up-to-the-minute financial overview and insights
-- **Multi-currency Support**: Vietnamese Dong (₫) formatting and localization
+### 💳 Quản Lý Tài Chính Toàn Diện
+- **Theo Dõi Giao Dịch**: Quản lý thu nhập/chi tiêu hoàn chỉnh với phân loại chi tiết
+- **Tìm Kiếm & Lọc Nâng Cao**: Tìm giao dịch theo ngày, loại, danh mục hoặc từ khóa
+- **Thống Kê Thời Gian Thực**: Tổng quan tài chính và thông tin chi tiết cập nhật từng phút
+- **Hỗ Trợ Đa Tiền Tệ**: Định dạng và địa phương hóa Đồng Việt Nam (₫)
 
-### 📊 Budget Planning & Monitoring
-- **Flexible Budget Creation**: Set budgets for specific categories or time periods
-- **Real-time Progress Tracking**: Visual indicators for budget utilization
-- **Intelligent Alerts**: Automated notifications when approaching budget limits
-- **Historical Analysis**: Compare current spending with historical patterns
+### 📊 Lập Kế Hoạch & Giám Sát Ngân Sách
+- **Tạo Ngân Sách Linh Hoạt**: Đặt ngân sách cho danh mục hoặc khoảng thời gian cụ thể
+- **Theo Dõi Tiến Độ Thời Gian Thực**: Chỉ báo trực quan về mức sử dụng ngân sách
+- **Cảnh Báo Thông Minh**: Thông báo tự động khi tiến gần đến giới hạn ngân sách
+- **Phân Tích Lịch Sử**: So sánh chi tiêu hiện tại với các mẫu lịch sử
 
-### 🎯 Goal Setting & Achievement
-- **Savings Goals**: Create and track multiple financial goals simultaneously
-- **Progress Visualization**: Interactive charts showing goal completion status
-- **Milestone Tracking**: Set and achieve intermediate milestones
-- **Deadline Management**: Smart reminders for goal target dates
+### 🎯 Đặt Mục Tiêu & Hoàn Thành
+- **Mục Tiêu Tiết Kiệm**: Tạo và theo dõi nhiều mục tiêu tài chính đồng thời
+- **Trực Quan Hóa Tiến Độ**: Biểu đồ tương tác hiển thị trạng thái hoàn thành mục tiêu
+- **Theo Dõi Cột Mốc**: Đặt và đạt được các cột mốc trung gian
+- **Quản Lý Hạn Chót**: Lời nhắc thông minh cho ngày đích của mục tiêu
 
-### 📈 Advanced Analytics & Reporting
-- **Interactive Dashboard**: Comprehensive financial overview with real-time data
-- **Category-wise Analysis**: Detailed spending patterns by category
-- **Time-based Reports**: Monthly, quarterly, and yearly financial reports
-- **Visual Data Representation**: Chart.js integration for beautiful, interactive charts
+### 📈 Phân Tích & Báo Cáo Nâng Cao
+- **Dashboard Tương Tác**: Tổng quan tài chính toàn diện với dữ liệu thời gian thực
+- **Phân Tích Theo Danh Mục**: Mẫu chi tiêu chi tiết theo từng danh mục
+- **Báo Cáo Theo Thời Gian**: Báo cáo tài chính hàng tháng, hàng quý và hàng năm
+- **Trực Quan Dữ Liệu**: Tích hợp Chart.js cho các biểu đồ tương tác đẹp mắt
 
-### 🔐 Enterprise-Grade Security
-- **Spring Security 6**: Modern, comprehensive security framework
-- **BCrypt Encryption**: Military-grade password hashing
-- **Role-based Access Control**: USER and ADMIN role management
-- **CSRF Protection**: Cross-site request forgery prevention
-- **Session Management**: Secure session handling with configurable timeouts
+### 🔐 Bảo Mật Cấp Doanh Nghiệp
+- **Spring Security 6**: Framework bảo mật toàn diện hiện đại
+- **Mã Hóa BCrypt**: Mã hóa mật khẩu cấp quân sự
+- **Kiểm Soát Truy Cập Dựa trên Vai Trò**: Quản lý vai trò USER và ADMIN
+- **Bảo Vệ CSRF**: Ngăn chặn tấn công giả mạo yêu cầu chéo trang web
+- **Quản Lý Session**: Xử lý session an toàn với thời gian chờ cấu hình
 
-### 🎨 Modern User Experience
-- **Responsive Design**: Mobile-first Bootstrap 5 interface
-- **Real-time Updates**: Dynamic content updates without page refreshes
-- **Intuitive Navigation**: User-friendly interface with breadcrumb navigation
-- **Accessibility**: WCAG-compliant design for inclusive user experience
+### 🎨 Trải Nghiệm Người Dùng Hiện Đại
+- **Thiết Kế Phản Ứng**: Giao diện Bootstrap 5 ưu tiên di động
+- **Cập Nhật Thời Gian Thực**: Cập nhật nội dung động mà không cần tải lại trang
+- **Dẫn Hướng Trực Quan**: Giao diện thân thiện với điều hướng breadcrumb
+- **Khả Năng Tiếp Cận**: Thiết kế tuân thủ WCAG cho trải nghiệm người dùng toàn diện
 
-## 🏗️ Technical Architecture
+## 🏗️ Kiến Trúc Kỹ Thuật
 
-### 📋 Technology Stack
+### 📋 Ngăn Công Nghệ
 
-#### Backend Technologies
-- **Java 21** - Latest Java with modern features and performance improvements
-- **Spring Boot 3.4.0** - Modern Spring framework with auto-configuration
-- **Spring AI** - Unified AI application framework for Java
-- **Spring Security 6** - Comprehensive security framework
-- **Spring Data JPA** - Advanced database abstraction layer
-- **Hibernate 6** - Powerful ORM framework
-- **MySQL 8.0+** - Production-ready relational database
-- **H2 Database** - In-memory database for development and testing
+#### Công Nghệ Backend
+- **Java 21** - Java phiên bản mới nhất với các tính năng hiện đại và cải tiến hiệu suất
+- **Spring Boot 3.4.0** - Framework Spring hiện đại với tự động cấu hình
+- **Spring AI** - Framework ứng dụng AI thống nhất cho Java
+- **Spring Security 6** - Framework bảo mật toàn diện
+- **Spring Data JPA** - Lớp trừu tượng cơ sở dữ liệu nâng cao
+- **Hibernate 6** - Framework ORM mạnh mẽ
+- **MySQL 8.0+** - Cơ sở dữ liệu quan hệ sản xuất
+- **H2 Database** - Cơ sở dữ liệu trong bộ nhớ cho phát triển và kiểm thử
 
-#### Frontend Technologies
-- **Thymeleaf 3.1** - Modern server-side templating engine
-- **Bootstrap 5** - Mobile-first responsive CSS framework
-- **JavaScript ES6+** - Modern JavaScript with async/await support
-- **Chart.js** - Beautiful, interactive data visualization library
-- **Apache Icons** - Professional icon library
+#### Công Nghệ Frontend
+- **Thymeleaf 3.1** - Công cụ tạo khuôn mẫu phía máy chủ hiện đại
+- **Bootstrap 5** - Framework CSS phản ứng ưu tiên di động
+- **JavaScript ES6+** - JavaScript hiện đại với hỗ trợ async/await
+- **Chart.js** - Thư viện trực quan hóa dữ liệu tương tác đẹp mắt
+- **Apache Icons** - Thư viện biểu tượng chuyên nghiệp
 
-#### Development & Build Tools
-- **Maven 3.6+** - Project build and dependency management
-- **Lombok 1.18.36** - Boilerplate code reduction
-- **MapStruct 1.6.3** - Type-safe bean mapping
-- **JUnit 5** - Modern testing framework
-- **Mockito** - Powerful mocking framework for unit tests
-- **dotenv-java** - Environment variable management
+#### Công Cụ Phát Triển & Xây Dựng
+- **Maven 3.6+** - Xây dựng dự án và quản lý phụ thuộc
+- **Lombok 1.18.36** - Giảm thiểu code mẫu
+- **MapStruct 1.6.3** - Ánh xạ bean an toàn kiểu
+- **JUnit 5** - Framework kiểm thử hiện đại
+- **Mockito** - Framework mocking mạnh mẽ cho kiểm thử đơn vị
+- **dotenv-java** - Quản lý biến môi trường
 
-#### AI & External Services
-- **Spring AI** - Abstraction layer for AI models
-- **Google Gemini API** - Advanced natural language processing via Spring AI
-- **RESTful APIs** - Modern API design patterns
+#### AI & Dịch Vụ Bên Ngoài
+- **Spring AI** - Lớp trừu tượng cho các mô hình AI
+- **Google Gemini API** - Xử lý ngôn ngữ tự nhiên nâng cao qua Spring AI
+- **RESTful APIs** - Các mẫu thiết kế API hiện đại
 
-### 🏛️ Clean Architecture
+### 🏛️ Kiến Trúc Sạch
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    🌐 Presentation Layer                      │
-│  Controllers • Forms • Thymeleaf Templates • Security         │
+│                    🌐 Lớp Hiển Thị                           │
+│  Controllers • Forms • Templates Thymeleaf • Security         │
 ├─────────────────────────────────────────────────────────────┤
-│                  💼 Business Logic Layer                      │
+│                  💼 Lớp Logic Kinh Doanh                     │
 │  Services • Validation • AI Integration • Calculations       │
 ├─────────────────────────────────────────────────────────────┤
-│                   🗄️ Data Access Layer                         │
+│                   🗄️ Lớp Truy Cập Dữ Liệu                    │
 │  Repositories • JPA Entities • Database Operations           │
 ├─────────────────────────────────────────────────────────────┤
-│                  🏗️ Infrastructure Layer                       │
+│                  🏗️ Lớp Hạ Tầng                              │
 │  Configuration • Security • External APIs • Utilities       │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### 📂 Project Structure
+### 📂 Cấu Trúc Dự Án
 
 ```
 PersonalFinanceManagementproject/
-├── 📄 pom.xml                                    # Maven build configuration
-├── 📄 README.md                                  # Project documentation
-├── 📄 DEVELOPER_GUIDE.md                         # Developer onboarding guide
-├── 📄 CLAUDE.md                                  # Claude Code instructions
-├── 📄 [Unit].ini                                 # Unit test configuration
+├── 📄 pom.xml                                    # Cấu hình build Maven
+├── 📄 README.md                                  # Tài liệu dự án
+├── 📄 README_VI.md                               # Tài liệu dự án tiếng Việt
+├── 📄 DEVELOPER_GUIDE.md                         # Hướng dẫn cho nhà phát triển
+├── 📄 CLAUDE.md                                  # Hướng dẫn Claude Code
+├── 📄 [Unit].ini                                 # Cấu hình kiểm thử đơn vị
 ├── 📂 src/
 │   ├── 📂 main/
-│   │   ├── 📂 java/com/finance/                  # Java source code
-│   │   │   ├── 📄 PersonalFinanceManagerApplication.java    # Main application class
-│   │   │   ├── 📂 config/                        # Configuration classes
-│   │   │   │   ├── 📄 SecurityConfig.java        # Spring Security configuration
-│   │   │   │   ├── 📄 WebConfig.java             # Web MVC configuration
-│   │   │   │   └── 📄 DataInitializer.java       # Database initialization
-│   │   │   ├── 📂 controller/                    # Web controllers
-│   │   │   │   ├── 📄 HomeController.java        # Landing page & auth
-│   │   │   │   ├── 📄 DashboardController.java   # Financial dashboard
-│   │   │   │   ├── 📄 TransactionController.java # Transaction management
-│   │   │   │   ├── 📄 BudgetController.java      # Budget operations
-│   │   │   │   ├── 📄 GoalController.java        # Goal tracking
-│   │   │   │   ├── 📄 UserController.java        # User management
-│   │   │   │   ├── 📄 AdminController.java       # Admin functions
-│   │   │   │   ├── 📄 ReportController.java      # Financial reporting
-│   │   │   │   ├── 📄 NotificationController.java # Notification system
-│   │   │   │   └── 📄 ChatController.java         # AI chat interface
-│   │   │   ├── 📂 service/                       # Business logic layer
-│   │   │   │   ├── 📄 TransactionService.java    # Transaction operations
-│   │   │   │   ├── 📄 BudgetService.java         # Budget management
-│   │   │   │   ├── 📄 GoalService.java           # Goal operations
-│   │   │   │   ├── 📄 UserService.java           # User management
-│   │   │   │   ├── 📄 CategoryService.java       # Category management
-│   │   │   │   ├── 📄 ReportService.java         # Financial analytics
-│   │   │   │   ├── 📄 NotificationService.java   # Notification handling
-│   │   │   │   ├── 📄 ChatService.java           # AI chat service
-│   │   │   │   ├── 📄 GeminiService.java         # Google Gemini integration
-│   │   │   │   └── 📄 UserDetailsServiceImpl.java # Security implementation
-│   │   │   ├── 📂 repository/                    # Data access layer
-│   │   │   │   ├── 📄 UserRepository.java        # User data operations
-│   │   │   │   ├── 📄 TransactionRepository.java # Transaction data access
-│   │   │   │   ├── 📄 CategoryRepository.java    # Category operations
-│   │   │   │   ├── 📄 BudgetRepository.java      # Budget data operations
-│   │   │   │   ├── 📄 GoalRepository.java        # Goal data operations
-│   │   │   │   ├── 📄 RoleRepository.java        # Role management
-│   │   │   │   └── 📄 NotificationRepository.java # Notification data
-│   │   │   ├── 📂 domain/                        # JPA entities
-│   │   │   │   ├── 📄 User.java                  # User entity
-│   │   │   │   ├── 📄 Transaction.java           # Transaction entity
-│   │   │   │   ├── 📄 Category.java              # Category entity
-│   │   │   │   ├── 📄 Budget.java                # Budget entity
-│   │   │   │   ├── 📄 Goal.java                  # Goal entity
-│   │   │   │   ├── 📄 Role.java                  # Role entity
-│   │   │   │   └── 📄 Notification.java          # Notification entity
-│   │   │   ├── 📂 form/                          # Form DTOs & validation
-│   │   │   │   ├── 📄 TransactionForm.java       # Transaction input form
-│   │   │   │   ├── 📄 BudgetForm.java            # Budget creation form
-│   │   │   │   ├── 📄 GoalForm.java              # Goal setting form
-│   │   │   │   ├── 📄 UserRegistrationForm.java  # User registration
-│   │   │   │   └── 📄 PasswordChangeForm.java    # Password management
-│   │   │   ├── 📂 exception/                     # Custom exceptions
-│   │   │   │   ├── 📄 UserNotFoundException.java  # User errors
-│   │   │   │   ├── 📄 TransactionNotFoundException.java # Transaction errors
-│   │   │   │   ├── 📄 DuplicateUserException.java # Duplicate handling
-│   │   │   │   ├── 📄 InvalidPasswordException.java # Password errors
-│   │   │   │   └── 📄 GlobalExceptionHandler.java # Centralized error handling
-│   │   │   └── 📂 validator/                     # Custom validators
+│   │   ├── 📂 java/com/finance/                  # Mã nguồn Java
+│   │   │   ├── 📄 PersonalFinanceManagerApplication.java    # Lớp ứng dụng chính
+│   │   │   ├── 📂 config/                        # Lớp cấu hình
+│   │   │   │   ├── 📄 SecurityConfig.java        # Cấu hình Spring Security
+│   │   │   │   ├── 📄 WebConfig.java             # Cấu hình Web MVC
+│   │   │   │   └── 📄 DataInitializer.java       # Khởi tạo cơ sở dữ liệu
+│   │   │   ├── 📂 controller/                    # Controllers web
+│   │   │   │   ├── 📄 HomeController.java        # Trang đích & xác thực
+│   │   │   │   ├── 📄 DashboardController.java   # Bảng điều khiển tài chính
+│   │   │   │   ├── 📄 TransactionController.java # Quản lý giao dịch
+│   │   │   │   ├── 📄 BudgetController.java      # Hoạt động ngân sách
+│   │   │   │   ├── 📄 GoalController.java        # Theo dõi mục tiêu
+│   │   │   │   ├── 📄 UserController.java        # Quản lý người dùng
+│   │   │   │   ├── 📄 AdminController.java       # Chức năng admin
+│   │   │   │   ├── 📄 ReportController.java      # Báo cáo tài chính
+│   │   │   │   ├── 📄 NotificationController.java # Hệ thống thông báo
+│   │   │   │   └── 📄 ChatController.java         # Giao diện chat AI
+│   │   │   ├── 📂 service/                       # Lớp logic kinh doanh
+│   │   │   │   ├── 📄 TransactionService.java    # Hoạt động giao dịch
+│   │   │   │   ├── 📄 BudgetService.java         # Quản lý ngân sách
+│   │   │   │   ├── 📄 GoalService.java           # Hoạt động mục tiêu
+│   │   │   │   ├── 📄 UserService.java           # Quản lý người dùng
+│   │   │   │   ├── 📄 CategoryService.java       # Quản lý danh mục
+│   │   │   │   ├── 📄 ReportService.java         # Phân tích tài chính
+│   │   │   │   ├── 📄 NotificationService.java   # Xử lý thông báo
+│   │   │   │   ├── 📄 ChatService.java           # Dịch vụ chat AI
+│   │   │   │   ├── 📄 GeminiService.java         # Tích hợp Google Gemini
+│   │   │   │   └── 📄 UserDetailsServiceImpl.java # Triển khai Security
+│   │   │   ├── 📂 repository/                    # Lớp truy cập dữ liệu
+│   │   │   │   ├── 📄 UserRepository.java        # Hoạt động dữ liệu người dùng
+│   │   │   │   ├── 📄 TransactionRepository.java # Truy cập dữ liệu giao dịch
+│   │   │   │   ├── 📄 CategoryRepository.java    # Hoạt động danh mục
+│   │   │   │   ├── 📄 BudgetRepository.java      # Hoạt động dữ liệu ngân sách
+│   │   │   │   ├── 📄 GoalRepository.java        # Hoạt động dữ liệu mục tiêu
+│   │   │   │   ├── 📄 RoleRepository.java        # Quản lý vai trò
+│   │   │   │   └── 📄 NotificationRepository.java # Dữ liệu thông báo
+│   │   │   ├── 📂 domain/                        # Entities JPA
+│   │   │   │   ├── 📄 User.java                  # Entity người dùng
+│   │   │   │   ├── 📄 Transaction.java           # Entity giao dịch
+│   │   │   │   ├── 📄 Category.java              # Entity danh mục
+│   │   │   │   ├── 📄 Budget.java                # Entity ngân sách
+│   │   │   │   ├── 📄 Goal.java                  # Entity mục tiêu
+│   │   │   │   ├── 📄 Role.java                  # Entity vai trò
+│   │   │   │   └── 📄 Notification.java          # Entity thông báo
+│   │   │   ├── 📂 form/                          # DTOs & xác thực biểu mẫu
+│   │   │   │   ├── 📄 TransactionForm.java       # Biểu mẫu nhập giao dịch
+│   │   │   │   ├── 📄 BudgetForm.java            # Biểu mẫu tạo ngân sách
+│   │   │   │   ├── 📄 GoalForm.java              # Biểu mẫu đặt mục tiêu
+│   │   │   │   ├── 📄 UserRegistrationForm.java  # Đăng ký người dùng
+│   │   │   │   └── 📄 PasswordChangeForm.java    # Quản lý mật khẩu
+│   │   │   ├── 📂 exception/                     # Ngoại lệ tùy chỉnh
+│   │   │   │   ├── 📄 UserNotFoundException.java  # Lỗi người dùng
+│   │   │   │   ├── 📄 TransactionNotFoundException.java # Lỗi giao dịch
+│   │   │   │   ├── 📄 DuplicateUserException.java # Xử lý trùng lặp
+│   │   │   │   ├── 📄 InvalidPasswordException.java # Lỗi mật khẩu
+│   │   │   │   └── 📄 GlobalExceptionHandler.java # Xử lý lỗi tập trung
+│   │   │   └── 📂 validator/                     # Trình xác thực tùy chỉnh
 │   │   ├── 📂 resources/
-│   │   │   ├── 📄 application.yaml              # Application configuration
-│   │   │   ├── 📂 static/                        # Static assets
+│   │   │   ├── 📄 application.yaml              # Cấu hình ứng dụng
+│   │   │   ├── 📂 static/                        # Tài sản tĩnh
 │   │   │   │   ├── 📂 css/
-│   │   │   │   │   └── 📄 style.css              # Custom styling
+│   │   │   │   │   └── 📄 style.css              # Phong cách tùy chỉnh
 │   │   │   │   ├── 📂 js/
-│   │   │   │   │   ├── 📄 scripts.js             # Interactive features
-│   │   │   │   │   └── 📄 reports.js             # Chart functionality
-│   │   │   │   └── 📂 images/                    # Image assets
-│   │   │   └── 📂 templates/                     # Thymeleaf templates
-│   │   │       ├── 📄 base.html                 # Base template
-│   │   │       ├── 📄 index.html                # Landing page
-│   │   │       ├── 📄 dashboard.html            # Main dashboard
-│   │   │       ├── 📂 transaction/              # Transaction pages
-│   │   │       ├── 📂 budgets/                  # Budget pages
-│   │   │       ├── 📂 goals/                    # Goal pages
-│   │   │       ├── 📂 user/                     # User management pages
-│   │   │       ├── 📂 admin/                    # Admin interface
-│   │   │       ├── 📂 reports/                  # Reporting pages
-│   │   │       ├── 📂 notifications/            # Notification pages
-│   │   │       └── 📂 chat/                     # AI chat interface
+│   │   │   │   │   ├── 📄 scripts.js             # Tính năng tương tác
+│   │   │   │   │   └── 📄 reports.js             # Chức năng biểu đồ
+│   │   │   │   └── 📂 images/                    # Tài sản hình ảnh
+│   │   │   └── 📂 templates/                     # Templates Thymeleaf
+│   │   │       ├── 📄 base.html                 # Template cơ bản
+│   │   │       ├── 📄 index.html                # Trang đích
+│   │   │       ├── 📄 dashboard.html            # Bảng điều khiển chính
+│   │   │       ├── 📂 transaction/              # Trang giao dịch
+│   │   │       ├── 📂 budgets/                  # Trang ngân sách
+│   │   │       ├── 📂 goals/                    # Trang mục tiêu
+│   │   │       ├── 📂 user/                     # Trang quản lý người dùng
+│   │   │       ├── 📂 admin/                    # Giao diện admin
+│   │   │       ├── 📂 reports/                  # Trang báo cáo
+│   │   │       ├── 📂 notifications/            # Trang thông báo
+│   │   │       └── 📂 chat/                     # Giao diện chat AI
 │   │   └── 📂 test/
-│   │       └── 📂 java/com/finance/              # Test classes
+│   │       └── 📂 java/com/finance/              # Lớp kiểm thử
 │   │           └── 📄 PersonalFinanceManagerApplicationTests.java
-└── 📂 target/                                    # Build output
+└── 📂 target/                                    # Kết quả build
 ```
 
-## 🗄️ Database Schema
+## 🗄️ Sơ Đồ Cơ Sở Dữ Liệu
 
-### Core Entities & Relationships
+### Entities Chính & Mối Quan Hệ
 
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
@@ -246,208 +247,208 @@ PersonalFinanceManagementproject/
 └─────────────────┘
 ```
 
-### Key Features by Entity
+### Tính Năng Chính Theo Entity
 
-#### **User Management**
-- **Authentication**: Secure login with BCrypt password encryption
-- **Role Management**: USER and ADMIN roles with granular permissions
-- **Profile Management**: Complete user profile with customizable settings
-- **Activity Tracking**: Comprehensive audit trail of user actions
+#### **Quản Lý Người Dùng**
+- **Xác Thực**: Đăng nhập an toàn với mã hóa mật khẩu BCrypt
+- **Quản Lý Vai Trò**: Vai trò USER và ADMIN với quyền chi tiết
+- **Quản Lý Hồ Sơ**: Hồ sơ người dùng hoàn chỉnh với cài đặt tùy chỉnh
+- **Theo Dõi Hoạt Động**: Nhật ký kiểm tra toàn diện các hành động người dùng
 
-#### **Transaction System**
-- **Precision Calculations**: BigDecimal for accurate financial computations
-- **Smart Categorization**: AI-powered category suggestions
-- **Advanced Search**: Multi-field search with date range filtering
-- **Transaction Types**: Income, Expense, and Transfer support
+#### **Hệ Thống Giao Dịch**
+- **Tính Chính xác**: BigDecimal cho các tính toán tài chính chính xác
+- **Phân Loại Thông Minh**: Gợi ý danh mục dựa trên AI
+- **Tìm Kiếm Nâng Cao**: Tìm kiếm đa trường với bộ lọc khoảng ngày
+- **Loại Giao Dịch**: Hỗ trợ Thu nhập, Chi tiêu và Chuyển khoản
 
-#### **Budget Planning**
-- **Flexible Periods**: Monthly, quarterly, or custom date ranges
-- **Category Allocation**: Budget specific categories or overall spending
-- **Progress Monitoring**: Real-time budget vs actual comparison
-- **Alert System**: Intelligent notifications for budget thresholds
+#### **Lập Kế Hoạch Ngân Sách**
+- **Khoảng Thời Gian Linh Hoạt**: Hàng tháng, hàng quý hoặc khoảng ngày tùy chỉnh
+- **Phân Bổ Danh Mục**: Ngân sách cho các danh mục cụ thể hoặc chi tiêu tổng thể
+- **Giám Sát Tiến Độ**: So sánh ngân sách với thực tế thời gian thực
+- **Hệ Thống Cảnh Báo**: Thông báo thông minh cho ngưỡng ngân sách
 
-#### **Goal Management**
-- **Multiple Goals**: Track various financial objectives simultaneously
-- **Progress Calculation**: Automatic percentage completion tracking
-- **Status Management**: Active, completed, paused, and cancelled states
-- **Milestone Tracking**: Intermediate achievements toward larger goals
+#### **Quản Lý Mục Tiêu**
+- **Nhiều Mục Tiêu**: Theo dõi nhiều mục tiêu tài chính đồng thời
+- **Tính Toán Tiến Độ**: Theo dõi tự động phần trăm hoàn thành
+- **Quản Lý Trạng Thái**: Trạng thái Hoạt động, Hoàn thành, Tạm dừng và Hủy
+- **Theo Dõi Cột Mốc**: Thành tựu trung gian hướng tới mục tiêu lớn hơn
 
-## 🚀 Quick Start Guide
+## 🚀 Hướng Dẫn Bắt Đầu Nhanh
 
-### Prerequisites
+### Điều Kiện Tiên Quyết
 
-- **Java 21** - Latest LTS version recommended
-- **Maven 3.6+** - Build and dependency management
-- **MySQL 8.0+** - Production database (or H2 for development)
-- **Git** - Version control
+- **Java 21** - Phiên bản LTS mới nhất được khuyến nghị
+- **Maven 3.6+** - Xây dựng và quản lý phụ thuộc
+- **MySQL 8.0+** - Cơ sở dữ liệu sản xuất (hoặc H2 cho phát triển)
+- **Git** - Kiểm soát phiên bản
 
-### Installation & Setup
+### Cài Đặt & Thiết Lập
 
-#### 1. **Clone the Repository**
+#### 1. **Clone Repository**
 ```bash
 git clone <repository-url>
 cd PersonalFinanceManagementproject
 ```
 
-#### 2. **Database Configuration**
+#### 2. **Cấu Hình Cơ Sở Dữ Liệu**
 
-**Option A: MySQL (Production)**
+**Lựa chọn A: MySQL (Sản xuất)**
 ```sql
--- Create MySQL database
+-- Tạo cơ sở dữ liệu MySQL
 CREATE DATABASE personal_finance_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- Create user (optional, for security)
+-- Tạo người dùng (tùy chọn, cho bảo mật)
 CREATE USER 'financeapp'@'localhost' IDENTIFIED BY 'StrongPassword123!';
 GRANT ALL PRIVILEGES ON personal_finance_db.* TO 'financeapp'@'localhost';
 FLUSH PRIVILEGES;
 ```
 
-**Option B: H2 (Development/Testing)**
-No setup required - uses in-memory database automatically.
+**Lựa chọn B: H2 (Phát Triển/Kiểm Thử)**
+Không cần thiết lập - sử dụng cơ sở dữ liệu trong bộ nhớ tự động.
 
-#### 3. **Environment Configuration**
-Create a `.env` file in the project root:
+#### 3. **Cấu Hình Môi Trường**
+Tạo tệp `.env` trong thư mục gốc dự án:
 ```env
-# Gemini AI API Key (required for AI features)
+# Gemini AI API Key (bắt buộc cho tính năng AI)
 GEMINI_API_KEY=your_gemini_api_key_here
 
-# Database Configuration (MySQL)
+# Cấu hình Database (MySQL)
 DATABASE_URL=jdbc:mysql://localhost:3306/personal_finance_db
 DATABASE_USERNAME=root
 DATABASE_PASSWORD=your_password
 ```
 
-#### 4. **Build and Run**
+#### 4. **Xây Dựng và Chạy**
 ```bash
-# Clean compile the project
+# Biên dịch sạch dự án
 mvn clean compile
 
-# Run tests
+# Chạy kiểm thử
 mvn test
 
-# Start the application
+# Khởi động ứng dụng
 mvn spring-boot:run
 ```
 
-#### 5. **Access the Application**
+#### 5. **Truy Cập Ứng Dụng**
 - **URL**: http://localhost:8083
-- **H2 Console** (development): http://localhost:8083/h2-console
+- **H2 Console** (phát triển): http://localhost:8083/h2-console
   - JDBC URL: `jdbc:h2:mem:testdb`
   - Username: `sa`
-  - Password: (leave empty)
+  - Password: (để trống)
 
-### Development Commands
+### Lệnh Phát Triển
 
 ```bash
-# Build and test
+# Xây dựng và kiểm thử
 mvn clean install
 
-# Run with specific profile
+# Chạy với profile cụ thể
 mvn spring-boot:run -Dspring-boot.run.profiles=dev
 
-# Package for production
+# Đóng gói cho sản xuất
 mvn clean package
 
-# Run tests with coverage
+# Chạy kiểm thử với độ phủ
 mvn clean test jacoco:report
 ```
 
-## 🎨 Features Deep Dive
+## 🎨 Khai Thác Tính Năng Chi Tiết
 
-### 🤖 AI-Powered Chat Interface
+### 🤖 Giao Diện Chat Tích Hợp AI
 
-The application features an intelligent chat system that allows users to record transactions using natural language:
+Ứng dụng có hệ thống chat thông minh cho phép người dùng ghi nhận giao dịch bằng ngôn ngữ tự nhiên:
 
-**Supported Commands (Vietnamese):**
+**Lệnh Hỗ Trợ (Tiếng Việt):**
 ```
 "Chi 50000 ăn sáng hôm qua"
-- Records: Expense of 50,000 VND for breakfast yesterday
-- Auto-categorizes as: Food & Dining
+- Ghi nhận: Chi tiêu 50.000 VNĐ cho bữa sáng hôm qua
+- Tự động phân loại: Ẩm thực & Đồ ăn
 
 "Nhận lương 15 triệu tháng này"
-- Records: Income of 15,000,000 VND for salary this month
-- Auto-categorizes as: Salary
+- Ghi nhận: Thu nhập 15.000.000 VNĐ cho lương tháng này
+- Tự động phân loại: Lương
 
 "Đặt cọc phòng trọ 2 triệu"
-- Records: Expense of 2,000,000 VND for rent deposit
-- Auto-categorizes as: Housing
+- Ghi nhận: Chi tiêu 2.000.000 VNĐ cho đặt cọc nhà trọ
+- Tự động phân loại: Nhà ở
 ```
 
-**AI Features:**
-- **Natural Language Processing**: Understands conversational Vietnamese
-- **Powered by Spring AI**: Leverages Google's Gemini 2.0 Flash model for high speed and accuracy
-- **Date Expression Handling**: Processes relative dates ("hôm qua", "tháng này")
-- **Currency Recognition**: Handles various Vietnamese currency formats
-- **Smart Categorization**: Learns from user patterns for better suggestions
-- **Error Recovery**: Graceful handling of ambiguous or incomplete inputs
+**Tính Năng AI:**
+- **Xử Lý Ngôn Ngữ Tự Nhiên**: Hiểu tiếng Việt hội thoại
+- **Cung Cấp Bởi Spring AI**: Tận dụng mô hình Gemini 2.0 Flash của Google cho tốc độ và độ chính xác cao
+- **Xử Lý Biểu Thức Ngày**: Xử lý ngày tương đối ("hôm qua", "tháng này")
+- **Nhận Diện Tiền Tệ**: Xử lý các định dạng tiền tệ Việt Nam khác nhau
+- **Phân Loại Thông Minh**: Học từ mẫu người dùng để đưa ra gợi ý tốt hơn
+- **Phục Hồi Lỗi**: Xử lý tự nhiên các đầu vào mơ hồ hoặc không đầy đủ
 
-### 📊 Interactive Dashboard
+### 📊 Dashboard Tương Tác
 
-The main dashboard provides a comprehensive financial overview:
+Dashboard chính cung cấp tổng quan tài chính toàn diện:
 
-**Real-time Statistics:**
-- **Total Balance**: Current financial position
-- **Monthly Income**: Total income for current month
-- **Monthly Expenses**: Total expenses for current month
-- **Savings Rate**: Percentage of income saved
-- **Budget Health**: Overall budget utilization status
+**Thống Kê Thời Gian Thực:**
+- **Tổng Số Dư**: Vị trí tài chính hiện tại
+- **Thu Nhập Hàng Tháng**: Tổng thu nhập tháng hiện tại
+- **Chi Tiêu Hàng Tháng**: Tổng chi tiêu tháng hiện tại
+- **Tỷ Lệ Tiết Kiệm**: Phần trăm thu nhập tiết kiệm được
+- **Sức Khỏe Ngân Sách**: Trạng thái sử dụng ngân sách tổng thể
 
-**Visual Analytics:**
-- **Spending Trends**: Line charts showing spending patterns over time
-- **Category Breakdown**: Pie charts of spending by category
-- **Budget Progress**: Bar charts comparing budget vs actual spending
-- **Goal Achievement**: Progress indicators for active goals
+**Phân Tích Trực Quan:**
+- **Xu Hướng Chi Tiêu**: Biểu đồ đường hiển thị mẫu chi tiêu theo thời gian
+- **Phân Tách Danh Mục**: Biểu đồ tròn chi tiêu theo danh mục
+- **Tiến Độ Ngân Sách**: Biểu đồ cột so sánh ngân sách với chi tiêu thực tế
+- **Hoàn Thành Mục Tiêu**: Chỉ báo tiến độ cho các mục tiêu đang hoạt động
 
-### 🔔 Intelligent Notification System
+### 🔔 Hệ Thống Thông Báo Thông Minh
 
-**Budget Alerts:**
-- Warning when reaching 80% of budget limit
-- Critical alerts at 100% budget utilization
-- Weekly budget summaries and recommendations
+**Cảnh Báo Ngân Sách:**
+- Cảnh báo khi đạt 80% giới hạn ngân sách
+- Cảnh báo nghiêm trọng khi đạt 100% mức sử dụng ngân sách
+- Tóm tắt và gợi ý ngân sách hàng tuần
 
-**Goal Reminders:**
-- Monthly goal progress updates
-- Deadline reminders for approaching target dates
-- Achievement celebrations when goals are completed
+**Nhắc Nhở Mục Tiêu:**
+- Cập nhật tiến độ mục tiêu hàng tháng
+- Lời nhắc hạn chót cho ngày mục tiêu đang đến gần
+- Chúc mừng hoàn thành khi mục tiêu được đạt
 
-**System Notifications:**
-- Transaction confirmations
-- Account activity updates
-- Security-related notifications
+**Thông Báo Hệ Thống:**
+- Xác nhận giao dịch
+- Cập nhật hoạt động tài khoản
+- Thông báo liên quan đến bảo mật
 
-## 🛡️ Security Implementation
+## 🛡️ Triển Khai Bảo Mật
 
-### Authentication & Authorization
+### Xác Thực & Phân Quyền
 
-**Multi-layered Security:**
-- **Form-based Authentication**: Secure login with CSRF protection
-- **Session Management**: Configurable session timeouts
-- **Remember-me Functionality**: Secure persistent login options
-- **Account Locking**: Protection against brute force attacks
+**Bảo Mật Đa Lớp:**
+- **Xác Thực Dạng Form**: Đăng nhập an toàn với bảo vệ CSRF
+- **Quản Lý Session**: Thời gian chờ session có cấu hình
+- **Chức Năng Ghi Nhớ**: Tùy chọn đăng nhập bền vững an toàn
+- **Khóa Tài Khoản**: Bảo vệ chống lại tấn công brute force
 
-**Role-based Access Control:**
-- **USER Role**: Access to personal finance features
-- **ADMIN Role**: Administrative functions and user management
-- **Resource Protection**: Method-level security annotations
+**Kiểm Soát Truy Cập Dựa trên Vai Trò:**
+- **Vai Trò USER**: Truy cập các tính năng tài chính cá nhân
+- **Vai Trò ADMIN**: Chức năng quản trị và quản lý người dùng
+- **Bảo Vệ Tài Nguyên**: Chú thích bảo mật cấp phương thức
 
-### Data Protection
+### Bảo Vệ Dữ Liệu
 
-**Encryption & Hashing:**
-- **BCrypt Password Hashing**: Industry-standard password encryption
-- **HTTPS Support**: SSL/TLS configuration for secure communications
-- **SQL Injection Prevention**: Parameterized queries via JPA/Hibernate
-- **XSS Protection**: Input sanitization and output encoding
+**Mã Hóa & Băm:**
+- **Băm Mật Khẩu BCrypt**: Mã hóa mật khẩu tiêu chuẩn ngành
+- **Hỗ Trợ HTTPS**: Cấu hình SSL/TLS cho truyền thông an toàn
+- **Ngăn Chặn SQL Injection**: Truy vấn được tham số hóa qua JPA/Hibernate
+- **Bảo Vệ XSS**: Khử trùng đầu vào và mã hóa đầu ra
 
-**Audit & Monitoring:**
-- **Activity Logging**: Comprehensive audit trail
-- **Failed Login Tracking**: Security event monitoring
-- **Session Monitoring**: Active session management
+**Kiểm Tra & Giám Sát:**
+- **Ghi Nhật Ký Hoạt Động**: Nhật ký kiểm tra toàn diện
+- **Theo Dõi Đăng Nhập Thất Bại**: Giám sát sự kiện bảo mật
+- **Giám Sát Session**: Quản lý session hoạt động
 
-## 🧪 Testing Strategy
+## 🧪 Chiến Lược Kiểm Thử
 
-### Testing Framework Setup
+### Thiết Lập Framework Kiểm Thử
 
-**Unit Testing:**
+**Kiểm Thử Đơn Vị:**
 ```java
 @ExtendWith(MockitoExtension.class)
 class TransactionServiceTest {
@@ -457,11 +458,11 @@ class TransactionServiceTest {
     @InjectMocks
     private TransactionService transactionService;
 
-    // Test methods...
+    // Phương thức kiểm thử...
 }
 ```
 
-**Integration Testing:**
+**Kiểm Thử Tích Hợp:**
 ```java
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -470,35 +471,35 @@ class TransactionControllerIntegrationTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    // Integration test methods...
+    // Phương thức kiểm thử tích hợp...
 }
 ```
 
-### Test Coverage Areas
+### Khu Vực Độ Phủ Kiểm Thử
 
 **Controllers:**
-- Request/response handling
-- Form validation
-- Security access control
-- Error handling
+- Xử lý yêu cầu/phản hồi
+- Xác thực biểu mẫu
+- Kiểm soát truy cập bảo mật
+- Xử lý lỗi
 
 **Services:**
-- Business logic validation
-- Financial calculations
-- Data processing
-- External API integration
+- Xác thực logic kinh doanh
+- Tính toán tài chính
+- Xử lý dữ liệu
+- Tích hợp API bên ngoài
 
 **Repositories:**
-- CRUD operations
-- Custom queries
-- Relationship handling
-- Data constraints
+- Hoạt động CRUD
+- Truy vấn tùy chỉnh
+- Xử lý mối quan hệ
+- Ràng buộc dữ liệu
 
-## 🔧 Configuration Guide
+## 🔧 Hướng Dẫn Cấu Hình
 
-### Application Configuration (`application.yaml`)
+### Cấu Hình Ứng Dụng (`application.yaml`)
 
-**Server Configuration:**
+**Cấu Hình Máy Chủ:**
 ```yaml
 server:
   port: 8083
@@ -509,7 +510,7 @@ server:
       enabled: true
 ```
 
-**Database Configuration:**
+**Cấu Hình Cơ Sở Dữ Liệu:**
 ```yaml
 spring:
   datasource:
@@ -523,7 +524,7 @@ spring:
       connection-timeout: 20000
       idle-timeout: 300000
 
-  # Spring AI Configuration
+  # Cấu hình Spring AI
   ai:
     google:
       genai:
@@ -534,7 +535,7 @@ spring:
             temperature: 0.1
 ```
 
-**JPA/Hibernate Configuration:**
+**Cấu Hình JPA/Hibernate:**
 ```yaml
   jpa:
     hibernate:
@@ -547,7 +548,7 @@ spring:
         use_sql_comments: true
 ```
 
-**Security Configuration:**
+**Cấu Hình Bảo Mật:**
 ```yaml
 spring:
   security:
@@ -557,35 +558,35 @@ spring:
       roles: ADMIN
 ```
 
-### Environment Variables
+### Biến Môi Trường
 
 ```bash
-# Production Environment
+# Môi trường sản xuất
 export SPRING_PROFILES_ACTIVE=prod
 export DATABASE_URL=jdbc:mysql://prod-server:3306/finance_db
 export DATABASE_USERNAME=prod_user
 export DATABASE_PASSWORD=secure_password
 export GEMINI_API_KEY=production_gemini_key
 
-# Development Environment
+# Môi trường phát triển
 export SPRING_PROFILES_ACTIVE=dev
 export GEMINI_API_KEY=development_gemini_key
 ```
 
-## 🚀 Deployment Guide
+## 🚀 Hướng Dẫn Triển Khai
 
-### Production Deployment
+### Triển Khai Sản Xuất
 
-#### 1. **Build for Production**
+#### 1. **Xây Dựng Cho Sản Xuất**
 ```bash
-# Clean build with tests
+# Xây dựng sạch với kiểm thử
 mvn clean package
 
-# Create executable JAR
+# Tạo JAR thực thi
 java -jar target/personal-finance-manager-1.0.0.jar
 ```
 
-#### 2. **Docker Deployment**
+#### 2. **Triển Khai Docker**
 
 **Dockerfile:**
 ```dockerfile
@@ -629,38 +630,38 @@ volumes:
   mysql_data:
 ```
 
-#### 3. **Cloud Deployment**
+#### 3. **Triển Khai Cloud**
 
 **AWS Elastic Beanstalk:**
 ```bash
-# Install EB CLI
+# Cài đặt EB CLI
 pip install awsebcli
 
-# Initialize application
+# Khởi tạo ứng dụng
 eb init personal-finance-manager
 
-# Create environment
+# Tạo môi trường
 eb create production
 
-# Deploy
+# Triển khai
 eb deploy
 ```
 
 **Google Cloud Platform:**
 ```bash
-# Build and deploy to Cloud Run
+# Xây dựng và triển khai lên Cloud Run
 gcloud builds submit --tag gcr.io/project-id/personal-finance-manager
 gcloud run deploy --image gcr.io/project-id/personal-finance-manager --platform managed
 ```
 
-### Monitoring & Logging
+### Giám Sát & Ghi Nhật Ký
 
-**Application Monitoring:**
-- **Spring Boot Actuator**: Health checks and metrics
-- **Micrometer**: Metrics collection for monitoring systems
-- **Custom Health Indicators**: Database and external service health checks
+**Giám Sát Ứng Dụng:**
+- **Spring Boot Actuator**: Kiểm tra sức khỏe và số liệu
+- **Micrometer**: Thu thập số liệu cho hệ thống giám sát
+- **Chỉ Báo Sức Khỏe Tùy Chỉnh**: Kiểm tra sức khỏe cơ sở dữ liệu và dịch vụ bên ngoài
 
-**Logging Configuration:**
+**Cấu Hình Ghi Nhật Ký:**
 ```yaml
 logging:
   level:
@@ -674,231 +675,231 @@ logging:
     name: logs/personal-finance-manager.log
 ```
 
-## 🤝 Contributing Guidelines
+## 🤝 Hướng Dẫn Đóng Góp
 
-### Development Workflow
+### Quy Trình Phát Triển
 
-1. **Setup Development Environment**
+1. **Thiết Lập Môi Trường Phát Triển**
    ```bash
    git clone <repository-url>
    cd PersonalFinanceManagementproject
    mvn clean install
    ```
 
-2. **Create Feature Branch**
+2. **Tạo Branch Tính Năng**
    ```bash
    git checkout -b feature/your-feature-name
    ```
 
-3. **Make Changes**
-   - Follow coding standards (4-space indentation)
-   - Write comprehensive tests
-   - Update documentation
-   - Ensure all tests pass
+3. **Thực Hiện Thay Đổi**
+   - Tuân thủ tiêu chuẩn mã hóa (thụt lề 4 khoảng trắng)
+   - Viết kiểm thử toàn diện
+   - Cập nhật tài liệu
+   - Đảm bảo tất cả kiểm thử đều vượt qua
 
-4. **Submit Changes**
+4. **Gửi Thay Đổi**
    ```bash
    git add .
    git commit -m "feat: add your feature description"
    git push origin feature/your-feature-name
    ```
 
-5. **Create Pull Request**
-   - Provide clear description
-   - Include screenshots for UI changes
-   - Ensure CI/CD pipeline passes
+5. **Tạo Pull Request**
+   - Cung cấp mô tả rõ ràng
+   - Bao gồm ảnh chụp màn hình cho các thay đổi giao diện
+   - Đảm bảo pipeline CI/CD vượt qua
 
-### Code Standards
+### Tiêu Chuẩn Mã
 
-**Java Code Style:**
-- Use 4-space indentation
-- Follow Java naming conventions
-- Add comprehensive JavaDoc comments
-- Keep methods under 50 lines
-- Use meaningful variable names
+**Kiểu Mã Java:**
+- Sử dụng thụt lề 4 khoảng trắng
+- Tuân thủ quy ước đặt tên Java
+- Thêm chú thích JavaDoc toàn diện
+- Giữ các phương thức dưới 50 dòng
+- Sử dụng tên biến có ý nghĩa
 
-**Database Standards:**
-- Use snake_case for table/column names
-- Add foreign key constraints
-- Include proper indexes for performance
-- Use appropriate data types
+**Tiêu Chuẩn Cơ Sở Dữ Liệu:**
+- Sử dụng snake_case cho tên bảng/cột
+- Thêm ràng buộc khóa ngoại
+- Bao gồm chỉ mục phù hợp cho hiệu suất
+- Sử dụng kiểu dữ liệu phù hợp
 
-**Frontend Standards:**
-- Follow Bootstrap 5 conventions
-- Use semantic HTML
-- Implement responsive design
-- Add proper ARIA labels for accessibility
+**Tiêu Chuẩn Frontend:**
+- Tuân thủ quy ước Bootstrap 5
+- Sử dụng HTML ngữ nghĩa
+- Triển khai thiết kế phản ứng
+- Thêm nhãn ARIA phù hợp để có khả năng tiếp cận
 
-## 📚 API Documentation
+## 📚 Tài Liệu API
 
-### REST API Endpoints
+### Các Endpoint REST API
 
-#### Authentication
+#### Xác Thực
 ```
-POST /login                    - User login
-POST /user/register            - User registration
-POST /logout                   - User logout
-```
-
-#### Transactions
-```
-GET  /transactions             - List all transactions (paginated)
-GET  /transactions/{id}        - Get transaction details
-POST /transactions/add         - Add new transaction
-PUT  /transactions/{id}        - Update transaction
-DELETE /transactions/{id}      - Delete transaction
-GET  /transactions/search      - Search transactions
+POST /login                    - Đăng nhập người dùng
+POST /user/register            - Đăng ký người dùng
+POST /logout                   - Đăng xuất người dùng
 ```
 
-#### Budgets
+#### Giao Dịch
 ```
-GET  /budgets                  - List all budgets
-POST /budgets/add              - Create new budget
-GET  /budgets/{id}             - Get budget details
-PUT  /budgets/{id}             - Update budget
-DELETE /budgets/{id}           - Delete budget
-GET  /budgets/progress         - Get budget progress
-```
-
-#### Goals
-```
-GET  /goals                    - List all goals
-POST /goals/add                - Create new goal
-GET  /goals/{id}               - Get goal details
-PUT  /goals/{id}               - Update goal
-DELETE /goals/{id}             - Delete goal
-POST /goals/{id}/contribute    - Add funds to goal
+GET  /transactions             - Liệt kê tất cả giao dịch (phân trang)
+GET  /transactions/{id}        - Lấy chi tiết giao dịch
+POST /transactions/add         - Thêm giao dịch mới
+PUT  /transactions/{id}        - Cập nhật giao dịch
+DELETE /transactions/{id}      - Xóa giao dịch
+GET  /transactions/search      - Tìm kiếm giao dịch
 ```
 
-#### AI Chat
+#### Ngân Sách
 ```
-POST /api/chat                 - Process transaction via AI chat
-GET  /api/chat/history         - Get chat history
+GET  /budgets                  - Liệt kê tất cả ngân sách
+POST /budgets/add              - Tạo ngân sách mới
+GET  /budgets/{id}             - Lấy chi tiết ngân sách
+PUT  /budgets/{id}             - Cập nhật ngân sách
+DELETE /budgets/{id}           - Xóa ngân sách
+GET  /budgets/progress         - Lấy tiến độ ngân sách
 ```
 
-### Response Formats
+#### Mục Tiêu
+```
+GET  /goals                    - Liệt kê tất cả mục tiêu
+POST /goals/add                - Tạo mục tiêu mới
+GET  /goals/{id}               - Lấy chi tiết mục tiêu
+PUT  /goals/{id}               - Cập nhật mục tiêu
+DELETE /goals/{id}             - Xóa mục tiêu
+POST /goals/{id}/contribute    - Thêm tiền vào mục tiêu
+```
 
-**Success Response:**
+#### Chat AI
+```
+POST /api/chat                 - Xử lý giao dịch qua chat AI
+GET  /api/chat/history         - Lấy lịch sử chat
+```
+
+### Định Dạng Phản Hồi
+
+**Phản Hồi Thành Công:**
 ```json
 {
   "success": true,
   "data": {
     "id": 1,
-    "description": "Sample transaction",
+    "description": "Giao dịch mẫu",
     "amount": 100000.00,
     "type": "EXPENSE",
     "category": {
       "id": 1,
-      "name": "Food & Dining"
+      "name": "Ẩm thực & Đồ ăn"
     }
   },
-  "message": "Operation completed successfully"
+  "message": "Hoạt động hoàn thành thành công"
 }
 ```
 
-**Error Response:**
+**Phản Hồi Lỗi:**
 ```json
 {
   "success": false,
   "error": {
     "code": "VALIDATION_ERROR",
-    "message": "Invalid transaction amount",
+    "message": "Số tiền giao dịch không hợp lệ",
     "details": [
-      "Amount must be greater than 0"
+      "Số tiền phải lớn hơn 0"
     ]
   },
   "timestamp": "2024-01-01T12:00:00Z"
 }
 ```
 
-## 📈 Performance Optimization
+## 📈 Tối Ưu Hiệu Suất
 
-### Database Optimization
+### Tối Ưu Cơ Sở Dữ Liệu
 
-**Indexing Strategy:**
+**Chiến Lược Indexing:**
 ```sql
--- Performance-critical indexes
+-- Các chỉ mục quan trọng về hiệu suất
 CREATE INDEX idx_transactions_user_date ON transactions(user_id, transaction_date);
 CREATE INDEX idx_transactions_category ON transactions(category_id);
 CREATE INDEX idx_budgets_user_category ON budgets(user_id, category_id);
 CREATE INDEX idx_goals_user_deadline ON goals(user_id, target_date);
 ```
 
-**Query Optimization:**
-- Use pagination for large datasets
-- Implement proper join strategies
-- Utilize database-specific features
-- Cache frequently accessed data
+**Tối Ưu Truy Vấn:**
+- Sử dụng phân trang cho các bộ dữ liệu lớn
+- Triển khai chiến lược join phù hợp
+- Tận dụng các tính năng cụ thể của cơ sở dữ liệu
+- Cache dữ liệu thường xuyên truy cập
 
-### Application Performance
+### Hiệu Suất Ứng Dụng
 
-**Caching Strategy:**
+**Chiến Lược Cache:**
 ```java
 @Service
 public class TransactionService {
 
     @Cacheable(value = "userTransactions", key = "#userId")
     public List<Transaction> getUserTransactions(Long userId) {
-        // Implementation
+        // Triển khai
     }
 
     @CacheEvict(value = "userTransactions", key = "#userId")
     public void addTransaction(Transaction transaction) {
-        // Implementation
+        // Triển khai
     }
 }
 ```
 
-**Connection Pooling:**
-- HikariCP for efficient database connections
-- Configured pool sizes based on application load
-- Connection timeout and idle connection management
+**Pooling Kết Nối:**
+- HikariCP cho các kết nối cơ sở dữ liệu hiệu quả
+- Cấu hình kích thước pool dựa trên tải ứng dụng
+- Quản lý timeout kết nối và kết nối idle
 
-## 🔍 Troubleshooting Guide
+## 🔍 Hướng Dẫn Gỡ Rối
 
-### Common Issues
+### Vấn Đề Phổ Biến
 
-#### 1. **Database Connection Issues**
+#### 1. **Vấn Đề Kết Nối Cơ Sở Dữ Liệu**
 ```bash
-# Check MySQL service status
+# Kiểm tra trạng thái dịch vụ MySQL
 sudo systemctl status mysql
 
-# Test connection
+# Kiểm tra kết nối
 mysql -h localhost -u financeapp -p personal_finance_db
 
-# Check application logs
+# Kiểm tra nhật ký ứng dụng
 tail -f logs/personal-finance-manager.log | grep -i database
 ```
 
-#### 2. **AI Features Not Working**
+#### 2. **Tính Năng AI Không Hoạt Động**
 ```bash
-# Verify API key
+# Xác minh khóa API
 echo $GEMINI_API_KEY
 
-# Test API connection
+# Kiểm tra kết nối API
 curl -H "Authorization: Bearer $GEMINI_API_KEY" \
      https://generativelanguage.googleapis.com/v1/models
 
-# Check application logs for AI-related errors
+# Kiểm tra nhật ký ứng dụng để tìm lỗi liên quan AI
 grep -i gemini logs/personal-finance-manager.log
 ```
 
-#### 3. **Performance Issues**
+#### 3. **Vấn Đề Hiệu Suất**
 ```bash
-# Monitor application performance
+# Giám sát hiệu suất ứng dụng
 jstat -gc -t $(pgrep java) 5s
 
-# Database performance analysis
+# Phân tích hiệu suất cơ sở dữ liệu
 mysql -e "SHOW PROCESSLIST;"
 mysql -e "SHOW FULL PROCESSLIST;"
 
-# Check memory usage
+# Kiểm tra sử dụng bộ nhớ
 free -h
 ```
 
-### Debug Mode
+### Chế Độ Gỡ Rối
 
-**Enable Debug Logging:**
+**Bật Ghi Nhật Ký Debug:**
 ```yaml
 logging:
   level:
@@ -908,7 +909,7 @@ logging:
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 ```
 
-**Enable H2 Console (Development):**
+**Bật H2 Console (Phát Triển):**
 ```yaml
 spring:
   h2:
@@ -917,57 +918,57 @@ spring:
       path: /h2-console
 ```
 
-## 📄 License & Credits
+## 📄 Giấy Phép & Ghi Nhận
 
-### License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+### Giấy Phép
+Dự án này được cấp phép theo Giấy phép MIT - xem tệp [LICENSE](LICENSE) để biết chi tiết.
 
-### Credits
-- **Spring Boot Team** - Excellent framework and documentation
-- **Bootstrap Team** - Beautiful UI framework
-- **Google AI Team** - Gemini API for natural language processing
-- **Open Source Community** - Various libraries and tools that made this project possible
+### Ghi Nhận
+- **Spring Boot Team** - Framework và tài liệu xuất sắc
+- **Bootstrap Team** - Framework UI đẹp mắt
+- **Google AI Team** - Gemini API cho xử lý ngôn ngữ tự nhiên
+- **Cộng Đồng Mã Nguồn Mở** - Các thư viện và công cụ đã làm dự án này trở nên khả thi
 
-### Third-Party Libraries
+### Thư Viện Bên Thứ Ba
 
-**Core Dependencies:**
-- Spring Boot 3.2.12 - Application framework
-- Spring Security 6 - Security framework
-- Spring Data JPA - Database abstraction
-- MySQL Connector - Database driver
-- Thymeleaf - Template engine
+**Phụ Thuộc Cốt Lõi:**
+- Spring Boot 3.2.12 - Framework ứng dụng
+- Spring Security 6 - Framework bảo mật
+- Spring Data JPA - Trừu tượng hóa cơ sở dữ liệu
+- MySQL Connector - Driver cơ sở dữ liệu
+- Thymeleaf - Công cụ tạo khuôn mẫu
 
-**UI/UX Libraries:**
-- Bootstrap 5 - CSS framework
-- Chart.js - Data visualization
-- Apache Icons - Icon library
+**Thư Viện UI/UX:**
+- Bootstrap 5 - Framework CSS
+- Chart.js - Trực quan hóa dữ liệu
+- Apache Icons - Thư viện biểu tượng
 
-**Development Tools:**
-- Lombok - Boilerplate reduction
-- MapStruct - Object mapping
-- JUnit 5 - Testing framework
-- Mockito - Mocking framework
-
----
-
-## 📞 Support & Contact
-
-### Getting Help
-- **Documentation**: Check this README and inline code comments
-- **Issues**: Report bugs via GitHub Issues
-- **Questions**: Contact development team
-
-### Contributing
-We welcome contributions! Please see the [Contributing Guidelines](#-contributing-guidelines) section above.
-
-### Acknowledgments
-This project was developed as part of a software engineering course, demonstrating modern Java development practices, clean architecture principles, and AI integration in web applications.
+**Công Cụ Phát Triển:**
+- Lombok - Giảm thiểu code mẫu
+- MapStruct - Ánh xạ đối tượng
+- JUnit 5 - Framework kiểm thử
+- Mockito - Framework mocking
 
 ---
 
-**🚀 Built with passion for better financial management**
+## 📞 Hỗ Trợ & Liên Hệ
 
-**Version**: 1.0.0
-**Last Updated**: November 2025
-**Java Version**: 21
-**Spring Boot Version**: 3.2.12
+### Nhận Trợ Giúp
+- **Tài liệu**: Kiểm tra README này và các chú thích mã nội tuyến
+- **Vấn đề**: Báo lỗi qua GitHub Issues
+- **Câu hỏi**: Liên hệ đội ngũ phát triển
+
+### Đóng Góp
+Chúng tôi chào đón sự đóng góp! Vui lòng xem phần [Hướng Dẫn Đóng Góp](#-hướng-dẫn-đóng-góp) ở trên.
+
+### Cảm Ơn
+Dự án này được phát triển như một phần của khóa học kỹ thuật phần mềm, thể hiện các thực hành phát triển Java hiện đại, các nguyên tắc kiến trúc sạch, và tích hợp AI trong các ứng dụng web.
+
+---
+
+**🚀 Xây dựng bằng đam mê cho quản lý tài chính tốt hơn**
+
+**Phiên bản**: 1.0.0
+**Cập nhật lần cuối**: Tháng 11 2025
+**Phiên bản Java**: 21
+**Phiên bản Spring Boot**: 3.2.12

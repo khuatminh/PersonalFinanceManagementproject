@@ -201,8 +201,8 @@
                         </thead>
                         <tbody>
                             <tr th:each="transaction : ${transactions}">
-                                <td th:text="${#temporals.format(transaction.transactionDate, 'MMM dd, yyyy HH:mm')}">
-                                    Jan 01, 2024 10:30
+                                <td th:text="${#temporals.format(transaction.transactionDate, 'dd/MM/yyyy HH:mm')}">
+                                    01/01/2024 10:30
                                 </td>
                                 <td th:text="${transaction.description}">Transaction Description</td>
                                 <td>
