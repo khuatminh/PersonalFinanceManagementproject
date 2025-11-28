@@ -36,7 +36,8 @@
                         </h3>
                     </div>
                     <div class="card-body">
-                        <form th:action="@{/admin/users/update/{id}(id=${user.id})}" th:object="${user}" method="post">
+                        <form th:action="@{/admin/users/update/{id}(id=${userId})}" th:object="${userForm}"
+                            method="post">
                             <div class="mb-3">
                                 <label for="username" class="form-label">
                                     <i class="bi bi-person"></i> Tên đăng nhập
@@ -59,7 +60,7 @@
                                 <label for="role" class="form-label">
                                     <i class="bi bi-shield"></i> Vai trò
                                 </label>
-                                <select id="role" th:field="*{userRole}" class="form-select">
+                                <select id="role" th:field="*{role}" class="form-select">
                                     <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}">
                                     </option>
                                 </select>

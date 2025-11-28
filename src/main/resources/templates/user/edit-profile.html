@@ -18,11 +18,11 @@
         <!-- Page Header -->
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2">
-                <i class="bi bi-pencil"></i> Edit Profile
+                <i class="bi bi-pencil"></i> Chỉnh sửa thông tin
             </h1>
             <div class="btn-toolbar mb-2 mb-md-0">
                 <a th:href="@{/user/profile}" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left"></i> Back to Profile
+                    <i class="bi bi-arrow-left"></i> Quay lại
                 </a>
             </div>
         </div>
@@ -32,7 +32,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title mb-0">
-                            <i class="bi bi-person-gear"></i> Update Profile Information
+                            <i class="bi bi-person-gear"></i> Cập nhật thông tin
                         </h3>
                     </div>
                     <div class="card-body">
@@ -41,7 +41,7 @@
 
                             <div class="mb-3">
                                 <label for="username" class="form-label">
-                                    <i class="bi bi-person"></i> Username
+                                    <i class="bi bi-person"></i> Tên người dùng
                                 </label>
                                 <input type="text" id="username" th:field="*{username}" class="form-control" required>
                                 <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="text-danger mt-1"></div>

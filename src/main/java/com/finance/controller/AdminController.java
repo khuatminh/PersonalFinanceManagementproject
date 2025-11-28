@@ -60,18 +60,18 @@ public class AdminController {
 
         model.addAttribute("userForm", form);
         model.addAttribute("userId", id);
-        model.addAttribute("role", roleRespository.findAll());
+        model.addAttribute("roles", roleRespository.findAll());
 
         return "admin/edit-user";
     }
 
     @PostMapping("/users/update/{id}")
     public String update(@PathVariable Long id,
-                         @Valid @ModelAttribute("userForm") AdminUserEditForm form,
-                         BindingResult result,
-                         Model model,
-                         RedirectAttributes redirectAttributes,
-                         Authentication authentication) {
+            @Valid @ModelAttribute("userForm") AdminUserEditForm form,
+            BindingResult result,
+            Model model,
+            RedirectAttributes redirectAttributes,
+            Authentication authentication) {
 
         User currentUser = userService.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
@@ -88,7 +88,6 @@ public class AdminController {
         boolean isSelfEditing = currentUser.getUsername().equals(currentLogin);
         boolean isCurrentAdmin = currentUser.getUserRole() != null
                 && "ADMIN".equals(currentUser.getUserRole().getName());
-
 
         boolean isRoleDowngraded = form.getRole() == null
                 || !"ADMIN".equals(form.getRole().getName());
@@ -124,9 +123,8 @@ public class AdminController {
 
     @PostMapping("/users/delete/{id}")
     public String deleteUser(@PathVariable Long id,
-                             RedirectAttributes redirectAttributes,
-                             Authentication authentication) {
-
+            RedirectAttributes redirectAttributes,
+            Authentication authentication) {
 
         User userToDelete = userService.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));

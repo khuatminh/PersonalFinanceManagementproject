@@ -25,10 +25,10 @@ public class HomeController {
         }
 
         if (error != null) {
-            model.addAttribute("error", "Invalid username or password.");
+            model.addAttribute("error", "Sai tài khoản hoặc mật khẩu.");
         }
         if (logout != null) {
-            model.addAttribute("message", "You have been logged out successfully.");
+            model.addAttribute("message", "Bạn đã đăng xuất thành công.");
         }
         return "login";
     }
@@ -42,9 +42,9 @@ public class HomeController {
     public String accessDenied(Principal principal, Model model) {
         if (principal != null) {
             model.addAttribute("username", principal.getName());
-            model.addAttribute("message", "You do not have permission to access this page!");
+            model.addAttribute("message", "Bạn không có quyền truy cập trang này!");
         } else {
-            model.addAttribute("message", "You must be logged in to access this page!");
+            model.addAttribute("message", "Bạn phải đăng nhập để truy cập trang này!");
         }
         return "access-denied";
     }

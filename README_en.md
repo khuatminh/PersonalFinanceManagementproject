@@ -72,7 +72,7 @@
 - **Bootstrap 5** - Mobile-first responsive CSS framework
 - **JavaScript ES6+** - Modern JavaScript with async/await support
 - **Chart.js** - Beautiful, interactive data visualization library
-- **Apache Icons** - Professional icon library
+- **Bootstrap Icons** - Professional icon library
 
 #### Development & Build Tools
 - **Maven 3.6+** - Project build and dependency management

@@ -17,7 +17,7 @@ import java.util.List;
 })
 @Getter
 @Setter
-@ToString(exclude = {"transactions", "budgets", "goals", "userRole"})
+@ToString(exclude = { "transactions", "budgets", "goals", "userRole", "notifications" })
 public class User {
 
     @Id
@@ -54,6 +54,9 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Goal> goals = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Notification> notifications = new ArrayList<>();
 
     @PrePersist
     public void prePersist() {
@@ -102,6 +105,21 @@ public class User {
         if (goal != null) {
             goals.remove(goal);
             goal.setUser(null);
+        }
+    }
+
+    public void addNotification(Notification notification) {
+        if (notification == null) {
+            throw new IllegalArgumentException("Notification cannot be null");
+        }
+        notifications.add(notification);
+        notification.setUser(this);
+    }
+
+    public void removeNotification(Notification notification) {
+        if (notification != null) {
+            notifications.remove(notification);
+            notification.setUser(null);
         }
     }
 
