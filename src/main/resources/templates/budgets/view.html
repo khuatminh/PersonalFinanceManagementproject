@@ -37,7 +37,7 @@
             <div class="card bg-primary text-white">
                 <div class="card-body">
                     <h5 class="card-title">Số tiền ngân sách</h5>
-                    <h3 th:text="${#numbers.formatInteger(budget.amount, 3, 'COMMA')} + ' VND'">500,000 VND</h3>
+                    <h3 class="money-amount" th:text="${#numbers.formatInteger(budget.amount, 3, 'COMMA')} + ' VND'">500,000 VND</h3>
                 </div>
             </div>
         </div>
@@ -45,7 +45,7 @@
             <div class="card bg-success text-white">
                 <div class="card-body">
                     <h5 class="card-title">Đã chi tiêu</h5>
-                    <h3 th:text="${#numbers.formatInteger(budgetProgress.spent, 3, 'COMMA')} + ' VND'">300,000 VND</h3>
+                    <h3 class="money-amount" th:text="${#numbers.formatInteger(budgetProgress.spent, 3, 'COMMA')} + ' VND'">300,000 VND</h3>
                 </div>
             </div>
         </div>
@@ -53,7 +53,7 @@
             <div class="card" th:classappend="${budgetProgress.overBudget ? 'bg-danger' : 'bg-info'} + ' text-white'">
                 <div class="card-body">
                     <h5 class="card-title">Còn lại</h5>
-                    <h3 th:text="${#numbers.formatInteger(budgetProgress.remaining, 3, 'COMMA')} + ' VND'">200,000 VND</h3>
+                    <h3 class="money-amount" th:text="${#numbers.formatInteger(budgetProgress.remaining, 3, 'COMMA')} + ' VND'">200,000 VND</h3>
                 </div>
             </div>
         </div>
@@ -61,7 +61,7 @@
             <div class="card bg-secondary text-white">
                 <div class="card-body">
                     <h5 class="card-title">Tiến độ</h5>
-                    <h3 th:text="${#numbers.formatDecimal(budgetProgress.percentageSpent, 1, 1)} + '%'">60%</h3>
+                    <h3 class="money-amount" th:text="${#numbers.formatDecimal(budgetProgress.percentageSpent, 1, 1)} + '%'">60%</h3>
                 </div>
             </div>
         </div>
@@ -130,7 +130,7 @@
         <div class="col-lg-6 mb-4">
             <div class="card shadow">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">
+                    <h5 class="mb-0 money-amount">
                         <i class="bi bi-graph-up"></i> Tổng quan tiến độ
                     </h5>
                 </div>

@@ -39,7 +39,7 @@
                 <div class="card bg-primary text-white">
                     <div class="card-body text-center">
                         <h5 class="card-title">Số tiền mục tiêu</h5>
-                        <h3 th:text="${#numbers.formatInteger(goal.targetAmount, 3, 'COMMA')} + ' VND'">1,000,000 VND</h3>
+                        <h3 class="money-amount" th:text="${#numbers.formatInteger(goal.targetAmount, 3, 'COMMA')} + ' VND'">1,000,000 VND</h3>
                     </div>
                 </div>
             </div>
@@ -47,7 +47,7 @@
                 <div class="card bg-success text-white">
                     <div class="card-body text-center">
                         <h5 class="card-title">Tiến độ hiện tại</h5>
-                        <h3 th:text="${#numbers.formatInteger(goal.currentAmount, 3, 'COMMA')} + ' VND'">300,000 VND</h3>
+                        <h3 class="money-amount"  th:text="${#numbers.formatInteger(goal.currentAmount, 3, 'COMMA')} + ' VND'">300,000 VND</h3>
                     </div>
                 </div>
             </div>
@@ -57,7 +57,7 @@
                         <h5 class="card-title" th:text="${goal.status.name() == 'COMPLETED' ? 'Đã hoàn thành' : 'Còn lại'}">
                             Còn lại
                         </h5>
-                        <h3 th:text="${#numbers.formatInteger(goal.getRemainingAmount(), 3, 'COMMA')} + ' VND'">700,000 VND</h3>
+                        <h3 class="money-amount"  th:text="${#numbers.formatInteger(goal.getRemainingAmount(), 3, 'COMMA')} + ' VND'">700,000 VND</h3>
                     </div>
                 </div>
             </div>
@@ -65,7 +65,7 @@
                 <div class="card" th:classappend="${goal.status.name() == 'COMPLETED' ? 'bg-success' : (goal.isOverdue() ? 'bg-danger' : 'bg-secondary')} + ' text-white'">
                     <div class="card-body text-center">
                         <h5 class="card-title">Tiến độ</h5>
-                        <h3 th:text="${goal.progressPercentage} + '%'">30%</h3>
+                        <h3 class="money-amount"  th:text="${goal.progressPercentage} + '%'">30%</h3>
                     </div>
                 </div>
             </div>
@@ -136,8 +136,8 @@
             <div class="col-lg-6 mb-4">
                 <div class="card shadow">
                     <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">
-                            <i class="bi bi-graph-up"></i> Trực quan hóa tiến độ
+                        <h5 class="mb-0 money-amount">
+                            <i class="bi bi-graph-up "></i> Trực quan hóa tiến độ
                         </h5>
                     </div>
                     <div class="card-body">
