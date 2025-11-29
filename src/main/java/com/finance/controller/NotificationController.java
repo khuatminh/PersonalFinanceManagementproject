@@ -77,7 +77,7 @@ public class NotificationController {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         notificationService.markAllAsReadForUser(user);
-        redirectAttributes.addFlashAttribute("success", "All notifications marked as read");
+        redirectAttributes.addFlashAttribute("success", "Tất cả thông báo đã được đánh dấu đã đọc");
 
         return "redirect:/notifications";
     }
@@ -91,7 +91,7 @@ public class NotificationController {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         notificationService.deleteReadNotifications(user);
-        redirectAttributes.addFlashAttribute("success", "All read notifications deleted");
+        redirectAttributes.addFlashAttribute("success", "Tất cả thông báo đã đọc đã được xóa");
 
         return "redirect:/notifications";
     }

@@ -74,7 +74,7 @@ public class BudgetController {
 
         // Custom date validation
         if (!budgetForm.isValidDateRange()) {
-            result.rejectValue("endDate", "error.endDate", "End date must be after start date");
+            result.rejectValue("endDate", "error.endDate", "Ngày kết thúc phải sau ngày bắt đầu");
         }
 
         if (result.hasErrors()) {
@@ -100,7 +100,7 @@ public class BudgetController {
                     category,
                     budgetForm.getDescription());
 
-            redirectAttributes.addFlashAttribute("success", "Budget created successfully!");
+            redirectAttributes.addFlashAttribute("success", "Ngân sách được tạo thành công!");
             return "redirect:/budgets";
 
         } catch (IllegalArgumentException e) {
@@ -166,7 +166,7 @@ public class BudgetController {
 
         // Custom date validation
         if (!budgetForm.isValidDateRange()) {
-            result.rejectValue("endDate", "error.endDate", "End date must be after start date");
+            result.rejectValue("endDate", "error.endDate", "Ngày kết thúc phải sau ngày bắt đầu");
         }
 
         if (result.hasErrors()) {
@@ -187,7 +187,7 @@ public class BudgetController {
             budgetService.updateBudget(id, budgetForm.getName(), budgetForm.getAmount(),
                     budgetForm.getStartDate(), budgetForm.getEndDate(), category, budgetForm.getDescription());
 
-            redirectAttributes.addFlashAttribute("success", "Budget updated successfully!");
+            redirectAttributes.addFlashAttribute("success", "Ngân sách được cập nhật thành công!");
             return "redirect:/budgets";
 
         } catch (IllegalArgumentException e) {
@@ -221,7 +221,7 @@ public class BudgetController {
 
         try {
             budgetService.deleteById(id);
-            redirectAttributes.addFlashAttribute("success", "Budget deleted successfully!");
+            redirectAttributes.addFlashAttribute("success", "Ngân sách đã được xóa thành công!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error deleting budget: " + e.getMessage());
         }

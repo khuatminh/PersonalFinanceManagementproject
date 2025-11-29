@@ -57,7 +57,7 @@ public class UserController {
                 userForm.getEmail(),
                 userForm.getPassword());
         redirectAttributes.addFlashAttribute("successMessage",
-                "Registration successful! Please login with your new account.");
+                "Đăng ký thành công! Vui lòng đăng nhập bằng tài khoản mới của bạn.");
         return "redirect:/login";
     }
 
@@ -93,11 +93,11 @@ public class UserController {
             BindingResult bindingResult, Principal principal, RedirectAttributes redirectAttributes) {
         User currentUser = getAuthenticatedUser(principal);
         if (userService.existsByUsername(form.getUsername()) && !currentUser.getUsername().equals(form.getUsername())) {
-            bindingResult.rejectValue("username", "error.user", "Username is already in use!");
+            bindingResult.rejectValue("username", "error.user", "Tên người dùng đã được sử dụng!");
         }
 
         if (userService.existsByEmail(form.getEmail()) && !currentUser.getEmail().equals(form.getEmail())) {
-            bindingResult.rejectValue("email", "error.user", "Email is already in use!");
+            bindingResult.rejectValue("email", "error.user", "Email đã được sử dụng!");
         }
         if (bindingResult.hasErrors()) {
             return "user/edit-profile";
@@ -109,7 +109,7 @@ public class UserController {
 
         userService.updateProfile((long) currentUser.getId(), userToUpdate);
         redirectAttributes.addFlashAttribute("successMessage",
-                "Profile updated successfully!");
+                "Cập nhật hồ sơ thành công!");
         return "redirect:/user/profile";
     }
 
@@ -127,7 +127,7 @@ public class UserController {
             RedirectAttributes redirectAttributes) {
         if (!form.isPasswordMatching()) {
             bindingResult.rejectValue("confirmNewPassword", "error.passwordForm",
-                    "New password and confirmation do not match");
+                    "Mật khẩu mới và xác nhận không khớp");
         }
         if (bindingResult.hasErrors()) {
             return "user/change-password";
@@ -136,7 +136,7 @@ public class UserController {
         User user = getAuthenticatedUser(principal);
         userService.changePassword((long) user.getId(), form.getCurrentPassword(), form.getNewPassword());
         redirectAttributes.addFlashAttribute("successMessage",
-                "Password changed successfully!");
+                "Đổi mật khẩu thành công!");
         return "redirect:/user/change-password";
     }
 

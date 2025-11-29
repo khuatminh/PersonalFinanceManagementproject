@@ -126,11 +126,11 @@ public class TransactionController {
                     form.getNotes());
 
             redirectAttributes.addFlashAttribute("successMessage",
-                    "Transaction added successfully: " + transaction.getDescription());
+                    "Giao dịch được thêm thành công: " + transaction.getDescription());
             return "redirect:/transactions";
 
         } catch (Exception e) {
-            bindingResult.reject("transactionError", "Error adding transaction: " + e.getMessage());
+            bindingResult.reject("transactionError", "Lỗi thêm giao dịch: " + e.getMessage());
 
             // Re-populate the model with categories when there's an exception
             User user = userService.findByUsername(principal.getName())
@@ -207,11 +207,11 @@ public class TransactionController {
             transactionService.save(existingTransaction);
 
             redirectAttributes.addFlashAttribute("successMessage",
-                    "Transaction updated successfully: " + existingTransaction.getDescription());
+                    "Giao dịch được cập nhật thành công: " + existingTransaction.getDescription());
             return "redirect:/transactions";
 
         } catch (Exception e) {
-            bindingResult.reject("transactionError", "Error updating transaction: " + e.getMessage());
+            bindingResult.reject("transactionError", "Lỗi cập nhật giao dịch: " + e.getMessage());
             return "transaction/edit";
         }
     }
@@ -234,12 +234,12 @@ public class TransactionController {
             transactionService.deleteById(id);
 
             redirectAttributes.addFlashAttribute("successMessage",
-                    "Transaction deleted successfully: " + description);
+                    "Giao dịch đã được xóa thành công: " + description);
             return "redirect:/transactions";
 
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage",
-                    "Error deleting transaction: " + e.getMessage());
+                    "Lỗi xóa giao dịch: " + e.getMessage());
             return "redirect:/transactions";
         }
     }

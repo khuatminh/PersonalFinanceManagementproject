@@ -27,15 +27,15 @@ public class UserRegistrationFormValidator implements Validator {
         UserRegistrationForm form = (UserRegistrationForm) target;
 
         if (!form.isPasswordMatch()) {
-            errors.rejectValue("confirmPassword", "error.userForm", "Passwords do not match");
+            errors.rejectValue("confirmPassword", "error.userForm", "Mật khẩu không khớp");
         }
 
         if (userService.existsByUsername(form.getUsername())) {
-            errors.rejectValue("username", "error.userForm", "Username already exists");
+            errors.rejectValue("username", "error.userForm", "Tên người dùng đã tồn tại");
         }
 
         if (userService.existsByEmail(form.getEmail())) {
-            errors.rejectValue("email", "error.userForm", "Email already exists");
+            errors.rejectValue("email", "error.userForm", "Email đã tồn tại");
         }
     }
 }

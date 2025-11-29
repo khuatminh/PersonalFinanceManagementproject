@@ -211,9 +211,9 @@ public class BudgetService {
         if (currentThreshold > 0 && (lastNotificationPercentage == null || currentThreshold > lastNotificationPercentage)) {
             String message;
             if (budgetProgress.isOverBudget()) {
-                message = String.format("You have exceeded your budget '%s' by %s!", budget.getName(), budgetProgress.getRemaining().abs());
+                message = String.format("Bạn đã vượt quá '%s' của ngân sách %s!", budgetProgress.getRemaining().abs(), budget.getName());
             } else {
-                message = String.format("You have spent over %d%% of your budget '%s'.", currentThreshold, budget.getName());
+                message = String.format("Bạn đã tiêu tới %d%% của ngân sách '%s'.", currentThreshold, budget.getName());
             }
             notificationService.createNotification(budget.getUser(), message);
             budget.setLastNotificationPercentage(currentThreshold);

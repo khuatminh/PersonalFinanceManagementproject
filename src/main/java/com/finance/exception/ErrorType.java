@@ -2,12 +2,12 @@ package com.finance.exception;
 
 
 public enum ErrorType {
-    USER_NOT_FOUND(1001, "Error: The requested user was not found."),
-    INVALID_PASSWORD(1002, "Error: The current password is incorrect."),
-    USERNAME_EXISTS(1003, "Error: Username already exists."),
-    EMAIL_EXISTS(1004, "Error: Email already exists."),
-    AUTH_USER_NOT_FOUND(1005, "Error: Authenticated user not found "),
-    GENERIC_ERROR(5000, "Error: An unknown error occurred.");
+    USER_NOT_FOUND(1001, "Lỗi: Không tìm thấy người dùng được yêu cầu."),
+    INVALID_PASSWORD(1002, "Lỗi: Mật khẩu hiện tại không chính xác."),
+    USERNAME_EXISTS(1003, "Lỗi: Tên người dùng đã tồn tại."),
+    EMAIL_EXISTS(1004, "Lỗi: Email đã tồn tại."),
+    AUTH_USER_NOT_FOUND(1005, "Lỗi: Không tìm thấy người dùng đã xác thực "),
+    GENERIC_ERROR(5000, "Lỗi: Đã xảy ra lỗi không xác định.");
 
     private final int code;
     private final String message;

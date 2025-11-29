@@ -87,7 +87,7 @@ public class GoalController {
                     user,
                     goalForm.getDescription());
 
-            redirectAttributes.addFlashAttribute("success", "Goal created successfully!");
+            redirectAttributes.addFlashAttribute("success", "Tạo mục tiêu thành công");
             return "redirect:/goals";
 
         } catch (Exception e) {
@@ -146,7 +146,7 @@ public class GoalController {
             goalService.updateGoal(id, goalForm.getName(), goalForm.getTargetAmount(),
                     goalForm.getTargetDate(), goalForm.getDescription());
 
-            redirectAttributes.addFlashAttribute("success", "Goal updated successfully!");
+            redirectAttributes.addFlashAttribute("success", "Cập nhật mục tiêu thành công");
             return "redirect:/goals";
 
         } catch (Exception e) {
@@ -171,9 +171,9 @@ public class GoalController {
 
         try {
             goalService.deleteById(id);
-            redirectAttributes.addFlashAttribute("success", "Goal deleted successfully!");
+            redirectAttributes.addFlashAttribute("success", "Xóa mục tiêu thành công");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Error deleting goal: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Lỗi xóa mục tiêu: " + e.getMessage());
         }
 
         return "redirect:/goals";
@@ -193,7 +193,7 @@ public class GoalController {
 
         try {
             goalService.completeGoal(id);
-            redirectAttributes.addFlashAttribute("success", "Goal marked as completed!");
+            redirectAttributes.addFlashAttribute("success", "Mục tiêu đã được đánh dấu hoàn thành!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error completing goal: " + e.getMessage());
         }
@@ -239,7 +239,7 @@ public class GoalController {
         try {
             goalService.contributeToGoal(id, amount);
             redirectAttributes.addFlashAttribute("success",
-                    String.format("Successfully contributed $%.2f to %s!", amount, goal.getName()));
+                    String.format("Đã góp thành công $%.2f vào %s!", amount, goal.getName()));
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error contributing to goal: " + e.getMessage());
         }

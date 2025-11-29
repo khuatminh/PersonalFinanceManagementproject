@@ -99,6 +99,13 @@ public class Budget {
         return java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate) + 1;
     }
 
+    public long getDurationInDays() {
+        if (startDate == null || endDate == null) {
+            return 0;
+        }
+        return java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate) + 1;
+    }
+
     @Override
     public String toString() {
         return name + " - " + amount + " (" + startDate + " to " + endDate + ")";
