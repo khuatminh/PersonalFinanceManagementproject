@@ -36,8 +36,7 @@
                         </h3>
                     </div>
                     <div class="card-body">
-                        <form th:action="@{/user/update}" th:object="${user}" method="post">
-                            <input type="hidden" th:field="*{id}" />
+                        <form th:action="@{/user/update}" th:object="${profileForm}" method="post">
 
                             <div class="mb-3">
                                 <label for="username" class="form-label">
